@@ -6,7 +6,7 @@ $(BIN): $(SRC)
 	-I $$HOME/Install/include \
 	-L $$HOME/Install/lib \
 	-o $(BIN) \
-	-lm -lSDL_mixer
-
+	-lm
+	
 clean:
 	rm -f $(BIN)
