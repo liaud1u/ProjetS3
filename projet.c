@@ -63,11 +63,22 @@ int main(){
     int jb,ib;
     texte = 32;
     
-    int ** mapix = (int ** ) malloc ((i +1)* sizeof (int));
+    
+    int ** mapix = (int ** ) malloc ((i +1)*2* sizeof (int));
     for (int p =0;p<i;p++)
     {
-        mapix[p]=(int *)malloc((j +1)* sizeof(int));
+        mapix[p]=(int *)malloc((j +1)* 2*sizeof(int));
     }
+    
+    for (ib = 0; ib < j ; ib++){
+        for(jb = 0; jb<i;jb++){
+            mapix[ib][jb] =0;
+            
+
+            
+        }
+    }
+    
     
     //Initialisation du tableau
     for (ib = 0; ib < j ; ib++){
@@ -83,15 +94,7 @@ int main(){
         }
     }
     
-    //Initialisation du tableau
-    for (ib = 0; ib < j ; ib++){
-        for(jb = 0; jb<i;jb++){
-        }
-    }
-    
-    
-    fclose(map);
-    
+ 
     k=0;
     l= 0;
     
@@ -103,6 +106,7 @@ int main(){
     
     
     while(!fin){
+
         for (k=0;k<20;k++){
             tilePosition.y = 0 + D_SIZE * (k);
             tilePosition.x = 0;
@@ -117,7 +121,7 @@ int main(){
             }
         }
         
-        
+
         
         for (jb=0;jb<j;jb++){
             tilePosition.y = 50 - ho + D_SIZE * jb;
@@ -156,7 +160,7 @@ int main(){
             
             
         }
-        
+
         life = 8;
         for(int li =5; li >0;li--){
             heartPos.x = -50 + li * D_SIZE;   
@@ -166,7 +170,7 @@ int main(){
             }else
                 SDL_BlitSurface(heart, NULL, screen, &heartPos);  
         }
-        
+
         
         keystate = SDL_GetKeyState(NULL);
         if (SDL_PollEvent(&event)){
