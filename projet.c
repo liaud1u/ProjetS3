@@ -3,12 +3,14 @@
 #include <SDL/SDL.h>
 
 #define D_SIZE 50
+#define i 32
+#define j 32
 
 
 int main(){
     FILE* map;
     char a,texte;
-    int i,j,k,l,fin,life;
+    int k,l,fin,life;
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
@@ -54,20 +56,20 @@ int main(){
     
     
     
-    map = fopen("level0.map","r");
+    map = fopen("level1.map","r");
     
-    i = 16; // largeur
-    j = 10;  // hauteur 
+    //i = 32; // largeur
+    //j = 32;  // hauteur 
     
     fin =0;
     int jb,ib;
     texte = 32;
-    
-    int ** mapix = (int ** ) malloc ((i +1)* sizeof (int));
+    int mapix[i][j];
+    /*int** mapix = (int ** ) malloc ((i +1)* sizeof (int));
     for (int p =0;p<i;p++)
     {
         mapix[p]=(int *)malloc((j +1)* sizeof(int));
-    }
+    }*/
     
     //Initialisation du tableau
     for (ib = 0; ib < j ; ib++){
@@ -174,19 +176,19 @@ int main(){
                 fin = 1;
             }
             if (keystate[SDLK_q] ){
-                ve -=2;
+                ve +=2;
                 
             }
             if (keystate[SDLK_z] ){
-                ho +=2;
+                ho -=2;
                 
             }
             if (keystate[SDLK_s] ){
-                ho-=2;
+                ho +=2;
                 
             }
             if (keystate[SDLK_d] ){
-                ve+=2;
+                ve-=2;
             }
         }
         SDL_UpdateRect(screen,0,0,0,0);
