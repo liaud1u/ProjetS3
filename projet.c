@@ -178,19 +178,19 @@ int main(){
                 fin = 1;
             }
             if (keystate[SDLK_q] ){
-                ve -=2;
+                ve +=2;
                 
             }
             if (keystate[SDLK_z] ){
-                ho +=2;
+                ho -=2;
                 
             }
             if (keystate[SDLK_s] ){
-                ho-=2;
+                ho+=2;
                 
             }
             if (keystate[SDLK_d] ){
-                ve+=2;
+                ve -=2;
             }
         }
         SDL_UpdateRect(screen,0,0,0,0);
