@@ -9,21 +9,22 @@
 int main(){
     FILE* map;
     char a,texte;
-    int i,j,k,l,r,fin,life,colorkey;
+    int i,j,k,l,r,fin,life,colorkey,moove,actualX,actualY;
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
-    SDL_Rect tilePosition,heartPos;
-    SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder;
+    SDL_Rect tilePosition,heartPos,elfPos,elfImage;
+    SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf;
     
     life = 5;
+    moove = 0;
     
     /*Initialize SDL*/
     SDL_Init(SDL_INIT_VIDEO);
     
     /*Title bar*/
     SDL_WM_SetCaption("Projet","Projet");
-    SDL_EnableKeyRepeat(10, 10);
+    SDL_EnableKeyRepeat(3, 3);
     /*Window creation*/
     screen = SDL_SetVideoMode(1800,1000,0,0);
     
@@ -56,6 +57,10 @@ int main(){
     hole= SDL_DisplayFormat(temp);   
     temp = SDL_LoadBMP("crate.bmp");
     crate= SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("elf_idle.bmp");
+    elf= SDL_DisplayFormat(temp);
+
+    
     /*Surface free*/
     SDL_FreeSurface(temp);
     
@@ -69,6 +74,8 @@ int main(){
     SDL_SetColorKey(heart, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(heartb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+
     
     srand(time(NULL));
     
@@ -168,14 +175,36 @@ int main(){
     k=0;
     l= 0;
     
-    int ve,ho;
+    int ve,ho,frame=0,wait =0;
     ve = 0;
     ho = 0;
     
     
+        
+      /* Define the source rectangle (elf)for the BlitSurface */
+      elfImage.y = 0 ;
+      elfImage.w = 32;
+      elfImage.h = 56;
+      elfImage.x = 32*frame;
+      elfPos.x = 900 - 16;
+      elfPos.y = 500 - 56;
     
     
     while(!fin){
+	//Mise a jour du sprite de l'elf
+      if(wait <30){
+	 wait++;}
+	 else{
+	   wait = 0;
+	if (frame <3 ){
+	  frame++;}
+	  else{
+	    frame = 0;
+	  }
+	 }	  
+	  
+	  elfImage.x = 32 * frame;
+	  
 	//affichage fond noir
         for (k=0;k<30;k++){
             tilePosition.y = 0 + D_SIZE * (k);
@@ -192,13 +221,17 @@ int main(){
         }
         
 
-        
+        //Affichage du tableau
         for (jb=0;jb<j;jb++){
             tilePosition.y = 50 - ho + D_SIZE * jb;
-            tilePosition.x = 50 + ve;
+            tilePosition.x = 75 + ve;
             for(ib=0;ib<i;ib++){
-                tilePosition.y = 50 - ho + D_SIZE * jb;
-                tilePosition.x = 50 + ve + D_SIZE * ib;
+                tilePosition.y = 55 - ho + D_SIZE * jb;
+                tilePosition.x = 75 + ve + D_SIZE * ib;
+		if(tilePosition.x <= elfPos.x && tilePosition.x + 50 >= elfPos.x && tilePosition.y <= elfPos.y && tilePosition.y + 50 >= elfPos.y){
+		  actualX = ib;
+		  actualY = jb;
+		}
                 switch (mapix[jb][ib]){
                     case 48:
                         SDL_BlitSurface(tree, NULL, screen, &tilePosition);
@@ -231,12 +264,15 @@ int main(){
             
         }
         
+        
+        
+        //Affichage du décor
         for (jb=0;jb<j;jb++){
             tilePosition.y = 50 - ho + D_SIZE * jb;
-            tilePosition.x = 50 + ve;
+            tilePosition.x = 75 + ve;
             for(ib=0;ib<i;ib++){
-               tilePosition.y = 50 - ho + D_SIZE * jb;
-                tilePosition.x = 50 + ve + D_SIZE * ib;
+               tilePosition.y = 55 - ho + D_SIZE * jb;
+                tilePosition.x = 75 + ve + D_SIZE * ib;
                 switch (mapdeco[jb][ib]){
 		    
                     case 48:
@@ -278,6 +314,8 @@ int main(){
             
         }
 
+        
+        //Affichage de la vie
         life = 8;
         for(int li =10; li >0;li--){
             heartPos.x = -50 + li * D_SIZE;   
@@ -288,28 +326,39 @@ int main(){
                 SDL_BlitSurface(heart, NULL, screen, &heartPos);  
         }
 
-        
+
+	//Detection de pression des touches
         keystate = SDL_GetKeyState(NULL);
         if (SDL_PollEvent(&event)){
+	    
             if (keystate[SDLK_ESCAPE]){
                 fin = 1;
             }
             if (keystate[SDLK_q] ){
-                ve +=2;
-                
+	  ve +=2;
+	  elfImage.x = 32 * frame+4*32;
+	      
             }
             if (keystate[SDLK_z] ){
                 ho -=2;
-                
+elfImage.x = 32 * frame+4*32;
             }
             if (keystate[SDLK_s] ){
                 ho+=2;
-                
+elfImage.x = 32 * frame + 4*32;
             }
             if (keystate[SDLK_d] ){
+	      
                 ve-=2;
+elfImage.x = 32 * frame+4*32;
             }
-        }
+	}
+            
+       
+          SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
+	    
+	  
+	  moove = 0;
         SDL_UpdateRect(screen,0,0,0,0);
         SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     };
