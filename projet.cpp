@@ -3,6 +3,9 @@
 #include <SDL/SDL.h>
 #include <ctime>
 
+
+#define HAUTEUR 500
+#define LARGEUR 900
 #define D_SIZE 50
 
 
@@ -14,7 +17,7 @@ int main(){
     Uint8 *keystate;
     SDL_Event event;
     SDL_Rect tilePosition,heartPos,elfPos,elfImage;
-    SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf;
+    SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*elfb,*elfa,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf;
     
     life = 5;
     moove = 0;
@@ -26,7 +29,7 @@ int main(){
     SDL_WM_SetCaption("Projet","Projet");
     SDL_EnableKeyRepeat(3, 3);
     /*Window creation*/
-    screen = SDL_SetVideoMode(1800,1000,0,0);
+    screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,0,0);
     
     /*BMP loading*/
     temp = SDL_LoadBMP("grass.bmp");
@@ -58,7 +61,9 @@ int main(){
     temp = SDL_LoadBMP("crate.bmp");
     crate= SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("elf_idle.bmp");
-    elf= SDL_DisplayFormat(temp);
+    elfa= SDL_DisplayFormat(temp);
+temp = SDL_LoadBMP("elf_idleb.bmp");
+    elfb= SDL_DisplayFormat(temp);
 
     
     /*Surface free*/
@@ -74,7 +79,8 @@ int main(){
     SDL_SetColorKey(heart, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(heartb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-    SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(elfa, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(elfb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
     
     srand(time(NULL));
@@ -186,13 +192,14 @@ int main(){
       elfImage.w = 32;
       elfImage.h = 56;
       elfImage.x = 32*frame;
-      elfPos.x = 900 - 16;
-      elfPos.y = 500 - 56;
+      elfPos.x = LARGEUR/2 - 16;
+      elfPos.y = HAUTEUR/2 - 56;
     
+elf = elfa; // par défaut le perso va a droite
     
     while(!fin){
-	//Mise a jour du sprite de l'elf
-      if(wait <30){
+	//Mise a jour du sprite du perso
+      if(wait <60){
 	 wait++;}
 	 else{
 	   wait = 0;
@@ -228,10 +235,6 @@ int main(){
             for(ib=0;ib<i;ib++){
                 tilePosition.y = 55 - ho + D_SIZE * jb;
                 tilePosition.x = 75 + ve + D_SIZE * ib;
-		if(tilePosition.x <= elfPos.x && tilePosition.x + 50 >= elfPos.x && tilePosition.y <= elfPos.y && tilePosition.y + 50 >= elfPos.y){
-		  actualX = ib;
-		  actualY = jb;
-		}
                 switch (mapix[jb][ib]){
                     case 48:
                         SDL_BlitSurface(tree, NULL, screen, &tilePosition);
@@ -255,7 +258,7 @@ int main(){
                         SDL_BlitSurface(hd, NULL, screen, &tilePosition);
                         break;
                     default:
-                        //printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapix[l][k]);
+                        printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapix[l][k]);
                         break;
                 }
                 
@@ -305,7 +308,7 @@ int main(){
                         break;
 			
                     default:
-                        //printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapix[l][k]);
+                        printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapdeco[l][k]);
                         break;
                 }
                 
@@ -314,7 +317,7 @@ int main(){
             
         }
 
-        
+
         //Affichage de la vie
         life = 8;
         for(int li =10; li >0;li--){
@@ -335,26 +338,54 @@ int main(){
                 fin = 1;
             }
             if (keystate[SDLK_q] ){
-	  ve +=2;
-	  elfImage.x = 32 * frame+4*32;
+		elf = elfb;
+	 	 elfImage.x = 32 * frame+4*32;
+
+
+		for (jb=0;jb<j;jb++){
+		    tilePosition.y = 50 - ho + D_SIZE * jb;
+		    tilePosition.x = 75 + ve;
+		    for(ib=0;ib<i;ib++){
+		        tilePosition.y = 55 - ho + D_SIZE * jb;
+		        tilePosition.x = 75 + ve + D_SIZE * ib;
+			if(tilePosition.x -16 <= LARGEUR/2 && tilePosition.x +50 -16 >= LARGEUR/2 && tilePosition.y <= HAUTEUR/2 && tilePosition.y + 50 >= HAUTEUR /2){
+			  actualX = jb;
+			  actualY = ib;
+			}
+	}}
+		//if(actualX > 0 ) //Non Collision avec le mur a gauche ( 51 )
+		 if(mapix[actualX][actualY]!=51)
+
+		 //if(actualX > 0 ) //Non Collision avec le mur a gauche
+		 //if(mapix[actualX][actualY]!=52 && mapix[actualX][actualY]!=50)
+			ve +=2;
+	
+
 	      
             }
             if (keystate[SDLK_z] ){
-                ho -=2;
+
 elfImage.x = 32 * frame+4*32;
+		printf("%d %d %d\n", actualX, actualY,mapix[actualX][actualY]);
+		//if(actualX < i-1 ) //Non Collision avec le mur avec la droite
+
+ho -=2;
             }
             if (keystate[SDLK_s] ){
+printf("%d %d %d\n", actualX, actualY,mapix[actualX][actualY]);
+
                 ho+=2;
 elfImage.x = 32 * frame + 4*32;
             }
             if (keystate[SDLK_d] ){
-	      
-                ve-=2;
+			ve -=2;
+	      elf = elfa;
+
+                
 elfImage.x = 32 * frame+4*32;
             }
 	}
             
-       
           SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
 	    
 	  
