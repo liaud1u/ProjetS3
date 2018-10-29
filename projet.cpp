@@ -431,7 +431,7 @@ int main(){
                         }
                     }
                     //Incrementation si le perso est sur une case autorisée
-                    if(mapix[actualX][actualY]==49  ||  mapix[actualX][actualY]==50)
+                    if((mapix[actualX][actualY]==49  ||  mapix[actualX][actualY]==50) && mapix[actualX][actualY-1] != 55 && mapix[actualX][actualY-1] != 50 && mapix[actualX][actualY-1] != 52)
                     {ve +=1;}
                 }
                 if (keystate[SDLK_z] ){ // si z actif
@@ -484,8 +484,11 @@ int main(){
                             }
                         }
                     }
-                    if(mapix[actualX][actualY+1]==49||  mapix[actualX][actualY]==51||  mapix[actualX-1][actualY] == 55){
+                    if((mapix[actualX][actualY+1]==49||  mapix[actualX][actualY]==51 || mapix[actualX][actualY] == 49) && mapix[actualX][actualY+2] != 55 && mapix[actualX][actualY+2] != 51 && mapix[actualX][actualY+2] != 52 && mapix[actualX][actualY+1] != 50){
                         ve -=1;//Incrementation si le joueur est sur une case autorisée
+                    }
+                    else{
+                    	printf("Collision : %d",mapix[actualX][actualY]);
                     }
                     elfImage.y = 56 * (who*2) ; //Mise a jour des sprites ( perso en mouvement ) 
                     elfImage.x = 32 * frame+4*32;
