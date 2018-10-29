@@ -220,37 +220,37 @@ int main(){
     screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,0,0);
     
     /*BMP loading*/
-    temp = SDL_LoadBMP("grass.bmp");
+    temp = SDL_LoadBMP("ressources/grass.bmp");
     tree = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("dirt.bmp");
+    temp = SDL_LoadBMP("ressources/dirt.bmp");
     dirt = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("coin_hg.bmp");
+    temp = SDL_LoadBMP("ressources/coin_hg.bmp");
     hg = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("coin_hd.bmp");
+    temp = SDL_LoadBMP("ressources/coin_hd.bmp");
     hd = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("haut.bmp");
+    temp = SDL_LoadBMP("ressources/haut.bmp");
     haut = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("droite.bmp");
+    temp = SDL_LoadBMP("ressources/droite.bmp");
     droite = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("gauche.bmp");
+    temp = SDL_LoadBMP("ressources/gauche.bmp");
     gauche= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("fullheart.bmp");
+    temp = SDL_LoadBMP("ressources/fullheart.bmp");
     heart= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("heart.bmp");
+    temp = SDL_LoadBMP("ressources/heart.bmp");
     heartb= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("doors_close.bmp");
+    temp = SDL_LoadBMP("ressources/doors_close.bmp");
     d_close= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("skull.bmp");
+    temp = SDL_LoadBMP("ressources/skull.bmp");
     skull= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("ladder.bmp");
+    temp = SDL_LoadBMP("ressources/ladder.bmp");
     ladder= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("hole.bmp");
+    temp = SDL_LoadBMP("ressources/hole.bmp");
     hole= SDL_DisplayFormat(temp);   
-    temp = SDL_LoadBMP("crate.bmp");
+    temp = SDL_LoadBMP("ressources/crate.bmp");
     crate= SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("perso.bmp");
+    temp = SDL_LoadBMP("ressources/perso.bmp");
     elf= SDL_DisplayFormat(temp);
-     temp = SDL_LoadBMP("zombie.bmp");
+     temp = SDL_LoadBMP("ressources/zombie.bmp");
     zombie= SDL_DisplayFormat(temp);
     
     
@@ -282,7 +282,7 @@ int main(){
     
     
     
-    map = fopen("level0.map","r");
+    map = fopen("maps/level0.map","r");
     
     i = 32;                                                 // largeur de la map
     j = 32;                                                 // hauteur  de la map
@@ -331,7 +331,7 @@ int main(){
     
     fclose(map);
     printf("Chargement level.deco ...\n");
-    map = fopen("level0.deco","r");
+    map = fopen("maps/level0.deco","r");
     texte = 0;
     
     //Initialisation du tableau
