@@ -1,5 +1,3 @@
-#ifndef DEF_ENNEMI
-#define DEF_ENNEMI
 #include <stdio.h>
 
 class Ennemi
@@ -23,4 +21,3 @@ class Ennemi
         int e_ho;
 };
 
-#endif

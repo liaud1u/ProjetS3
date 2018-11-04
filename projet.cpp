@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
+#include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
 
@@ -32,6 +33,7 @@ class Ennemi
         void dead(); // Tue le monstre
         int haveDamage(int damage); //Inflige des dégats au monstre
         int getDamage() const; //Recupere les dégat infligé par le monstre ( en fonction de sa taille, type ... ) 
+        
         
     
     private:
@@ -108,40 +110,8 @@ bool Ennemi::isDead() const{
     return e_dead;
 }
 
-int distance(int x, int y,int xb, int yb, int** map, int maxX, int maxY){
-    int res=0;
-//     if(x != xb && y != yb)
-//     {
-//         if (x+1 < maxX && map[x+1][y] == 49){
-//             map[x][y] = 51;
-//             res = res> 1 + distance(x+1,y,xb,yb,map,maxX,maxY)?res:1 + distance(x+1,y,xb,yb,map,maxX,maxY);
-//             
-//         }else{
-//             if (x-1 >= 0 && map[x-1][y] == 49){
-//                 map[x][y] = 51;
-//             res = res> 1 + distance(x-1,y,xb,yb,map,maxX,maxY)?res:1 + distance(x-1,y,xb,yb,map,maxX,maxY);
-//             
-//             }else{
-//                 if (y+1 >= maxY &&map[x][y+1] == 49){
-//                     map[x][y] = 51;
-//                 res = res> 1 + distance(x,y+1,xb,yb,map,maxX,maxY)?res:1 + distance(x,y+1,xb,yb,map,maxX,maxY);
-//                 }
-//                 else{
-//                     if (y-1 >= 0 && map[x][y-1] == 49){
-//                         map[x][y] = 51;
-//                     res = res> 1 + distance(x,y-1,xb,yb,map,maxX,maxY)?res:1 + distance(x,y-1,xb,yb,map,maxX,maxY);
-//                     }
-//                     else{
-//                         res = -100000;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     else{
-//         res = 0;
-//     }
-    return res;
+int distance(int x, int y,int xb, int yb, int** mapi, int maxX, int maxY){
+    return sqrt((x-xb)*(x-xb) + (y-yb)*(y-yb));
 }
 
 void Ennemi::mooveL(int c){
@@ -175,6 +145,45 @@ void Ennemi::mooveD(int c){
         e_ve = e_ve%50;
     }
 }
+
+int mini(int x, int y){
+    if (x>y)
+        return y;
+    return x;
+}
+
+// void Ennemi::moovement(int actualX, int actualY, int** mapix, int X, int Y){
+//     int min = 999;
+//     //Recuperation de la plus petite distance
+//     if(mapix[actualX+1][actualY] == 49){
+//         min = mini(min,distance(this.getX()+1, this.getY(), actualX, actualY, mapix, X,Y));
+//     }
+//     if(mapix[actualX-1][actualY] == 49){
+//         min = mini(min,distance(this.getX()-1, this.getY(), actualX, actualY, mapix, X,Y));
+//     }
+//     if(mapix[actualX][actualY+1] == 49){
+//         min = mini(min,distance(this.getX(), this.getY()+1, actualX, actualY, mapix, X,Y));
+//     }
+//     if(mapix[actualX][actualY-1] == 49){
+//         min = mini(min,distance(this.getX(), this.getY()-1, actualX, actualY, mapix, X,Y));
+//     }
+//     
+//     //Recuperation de la case la plus proche
+//     if(mapix[actualX+1][actualY] == 49 && distance(this.getX()+1, this.getY(), actualX, actualY, mapix, X,Y) == min){
+//         this.mooveR(50);
+//     }
+//     if(mapix[actualX-1][actualY] == 49 && distance(this.getX()-1, this.getY(), actualX, actualY, mapix, X,Y) == min){
+//         this.mooveL(50);
+//     } 
+//     if(mapix[actualX][actualY+1] == 49 && distance(this.getX(), this.getY()+1, actualX, actualY, mapix, X,Y) == min){
+//         this.mooveD(50);
+//     }
+//     if(mapix[actualX][actualY-1] == 49 && distance(this.getX(), this.getY()-1, actualX, actualY, mapix, X,Y) == min){
+//         this.mooveU(50);
+// 
+//     }
+// }
+
 int Ennemi::getDir() const{
         return e_dir;
 }
@@ -184,7 +193,7 @@ int Ennemi::getX() const{
 }
 
 int Ennemi::getY() const{
-    return e_y;
+    return e_y+1;
 }
 
 void Ennemi::afficher() const{
@@ -199,6 +208,7 @@ void Ennemi::afficher() const{
 int main(){
     FILE* map;
     char texte;
+    int mouvement_Zombie; // Pour bouger un monstre ( test ) 
     int i,j,k,l,who,r,fin,life,colorkey,zombieTabS,actualX,actualY, ve,ho,frame=0,wait =0;;
     SDL_Surface *screen;
     Uint8 *keystate;
@@ -206,6 +216,9 @@ int main(){
     SDL_Rect tilePosition,heartPos,zombiePos,elfPos,elfImage,zombieImage;
     SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
     
+    int x, y;
+    x = 0; // Position de départ
+    y = -1; // Position de départ 
     
     life = 5;
     who = 1;
@@ -259,7 +272,7 @@ int main(){
     Ennemi zombieTab[zombieTabS];
     zombieTab[0] = Ennemi(5,2,20,0,0);
     zombieTab[1] = Ennemi(5,5,20,0,0);
-    zombieTab[2] = Ennemi(9,5,20,0,0);
+    zombieTab[2] = Ennemi(9,3,20,0,0);
     zombieTab[3] = Ennemi(5,20,20,0,0);
     zombieTab[4] = Ennemi(8,12,20,0,0);
     
@@ -397,11 +410,11 @@ int main(){
             keystate = SDL_GetKeyState(NULL);
             if (SDL_PollEvent(&event)){
                 for (jb=0;jb<j;jb++){
-                    tilePosition.y = - ho + D_SIZE * jb;
-                    tilePosition.x =  ve;
+                    tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                    tilePosition.x =  ve + x * D_SIZE;
                     for(ib=0;ib<i;ib++){
-                        tilePosition.y = - ho + D_SIZE * jb;
-                        tilePosition.x =  ve + D_SIZE * ib;
+                        tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x =  ve + D_SIZE * ib + x * D_SIZE;
                         if(tilePosition.x -16 <= LARGEUR/2 && tilePosition.x +50 -16 >= LARGEUR/2 && tilePosition.y <= HAUTEUR/2 && tilePosition.y + 50 >= HAUTEUR /2){
                             actualX = jb;
                             actualY = ib;
@@ -419,11 +432,11 @@ int main(){
                     elfImage.y = 56 * (who*2 +1) ; //activation du sprite de déplacement
                     elfImage.x = 32 * frame+4*32; 
                     for (jb=0;jb<j;jb++){ //récuperation des coord du perso
-                        tilePosition.y = - ho + D_SIZE * jb;
-                        tilePosition.x = 75 + ve;
+                        tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x = 75 + ve + x * D_SIZE;
                         for(ib=0;ib<i;ib++){
-                            tilePosition.y = - ho + D_SIZE * jb;
-                            tilePosition.x = 75 + ve + D_SIZE * ib;
+                            tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                            tilePosition.x = 75 + ve + D_SIZE * ib + x * D_SIZE;
                             if(tilePosition.x -40 -50<= LARGEUR/2 && tilePosition.x +50-50 -16 >= LARGEUR/2 && tilePosition.y <= HAUTEUR/2 && tilePosition.y + 50 >= HAUTEUR /2){ 
                                 actualX = jb;
                                 actualY = ib;
@@ -437,11 +450,11 @@ int main(){
                 if (keystate[SDLK_z] ){ // si z actif
                     elfImage.x = 32 * frame+4*32; // activation du sprite de déplacement
                     for (jb=0;jb<j;jb++){  // Detection de la case ou le joueur est 
-                        tilePosition.y = - ho + D_SIZE * jb;
-                        tilePosition.x = ve;
+                        tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x = ve + x * D_SIZE;
                         for(ib=0;ib<i;ib++){
-                            tilePosition.y =  - ho + D_SIZE * jb;
-                            tilePosition.x =  ve + D_SIZE * ib;
+                            tilePosition.y =  - ho + D_SIZE * jb + y * D_SIZE;
+                            tilePosition.x =  ve + D_SIZE * ib + x * D_SIZE;
                             if(tilePosition.x <= LARGEUR/2 && tilePosition.x +50 >= LARGEUR/2 && tilePosition.y -10 <= HAUTEUR/2 && tilePosition.y + 50-10>= HAUTEUR /2){
                                 actualX = jb;
                                 actualY = ib;
@@ -453,11 +466,11 @@ int main(){
                 }
                 if (keystate[SDLK_s] ){ // activation de S
                     for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
-                        tilePosition.y = - ho + D_SIZE * jb;
-                        tilePosition.x =  ve;
+                        tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x =  ve + x * D_SIZE;
                         for(ib=0;ib<i;ib++){
-                            tilePosition.y =  5- ho + D_SIZE * jb;
-                            tilePosition.x = ve + D_SIZE * ib;
+                            tilePosition.y =  5- ho + D_SIZE * jb + y * D_SIZE;
+                            tilePosition.x = ve + D_SIZE * ib + x * D_SIZE;
                             if(tilePosition.x +16 <= LARGEUR/2 && tilePosition.x +50 +16 >= LARGEUR/2 && tilePosition.y +40 <= HAUTEUR/2 && tilePosition.y+40 + 50 >= HAUTEUR /2){
                                 actualX = jb;
                                 actualY = ib;
@@ -468,16 +481,14 @@ int main(){
                         ho+=1; //Si le joueur est sur une case autorisée on incremente
                     }
                     elfImage.x = 32 * frame + 4*32; //Mise a jour du sprite 
-                    
-                    printf("Distance entre x: %d y: %d x: %d y: %d : %d\n",actualX, actualY, zombieTab[0].getX() , zombieTab[0].getY(), distance(zombieTab[0].getX(), zombieTab[0].getY(), actualX, actualY, mapix,i,j)); //Test distance entre un monstre et le joueur 
                 }
                 if (keystate[SDLK_d] ){ //Si touche D 
                     for (jb=0;jb<j;jb++){ //Detection de la case ou est le joueur
-                        tilePosition.y =  - ho + D_SIZE * jb;
-                        tilePosition.x =  ve;
+                        tilePosition.y =  - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x =  ve + x * D_SIZE;
                         for(ib=0;ib<i;ib++){
-                            tilePosition.y = 5 - ho + D_SIZE * jb;
-                            tilePosition.x =  ve + D_SIZE * ib;
+                            tilePosition.y = 5 - ho + D_SIZE * jb + y * D_SIZE;
+                            tilePosition.x =  ve + D_SIZE * ib + x * D_SIZE;
                             if(tilePosition.x -16+80 <= LARGEUR/2 && tilePosition.x +50 +80-16 >= LARGEUR/2 && tilePosition.y <= HAUTEUR/2 && tilePosition.y + 50 >= HAUTEUR /2){
                                 actualX = jb;
                                 actualY = ib;
@@ -495,6 +506,21 @@ int main(){
                 }
             }
             
+            for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
+                        tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
+                        tilePosition.x =  ve + x * D_SIZE;
+                        for(ib=0;ib<i;ib++){
+                            tilePosition.y =  5- ho + D_SIZE * jb + y * D_SIZE;
+                            tilePosition.x = ve + D_SIZE * ib + x * D_SIZE;
+                            if(tilePosition.x+16 <= LARGEUR/2 && tilePosition.x +50 +16 >= LARGEUR/2 && tilePosition.y+16 <= HAUTEUR/2 && tilePosition.y +50+16 >= HAUTEUR /2){
+                                actualX = jb;
+                                actualY = ib;
+                            }
+                        }
+                    }
+            
+                                printf("Distance entre x: %d y: %d x: %d y: %d : %d\n",actualY, actualX, zombieTab[0].getX() , zombieTab[0].getY(), distance(zombieTab[0].getX(), zombieTab[0].getY(), actualY, actualX, mapix,i,j)); //Test distance entre un monstre et le joueur 
+            
                         //affichage fond noir
             for (k=0;k<30;k++){
                 tilePosition.y = 0 + D_SIZE * (k);
@@ -508,11 +534,11 @@ int main(){
             
             //Affichage du tableau
             for (jb=0;jb<j;jb++){
-                tilePosition.y = 5- ho + D_SIZE * jb;
-                tilePosition.x =  ve;
+                tilePosition.y = 5- ho + D_SIZE * jb + y * D_SIZE;
+                tilePosition.x =  ve + x * D_SIZE;
                 for(ib=0;ib<i;ib++){
-                    tilePosition.y =  5- ho + D_SIZE * jb;
-                    tilePosition.x = ve + D_SIZE * ib;
+                    tilePosition.y =  5- ho + D_SIZE * jb + y * D_SIZE;
+                    tilePosition.x = ve + D_SIZE * ib + x * D_SIZE;
                     switch (mapix[jb][ib]){
                         case 48:
                             SDL_BlitSurface(tree, NULL, screen, &tilePosition);
@@ -544,11 +570,11 @@ int main(){
             
             //Affichage du décor
             for (jb=0;jb<j;jb++){
-                tilePosition.y =  - ho + D_SIZE * jb;
-                tilePosition.x =  ve;
+                tilePosition.y =  - ho + D_SIZE * jb + y *D_SIZE;
+                tilePosition.x =  ve + x *D_SIZE;
                 for(ib=0;ib<i;ib++){
-                    tilePosition.y = 5- ho + D_SIZE * jb;
-                    tilePosition.x =  ve + D_SIZE * ib;
+                    tilePosition.y = 5- ho + D_SIZE * jb + y * D_SIZE;
+                    tilePosition.x =  ve + D_SIZE * ib + x * D_SIZE;
                     switch (mapdeco[jb][ib]){
                         case 48:
                             break;
@@ -583,7 +609,7 @@ int main(){
             }
             
             //Affichage de la vie
-            life = 8;
+            life = 20;
             for(int li =10; li >0;li--){
                 heartPos.x = -50 + li * D_SIZE;   
                 if(life<li*2){
@@ -592,13 +618,14 @@ int main(){
                     SDL_BlitSurface(heart, NULL, screen, &heartPos);  
             }
             
+           
             //Affichage des monstres ( ici seulement zombie ) 
             for (int z = 0; z<zombieTabS; z++){
-                
+                if(!zombieTab[z].isDead()){
                 zombiePos = zombieTab[z].getPosition(ve,ho);
                 zombieImage.y = zombieTab[z].getDir() * 40 ;
                 SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
-            }
+            }}
 
             //Affichage du perso 
             SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
