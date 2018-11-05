@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <ctime>
 #include "Ennemi.h"
+#include "Fonction.h"
 
 using namespace std;
 
@@ -73,6 +74,7 @@ void Ennemi::mooveL(int c){
                e_ho = e_ho -c ;
         e_x= e_x-abs(e_ho)/50;
         e_ho = e_ho%50;
+	e_dir = 1;
     }
 }
 
@@ -81,6 +83,7 @@ void Ennemi::mooveR(int c){
                 e_ho = e_ho +c ;
         e_x= e_x+e_ho/50;
         e_ho = e_ho%50;
+	e_dir = 0;
     }
 }
 
@@ -90,6 +93,41 @@ void Ennemi::mooveU(int c){
         e_y= e_y-abs(e_ve)/50;
         e_ve = e_ve%50;
     }
+}
+
+void Ennemi::move(int **mapix, int i, int j, int y, int x){
+   printf("X: %d Y: %d Distance: %d\n",x,y,distance(getX(), getY(), x, y, mapix,i,j));
+   int min = 999;
+    //Recuperation de la plus petite distance
+    //if(mapix[getX()+1][getY()] == 49){
+        min = mini(min,distance(getX()+1, getY(), x, y, mapix, i,j));
+    //}
+    //if(mapix[getX()-1][getY()] == 49){
+        min = mini(min,distance(getX()-1, getY(), x, y, mapix, i,j));
+    //}
+    //if(mapix[getX()][getY()+1] == 49){
+        min = mini(min,distance(getX(), getY()+1, x, y, mapix, i,j));
+    //}
+    //if(mapix[getX()][getY()-1] == 49){
+        min = mini(min,distance(getX(), getY()-1, x, y, mapix, i,j));
+    //}
+    
+  if(min>1 && min<10){
+    //Recuperation de la case la plus proche
+    if(/*mapix[getX()+1][getY()] == 49 &&*/ distance(getX()+1, getY(), x, y, mapix, i,j) == min){
+        mooveR(1);
+    }
+    if(/*mapix[getX()-1][getY()] == 49 &&*/ distance(getX()-1, getY(), x, y, mapix, i,j) == min){
+        mooveL(1);
+    } 
+    if(/*mapix[getX()][getY()+1] == 49 &&*/ distance(getX(), getY()+1, x, y, mapix, i,j) == min){
+        mooveD(1);
+    }
+    if(/*mapix[getX()][getY()-1] == 49 &&*/ distance(getX(), getY()-1, x, y, mapix, i,j) == min){
+        mooveU(1);
+    }
+    }
+    
 }
 
 void Ennemi::mooveD(int c){

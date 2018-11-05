@@ -148,27 +148,8 @@ int main(){
             
             //Detection de pression des touches
             keystate = SDL_GetKeyState(NULL);
-            if (SDL_PollEvent(&event)){
-                
-                if (keystate[SDLK_ESCAPE]){
-                    fin = 1;
-                }
-                
-                if (keystate[SDLK_q] ){ // si q actif
-                    leftK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                }
-                if (keystate[SDLK_z] ){ // si z actif
-                    upK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                }
-                if (keystate[SDLK_s] ){ // activation de S
-                    downK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                }
-                if (keystate[SDLK_d] ){ //Si touche D 
-                    rightK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                }
-            }
-            
-            for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
+	   
+	    for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
                 tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
                 tilePosition.x =  ve + x * D_SIZE;
                 for(ib=0;ib<i;ib++){
@@ -181,7 +162,32 @@ int main(){
                 }
             }
             
-            printf("Distance entre x: %d y: %d x: %d y: %d : %d\n",actualY, actualX, zombieTab[0].getX() , zombieTab[0].getY(), distance(zombieTab[0].getX(), zombieTab[0].getY(), actualY, actualX, mapix,i,j)); //Test distance entre un monstre et le joueur 
+            if (SDL_PollEvent(&event)){
+                
+                if (keystate[SDLK_ESCAPE]){
+                    fin = 1;
+                }
+                
+                if (keystate[SDLK_q] ){ // si q actif
+                    leftK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
+		    zombieTab[1].move(mapix,i,j,actualX,actualY);
+                }
+                if (keystate[SDLK_z] ){ // si z actif
+                    upK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
+		  zombieTab[1].move(mapix,i,j,actualX,actualY);
+		  
+		}
+                if (keystate[SDLK_s] ){ // activation de S
+                    downK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
+                zombieTab[1].move(mapix,i,j,actualX,actualY);
+		  
+		}
+                if (keystate[SDLK_d] ){ //Si touche D 
+                    rightK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
+                zombieTab[1].move(mapix,i,j,actualX,actualY);
+		  
+		}
+            }
             
             //affichage fond noir
             for (k=0;k<30;k++){

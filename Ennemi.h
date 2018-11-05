@@ -25,7 +25,7 @@ class Ennemi
         void dead(); // Tue le monstre
         void haveDamage(int damage); //Inflige des dégats au monstre
         int getDamage() const; //Recupere les dégat infligé par le monstre ( en fonction de sa taille, type ... ) 
-        
+        void move(int **mapix, int i, int j, int y, int x);
         
     
     private:
