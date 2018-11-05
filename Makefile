@@ -1,4 +1,4 @@
-SRC= projet.cpp 
+SRC= *.cpp 
 BIN=projet
 
 $(BIN): $(SRC)
