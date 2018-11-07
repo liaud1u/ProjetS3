@@ -112,7 +112,7 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x){
         min = mini(min,distance(getX(), getY()-1, x, y, mapix, i,j));
     //}
     
-  if(min>1 && min<10){
+  if(min>0 && min<10){
     //Recuperation de la case la plus proche
     if(/*mapix[getX()+1][getY()] == 49 &&*/ distance(getX()+1, getY(), x, y, mapix, i,j) == min){
         mooveR(1);

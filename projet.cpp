@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <ctime>
 #include <string>
+
 #include "Ennemi.h"
 #include "Fonction.h"
 #include "Event.h"
@@ -13,18 +14,31 @@
 #define LARGEUR 900
 #define D_SIZE 50
 
+
 //Programme principal
 int main(){
-    int i,j,k,l,who,r,fin,life,colorkey,zombieTabS,actualX,actualY, ve,ho,frame=0,wait =0;;
+    int i,j; // Parcours des boucles
+    int k,l; // Parcours des boucles 
+    int who; // Quel personnage
+    int r; // Décallage pour le positionnement de certains objets de déco sur la carte
+    int fin; // Si fin alors la boucle principale s'arrete 
+    int life; // Vie du joueur
+    int colorkey; // Couleur pour transparence des bmp 
+    int zombieTabS; // Nombre de Zombies
+    int actualX,actualY; // Coordonnées actuelles
+    int vertical,horizontal; // Décallage horizontal et vertical de la carte en fonction de la position initiale 
+    int frame=0; // Pour les annimation 
+    int wait =0; // Temporaire, pour ralentir les animations
+    
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
     SDL_Rect tilePosition,heartPos,zombiePos,elfPos,elfImage,zombieImage;
-    SDL_Surface *dirt,*d_close,*tree,*hd,*heart,*hg,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
+    SDL_Surface *dirt,*d_close,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
     
-    int x, y;
-    x = 0; // Position de départ
-    y = -1; // Position de départ 
+    int pos_x, pos_y;
+    pos_x = +5; // Position de départ
+    pos_y = 1; // Position de départ 
     
     life = 5;
     who = 1;
@@ -47,6 +61,10 @@ int main(){
     hg = SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/coin_hd.bmp");
     hd = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/coin_bg.bmp");
+    bg = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/coin_bd.bmp");
+    bd = SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/haut.bmp");
     haut = SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/droite.bmp");
@@ -71,15 +89,23 @@ int main(){
     elf= SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/zombie.bmp");
     zombie= SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/int_d.bmp");
+    int_d = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/int_g.bmp");
+    int_g = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/coin_ext_d.bmp");
+    ext_d = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/coin_ext_g.bmp");
+    ext_g = SDL_DisplayFormat(temp);
     
     //Test pour les monstres
     zombieTabS = 5;
     Ennemi zombieTab[zombieTabS];
-    zombieTab[0] = Ennemi(5,2,20,0,0);
-    zombieTab[1] = Ennemi(5,5,20,0,0);
-    zombieTab[2] = Ennemi(9,3,20,0,0);
-    zombieTab[3] = Ennemi(5,20,20,0,0);
-    zombieTab[4] = Ennemi(8,12,20,0,0);
+    zombieTab[0] = Ennemi(4+pos_x,6+pos_y,20,0,0);
+    zombieTab[1] = Ennemi(7+pos_x,5+pos_y,20,0,0);
+    zombieTab[2] = Ennemi(9+pos_x,5+pos_y,20,0,0);
+    zombieTab[3] = Ennemi(5+pos_x,20+pos_y,20,0,0);
+    zombieTab[4] = Ennemi(8+pos_x,14+pos_y,20,0,0);
     
     /*Surface free*/
     SDL_FreeSurface(temp);
@@ -102,9 +128,9 @@ int main(){
     fin =0;
     int jb,ib;
     
-    int ** mapix = alloc(i,j);
+    int ** map = alloc(i,j);
     int ** mapdeco = alloc(i,j);
-    init(i,j,mapix,"maps/level0.map");
+    init(i,j,map,"maps/level0.map");
     init(i,j,mapdeco,"maps/level0.deco");
     
     k=0;
@@ -123,8 +149,8 @@ int main(){
     zombieImage.w = 32;
     zombieImage.h = 40;
     zombieImage.x = 32*frame;
-    ve = 75;
-    ho = -50;
+    vertical = 75;
+    horizontal = -50;
     
     while(!fin){
         //Mise a jour du sprite du perso
@@ -148,13 +174,13 @@ int main(){
             
             //Detection de pression des touches
             keystate = SDL_GetKeyState(NULL);
-	   
-	    for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
-                tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
-                tilePosition.x =  ve + x * D_SIZE;
+            
+            for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
+                tilePosition.y = - horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                tilePosition.x =  vertical + pos_x * D_SIZE;
                 for(ib=0;ib<i;ib++){
-                    tilePosition.y =  5- ho + D_SIZE * jb + y * D_SIZE;
-                    tilePosition.x = ve + D_SIZE * ib + x * D_SIZE;
+                    tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                    tilePosition.x = vertical + D_SIZE * ib + pos_x * D_SIZE;
                     if(tilePosition.x+16 <= LARGEUR/2 && tilePosition.x +50 +16 >= LARGEUR/2 && tilePosition.y+16 <= HAUTEUR/2 && tilePosition.y +50+16 >= HAUTEUR /2){
                         actualX = jb;
                         actualY = ib;
@@ -169,24 +195,24 @@ int main(){
                 }
                 
                 if (keystate[SDLK_q] ){ // si q actif
-                    leftK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-		    zombieTab[1].move(mapix,i,j,actualX,actualY);
+                    leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
                 }
                 if (keystate[SDLK_z] ){ // si z actif
-                    upK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-		  zombieTab[1].move(mapix,i,j,actualX,actualY);
-		  
-		}
+                    upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
+                    
+                }
                 if (keystate[SDLK_s] ){ // activation de S
-                    downK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                zombieTab[1].move(mapix,i,j,actualX,actualY);
-		  
-		}
+                    downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
+                    
+                }
                 if (keystate[SDLK_d] ){ //Si touche D 
-                    rightK(elfImage, who, frame, tilePosition, ho, y, ve, x, actualX, actualY,i,j,mapix);
-                zombieTab[1].move(mapix,i,j,actualX,actualY);
-		  
-		}
+                    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
+                    
+                }
             }
             
             //affichage fond noir
@@ -202,12 +228,12 @@ int main(){
             
             //Affichage du tableau
             for (jb=0;jb<j;jb++){
-                tilePosition.y = 5- ho + D_SIZE * jb + y * D_SIZE;
-                tilePosition.x =  ve + x * D_SIZE;
+                tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                tilePosition.x =  vertical+ pos_x * D_SIZE;
                 for(ib=0;ib<i;ib++){
-                    tilePosition.y =  5- ho + D_SIZE * jb + y * D_SIZE;
-                    tilePosition.x = ve + D_SIZE * ib + x * D_SIZE;
-                    switch (mapix[jb][ib]){
+                    tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                    tilePosition.x = vertical+ D_SIZE * ib + pos_x * D_SIZE;
+                    switch (map[jb][ib]){
                         case 48:
                             SDL_BlitSurface(tree, NULL, screen, &tilePosition);
                             break;
@@ -229,8 +255,26 @@ int main(){
                         case 54:
                             SDL_BlitSurface(hd, NULL, screen, &tilePosition);
                             break;
+                        case 57:
+                            SDL_BlitSurface(bg, NULL, screen, &tilePosition);
+                            break;
+                        case 56:
+                            SDL_BlitSurface(bd, NULL, screen, &tilePosition);
+                            break;
+                            
+                        case 98:
+                            SDL_BlitSurface(int_g, NULL, screen, &tilePosition);
+                            break;
+                        case 97:
+                            SDL_BlitSurface(int_d, NULL, screen, &tilePosition);
+                            break;
+                        case 100:
+                            SDL_BlitSurface(ext_g, NULL, screen, &tilePosition);
+                            break;
+                        case 99:
+                            SDL_BlitSurface(ext_d, NULL, screen, &tilePosition);
+                            break;
                         default:
-                            printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapix[l][k]);
                             break;
                     }
                 }
@@ -238,18 +282,18 @@ int main(){
             
             //Affichage du décor
             for (jb=0;jb<j;jb++){
-                tilePosition.y =  - ho + D_SIZE * jb + y *D_SIZE;
-                tilePosition.x =  ve + x *D_SIZE;
+                tilePosition.y =  - horizontal + D_SIZE * jb + pos_y *D_SIZE;
+                tilePosition.x =  vertical+ pos_x *D_SIZE;
                 for(ib=0;ib<i;ib++){
-                    tilePosition.y = 5- ho + D_SIZE * jb + y * D_SIZE;
-                    tilePosition.x =  ve + D_SIZE * ib + x * D_SIZE;
+                    tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                    tilePosition.x =  vertical+ D_SIZE * ib + pos_x * D_SIZE;
                     switch (mapdeco[jb][ib]){
                         case 48:
                             break;
                         case 49:
-                            tilePosition.y = - ho + D_SIZE * jb-59;
+                            tilePosition.y = - horizontal + D_SIZE * jb-59;
                             SDL_BlitSurface(d_close, NULL, screen, &tilePosition);
-                            tilePosition.y = - ho + D_SIZE * jb+59;
+                            tilePosition.y = - horizontal + D_SIZE * jb+59;
                             break;
                         case 50:
                             r = 8;
@@ -269,8 +313,8 @@ int main(){
                             SDL_BlitSurface(crate, NULL, screen, &tilePosition);
                             tilePosition.x -= r;
                             break;
+                               
                         default:
-                            printf("Cannot load tile on %d %d: char '%c'\n",l,k,mapdeco[l][k]);
                             break;
                     }
                 }
@@ -280,23 +324,47 @@ int main(){
             //Affichage des monstres ( ici seulement zombie ) 
             for (int z = 0; z<zombieTabS; z++){
                 if(!zombieTab[z].isDead()){
-                    zombiePos = zombieTab[z].getPosition(ve,ho);
+                    zombiePos = zombieTab[z].getPosition(vertical,horizontal);
                     zombieImage.y = zombieTab[z].getDir() * 40 ;
                     SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
                 }}
                 
-                            //Affichage de la vie
-            life = 20;
-            for(int li =10; li >0;li--){
-                heartPos.x = -50 + li * D_SIZE;   
-                if(life<li*2){
-                    SDL_BlitSurface(heartb, NULL, screen, &heartPos); 
-                }else
-                    SDL_BlitSurface(heart, NULL, screen, &heartPos);  
-            }
-            
+                //Affichage de la vie
+                life = 10;
+                for(int li =5; li >0;li--){
+                    heartPos.x = -50 + li * D_SIZE;   
+                    if(life<li*2){
+                        SDL_BlitSurface(heartb, NULL, screen, &heartPos); 
+                    }else
+                        SDL_BlitSurface(heart, NULL, screen, &heartPos);  
+                }
+                
                 //Affichage du perso 
                 SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
+                
+                //Affichage du décor qui passe dessus les personnages
+                for (jb=0;jb<j;jb++){
+                    tilePosition.y =  - horizontal + D_SIZE * jb + pos_y *D_SIZE;
+                    tilePosition.x =  vertical+ pos_x *D_SIZE;
+                    for(ib=0;ib<i;ib++){
+                        tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                        tilePosition.x =  vertical+ D_SIZE * ib + pos_x * D_SIZE;
+                        switch (mapdeco[jb][ib]){
+                            case 53:
+                                r = 3;
+                                tilePosition.x +=r;
+                                SDL_BlitSurface(crate, NULL, screen, &tilePosition);
+                                tilePosition.x -= r;
+                                break;
+
+                            default:
+                                
+                                break;
+                        }
+                    }
+                    
+ 
+                }
                 
                 //Mise a jour de l'ecran
                 SDL_UpdateRect(screen,0,0,0,0);
