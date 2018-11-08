@@ -18,7 +18,7 @@
 //Programme principal
 int main(){
     int i,j; // Parcours des boucles
-    int k,l; // Parcours des boucles 
+    int k; // Parcours des boucles 
     int who; // Quel personnage
     int r; // Décallage pour le positionnement de certains objets de déco sur la carte
     int fin; // Si fin alors la boucle principale s'arrete 
@@ -29,18 +29,20 @@ int main(){
     int vertical,horizontal; // Décallage horizontal et vertical de la carte en fonction de la position initiale 
     int frame=0; // Pour les annimation 
     int wait =0; // Temporaire, pour ralentir les animations
+    int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
+    
+    life = 10;
     
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
     SDL_Rect tilePosition,heartPos,zombiePos,elfPos,elfImage,zombieImage;
-    SDL_Surface *dirt,*d_close,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
+    SDL_Surface *dirt,*d_close,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
     
     int pos_x, pos_y;
-    pos_x = +5; // Position de départ
-    pos_y = 1; // Position de départ 
+    pos_x = 0; // Position de départ
+    pos_y = 0; // Position de départ 
     
-    life = 5;
     who = 1;
     
     /*Initialize SDL*/
@@ -75,6 +77,8 @@ int main(){
     heart= SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/heart.bmp");
     heartb= SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/half_heart.bmp");
+    hearth= SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/doors_close.bmp");
     d_close= SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/skull.bmp");
@@ -101,11 +105,11 @@ int main(){
     //Test pour les monstres
     zombieTabS = 5;
     Ennemi zombieTab[zombieTabS];
-    zombieTab[0] = Ennemi(4+pos_x,6+pos_y,20,0,0);
-    zombieTab[1] = Ennemi(7+pos_x,5+pos_y,20,0,0);
-    zombieTab[2] = Ennemi(9+pos_x,5+pos_y,20,0,0);
+    zombieTab[0] = Ennemi(4+pos_x,6+pos_y,20,1,0);
+    zombieTab[1] = Ennemi(2+pos_x,9+pos_y,20,1,0);
+    zombieTab[2] = Ennemi(9+pos_x,3+pos_y,20,0,0);
     zombieTab[3] = Ennemi(5+pos_x,20+pos_y,20,0,0);
-    zombieTab[4] = Ennemi(8+pos_x,14+pos_y,20,0,0);
+    zombieTab[4] = Ennemi(8+pos_x,30+pos_y,20,1,0);
     
     /*Surface free*/
     SDL_FreeSurface(temp);
@@ -120,6 +124,7 @@ int main(){
     SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(zombie, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+     SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     srand(time(NULL));
     
     i = 32;                                                 // largeur de la map
@@ -134,7 +139,6 @@ int main(){
     init(i,j,mapdeco,"maps/level0.deco");
     
     k=0;
-    l= 0;
     
     /* Define the source rectangle (elf)for the BlitSurface */
     elfImage.y = 0 +56*2*who;
@@ -169,7 +173,7 @@ int main(){
             //Mise a jour des annimations 
             
             elfImage.x = 32 * frame;
-            zombieImage.x = 32*frame;
+            
             
             
             //Detection de pression des touches
@@ -196,22 +200,27 @@ int main(){
                 
                 if (keystate[SDLK_q] ){ // si q actif
                     leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
+                     for(k = 0; k < zombieTabS; k++){
+                        zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
+                    }
                 }
                 if (keystate[SDLK_z] ){ // si z actif
                     upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
-                    
+                     for(k = 0; k < zombieTabS; k++){
+                        zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
+                    }
                 }
                 if (keystate[SDLK_s] ){ // activation de S
                     downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
-                    
+                     for(k = 0; k < zombieTabS; k++){
+                        zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
+                    }
                 }
                 if (keystate[SDLK_d] ){ //Si touche D 
                     rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-                    zombieTab[1].move(map,i,j,actualX+pos_y,actualY+pos_x);
-                    
+                    for(k = 0; k < zombieTabS; k++){
+                        zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
+                    }
                 }
             }
             
@@ -324,20 +333,13 @@ int main(){
             //Affichage des monstres ( ici seulement zombie ) 
             for (int z = 0; z<zombieTabS; z++){
                 if(!zombieTab[z].isDead()){
-                    zombiePos = zombieTab[z].getPosition(vertical,horizontal);
-                    zombieImage.y = zombieTab[z].getDir() * 40 ;
+                    zombiePos = zombieTab[z].getPositionPrint(horizontal,vertical);
+                    zombieImage.y = zombieTab[z].getDir() * 40  + 40 * zombieTab[z].getSize();
+                    zombieImage.x = zombieTab[z].getCat() * 32 * 4 + 32 * frame;
                     SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
                 }}
                 
-                //Affichage de la vie
-                life = 10;
-                for(int li =5; li >0;li--){
-                    heartPos.x = -50 + li * D_SIZE;   
-                    if(life<li*2){
-                        SDL_BlitSurface(heartb, NULL, screen, &heartPos); 
-                    }else
-                        SDL_BlitSurface(heart, NULL, screen, &heartPos);  
-                }
+                
                 
                 //Affichage du perso 
                 SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
@@ -366,8 +368,54 @@ int main(){
  
                 }
                 
+                //Affichage de la vie
+            lifeprint = life;
+                for(int li =0; li <10;li+=2){
+                    
+                    heartPos.x = + li * D_SIZE/2;   
+                    if(lifeprint>=2){
+                        SDL_BlitSurface(heart, NULL, screen, &heartPos); 
+                    }else {
+                        if(lifeprint==1){
+                            SDL_BlitSurface(hearth, NULL, screen, &heartPos); 
+                        }else{
+                        SDL_BlitSurface(heartb, NULL, screen, &heartPos);  
+                        }}
+                        lifeprint -=2;
+                }
+                if (life <= 0){
+                    fin = 1;
+                }
                 //Mise a jour de l'ecran
                 SDL_UpdateRect(screen,0,0,0,0);
     };
+        
+    //Free 
+    SDL_FreeSurface(tree);
+    SDL_FreeSurface(dirt);
+    SDL_FreeSurface(hg);
+    SDL_FreeSurface(hd);
+    SDL_FreeSurface(bg);
+    SDL_FreeSurface(bd);
+    SDL_FreeSurface(haut);
+    SDL_FreeSurface(droite);
+    SDL_FreeSurface(gauche);
+    SDL_FreeSurface(heart);
+    SDL_FreeSurface(heartb);
+    SDL_FreeSurface(hearth);
+    SDL_FreeSurface(d_close);
+    SDL_FreeSurface(skull);
+    SDL_FreeSurface(ladder);
+    SDL_FreeSurface(hole);
+    SDL_FreeSurface(crate);
+    SDL_FreeSurface(elf);
+    SDL_FreeSurface(zombie);
+    SDL_FreeSurface(int_d );
+    SDL_FreeSurface(int_g );
+    SDL_FreeSurface(ext_d );
+    SDL_FreeSurface(ext_g );
+    free_tab(i,map);
+    free_tab(i,mapdeco);
+    
     return 0;
 }

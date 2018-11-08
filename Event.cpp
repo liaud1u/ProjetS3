@@ -20,7 +20,6 @@ void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actua
             }
         }
     }
-    printf("x: %d y: %d\n", actualX, actualY);
 }
 
 void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
