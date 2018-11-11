@@ -35,7 +35,7 @@ void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int
 
 void rightK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
     getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j);
-if(actualY < j &&( mapix[actualX][actualY+1] == 49 || mapix[actualX][actualY] == 49)){
+if(actualY < j &&( mapix[actualX][actualY+1] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX][actualY+1] != 50){
         ve -=1;//Incrementation si le joueur est sur une case autorisée
    
 
@@ -47,7 +47,7 @@ if(actualY < j &&( mapix[actualX][actualY+1] == 49 || mapix[actualX][actualY] ==
 void upK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j);
     elfImage.x = 32 * frame+4*32; // activation du sprite de déplacement
-    if(actualX > 0 && (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49)){
+    if(actualX > 0 && (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX-1][actualY] != 50){
         ho -=1;
 
     } // Incrementation si le perso est dans les cases autorisée
@@ -56,7 +56,7 @@ getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j);
 
 void downK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j);
-    if(actualX < i && (mapix[actualX+1][actualY] == 49 || mapix[actualX][actualY] == 49)){
+    if(actualX < i && (mapix[actualX+1][actualY] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX+1][actualY] != 52 && mapix[actualX+1][actualY] != 50){
         ho+=1; //Si le joueur est sur une case autorisée on incremente
 
 
