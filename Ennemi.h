@@ -9,7 +9,7 @@ class Ennemi
     public:
         //Constructeurs
         Ennemi();
-        Ennemi(int x, int y, int vie, int cat, int size);
+        Ennemi(int idx,int x, int y, int vie, int cat, int size);
         
         //Liste des fonctions
         SDL_Rect getPosition() const; //Retourne position du monstre
@@ -34,6 +34,7 @@ class Ennemi
     
     private:
         //Attributs
+	int id;
         int e_x; //Coordonnées x sur le tabeleau
         int e_y; //Pareil en y
         int e_vie; //Vie ( en demi coeurs )

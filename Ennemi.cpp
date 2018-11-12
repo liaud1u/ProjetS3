@@ -14,6 +14,7 @@ using namespace std;
 //A mettre dans Ennemi.cpp
 Ennemi::Ennemi()
 {
+     id=0;
      e_x=1;
      e_y=1;
      e_vie=20;
@@ -28,7 +29,8 @@ Ennemi::Ennemi()
      e_where = 5;
 }
 
-Ennemi::Ennemi(int x, int y, int vie, int cat, int size){
+Ennemi::Ennemi(int idx,int x, int y, int vie, int cat, int size){
+     id=idx;
      e_x=x;
      e_y=y;
      e_vie=vie;
@@ -66,9 +68,8 @@ int Ennemi::getSize() const{ // taille du monstre
 }
 
 void Ennemi::randomWhere(){
-    srand(time(NULL));
-    int random = rand()%4;
-    e_where = random;
+    srand(time(NULL)+id);
+    e_where = rand()%4;
     e_cooldown_moove = rand()%4 * 50 ;
 }
 
@@ -169,7 +170,14 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
     srand(time(NULL));
     //Tirage de la prochaine direction si le cooldown n'est pas arreté
     if (e_cooldown_moove == 0){
-        randomWhere();
+// 	while (!col){
+// 	  randomWhere();
+// 	  col = ( e_where == 0 && getY()-1>0&& getX()-1>0&&mapix[getY()-1][getX()-1] == 49) || 
+// 	  ( e_where == 1 && getY()-1>0&& getX()+1<i && mapix[getY()-1][getX()+1] == 49) || 
+// 	  ( e_where == 2 &&  getY()-2>0 && mapix[getY()-2][getX()] == 49)|| 
+// 	  ( e_where == 3 &&  mapix[getY()][getX()] == 49) ;
+// 	}
+      randomWhere();
         e_cooldown_moove = rand()%4 * 50;;
     }else{
         if(e_cooldown_moove > 0)
@@ -196,8 +204,7 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
             mooveD(1,mapix);
         break;
         case 4:
-            if(e_cooldown == 0 && min <=1 && e_cooldown%50 == 0/* Pour être sur que le monstre est pile sur une case*/){
-        printf("Distance: %d", min);
+            if(e_cooldown == 0 && min <=1 && e_cooldown_moove%50 == 0/* Pour être sur que le monstre est pile sur une case*/){
         attack(vie);
         e_cooldown = 500;
         }
