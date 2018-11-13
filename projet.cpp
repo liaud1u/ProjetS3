@@ -161,7 +161,18 @@ int main(){
   vertical = 75;
   horizontal = -50;
   
+  int fps = 0;
   while(!fin){
+      fps++;
+      if(SDL_GetTicks()%1000==0){
+          if (fps != 1)
+              printf("Fps: %d\n", fps);
+          fps = 0;
+      }
+      
+      
+      
+      
     //Mise a jour du sprite du perso
     if(wait < 40){
       wait++;}
@@ -374,7 +385,9 @@ int main(){
 	}
 	
       }
-      if(mapdeco[actualX][actualY]==52){
+      
+      else{
+          if(mapdeco[actualX][actualY]==52){
 	if(level > 0 ){
 	  level--;
 	  printf("Chargement du niveau supérieur %d\n",level);
@@ -408,7 +421,7 @@ int main(){
 	    //Chargement des monstres du niveau
 	  }
 	  
-	  
+    }
 	}
       }
       
