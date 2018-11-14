@@ -6,8 +6,8 @@
 #include "Ennemi.h"
 #include "Fonction.h"
 
-#define HAUTEUR 500
-#define LARGEUR 900
+#define HAUTEUR 750
+#define LARGEUR 1200
 
 using namespace std;
 
@@ -68,7 +68,7 @@ int Ennemi::getSize() const{ // taille du monstre
 }
 
 void Ennemi::randomWhere(){
-    srand(time(NULL)+id);
+    srand(SDL_GetTicks()+id+time(NULL));
     e_where = rand()%4;
     e_cooldown_moove = rand()%4 * 50 ;
 }
@@ -86,7 +86,7 @@ SDL_Rect Ennemi::getPositionPrint(int ve,int ho) const{ //a afficher
 
 int Ennemi::getDamage() const{
     {
-        return e_size + 1 ;
+        return /*e_size + 1*/ 0;
     }
 }
 

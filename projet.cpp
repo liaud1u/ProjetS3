@@ -11,8 +11,8 @@
 #include "Event.h"
 #include "Map.h"
 
-#define HAUTEUR 500
-#define LARGEUR 900
+#define HAUTEUR 750
+#define LARGEUR 1200
 #define D_SIZE 50
 
 using namespace std;
@@ -52,6 +52,7 @@ int main(){
   /*Initialize SDL*/
   SDL_Init(SDL_INIT_VIDEO);
   
+
   /*Title bar*/
   SDL_WM_SetCaption("Projet","Projet");
   SDL_EnableKeyRepeat(10, 1);
@@ -158,8 +159,8 @@ int main(){
   zombieImage.w = 32;
   zombieImage.h = 40;
   zombieImage.x = 32*frame;
-  vertical = 75;
-  horizontal = -50;
+  vertical = 125;
+  horizontal = -75;
   
   int fps = 0;
   while(!fin){
@@ -216,34 +217,27 @@ int main(){
 	
 	if (keystate[SDLK_q] ){ // si q actif
 	  leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-	  for(k = 0; k < zombieTabS; k++){
-	    if(!zombieTab[k].isDead())
-	      zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
-	  }
+
 	}
 	if (keystate[SDLK_z] ){ // si z actif
 	  upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-	  for(k = 0; k < zombieTabS; k++){
-	    if(!zombieTab[k].isDead())
-	      zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
-	  }
+
 	}
 	if (keystate[SDLK_s] ){ // activation de S
 	  downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-	  for(k = 0; k < zombieTabS; k++){
-	    if(!zombieTab[k].isDead())
-	      zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
-	  }
+	 
 	}
 	if (keystate[SDLK_d] ){ //Si touche D 
 	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
-	  for(k = 0; k < zombieTabS; k++){
+    }
+      }
+      
+      
+      	  for(k = 0; k < zombieTabS; k++){
 	    if(!zombieTab[k].isDead())
 	      zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
 	  }
-	}
-      }
-      
+	  
       //affichage fond noir
       for (k=0;k<30;k++){
 	tilePosition.y = 0 + D_SIZE * (k);

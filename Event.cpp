@@ -8,6 +8,7 @@
 #define D_SIZE 50
 
 void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actualY, int &actualX, int &i, int &j,int **mapix){
+    
 	for (int jb=0;jb<j;jb++){ //récuperation des coord du perso
         tilePosition.y = - ho + D_SIZE * jb + y * D_SIZE;
         tilePosition.x = ve + x * D_SIZE;
@@ -20,23 +21,28 @@ void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actua
             }
         }
     }
-    printf("^ %d v %d < %d > %d \n", mapix[actualY-1][actualX],mapix[actualY+1][actualX], mapix[actualY][actualX-1],mapix[actualY][actualX+1]);
+    int in_tab = actualX > 0 && actualY >0 && actualX < i && actualY < j;
+    if(in_tab)
+        printf("^ %d v %d < %d > %d \n", mapix[actualY-1][actualX],mapix[actualY+1][actualX], mapix[actualY][actualX-1],mapix[actualY][actualX+1]);
 }
 
 void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
     elfImage.y = 56 * (who*2 +1) ; //activation du sprite de déplacement
     elfImage.x = 32 * frame+4*32; 
+    int in_tab = actualX >= 0 && actualY >0 && actualX < i && actualY < j;
   getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix);
     //Incrementation si le perso est sur une case autorisée
   
-    if(actualY > 0 && (mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49)&&mapix[actualX][actualY-1] != 99){
+    if(in_tab && (mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49||mapix[actualX][actualY-1] == 52||mapix[actualX][actualY-1] == 57||mapix[actualX][actualY-1] == 54||mapix[actualX][actualY-1] == 55)){
         ve +=1;
     }
 }
 
 void rightK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
+    int in_tab = actualX >= 0 && actualY >=0 && actualX < i && actualY+1 < j;
     getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix);
-if(actualY < j &&( mapix[actualX][actualY+1] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX][actualY+1] != 50&&mapix[actualX][actualY+1] != 100){
+    printf("ve: %d\n", abs(ve)%50);
+if(in_tab && ( mapix[actualX][actualY+1] == 49 ||abs(ve)%50<35|| mapix[actualX][actualY+1] ==52|| mapix[actualX][actualY+1] ==56|| mapix[actualX][actualY+1] ==55 )){
         ve -=1;//Incrementation si le joueur est sur une case autorisée
    
 
@@ -47,8 +53,9 @@ if(actualY < j &&( mapix[actualX][actualY+1] == 49 || mapix[actualX][actualY] ==
 
 void upK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix);
+    int in_tab = actualX > 0 && actualY >=0 && actualX < i && actualY < j;
     elfImage.x = 32 * frame+4*32; // activation du sprite de déplacement
-    if(actualX > 0 && (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX-1][actualY] != 50){
+    if(in_tab && (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49 ||mapix[actualX-1][actualY]==99||(mapix[actualX-1][actualY]==51 && abs(ve)%50-25>45)||mapix[actualX-1][actualY]==55|| mapix[actualX-1][actualY] ==51  )){
         ho -=1;
 
     } // Incrementation si le perso est dans les cases autorisée
@@ -57,10 +64,12 @@ getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix);
 
 void downK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix){
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix);
-    if(actualX < i && (mapix[actualX+1][actualY] == 49 || mapix[actualX][actualY] == 49) && mapix[actualX+1][actualY] != 52 && mapix[actualX+1][actualY] != 50&& mapix[actualX+1][actualY] != 99&& mapix[actualX+1][actualY] != 100){
+int in_tab = actualX >= 0 && actualY >=0 && actualX+1 < i && actualY < j;
+    if(in_tab &&(mapix[actualX+1][actualY] == 49 ||mapix[actualX+1][actualY]==51||mapix[actualX+1][actualY]==51||abs(ho-25)%50<45||(abs(ho-25)%50<43&&mapix[actualX+1][actualY] == 52))){
         ho+=1; //Si le joueur est sur une case autorisée on incremente
 
 
     }
+        
     elfImage.x = 32 * frame + 4*32; //Mise a jour du sprite 
 }
