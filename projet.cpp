@@ -58,19 +58,24 @@ int main(){
   int frame=0; // Pour les annimation 
   int wait =0; // Temporaire, pour ralentir les animations
   int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
+  int menu_int;
   
   life = 10;
   
   SDL_Surface *screen;
   Uint8 *keystate;
   SDL_Event event;
-  SDL_Rect tilePosition,heartPos,zombiePos,elfPos,elfImage,zombieImage;
-  SDL_Surface *dirt,*d_close,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie;
+  SDL_Rect tilePosition,menuPos,heartPos,zombiePos,elfPos,elfImage,zombieImage,screenPos,menuImage;
+  SDL_Surface *dirt,*d_close,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie,*screenshot;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
   pos_y = 0; // Position de départ 
   
+  menuPos.x = 50;
+  menuPos.y = 70;
+  screenPos.x = 0;
+  screenPos.y = 0;
   who = 1;
   
   /*Initialize SDL*/
@@ -130,6 +135,10 @@ int main(){
   ext_d = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/coin_ext_g.bmp");
   ext_g = SDL_DisplayFormat(temp);
+  temp = SDL_LoadBMP("ressources/menu.bmp");
+  menu = SDL_DisplayFormat(temp);
+  temp = SDL_LoadBMP("ressources/screen.bmp");
+  screenshot = SDL_DisplayFormat(temp);
   
   //Test pour les monstres
   zombieTabS = 5;
@@ -185,9 +194,35 @@ int main(){
   zombieImage.x = 32*frame;
   vertical = 125;
   horizontal = -75;
-  
+
+  menu_int = 0;
   int fps = 0;
   while(!fin){
+      
+      while(!menu_int){
+          
+      if (SDL_PollEvent(&event)){
+	if (event.type == SDL_MOUSEBUTTONDOWN){
+        if(event.motion.x >= 140 && event.motion.x <= 495 && event.motion.y > 363 && event.motion.y < 436){
+			menu_int = 1;
+            printf("Jouer\n");
+        }
+        if(event.motion.x >= 196 && event.motion.x <= 553 && event.motion.y > 466 && event.motion.y < 546){
+			menu_int = 2;
+            printf("Option:\n");
+        }
+        
+		}
+        
+		 SDL_BlitSurface(screenshot, NULL, screen, &screenPos);  
+       SDL_BlitSurface(menu, NULL, screen, &menuPos);  
+       
+      //Mise a jour de l'ecran
+      SDL_UpdateRect(screen,0,0,0,0);
+      }
+          
+        }
+      
       fps++;
       if(SDL_GetTicks()%1000==0){
           if (fps != 1)
@@ -506,6 +541,7 @@ int main(){
       if (life <= 0){
 	fin = 1;
       }
+
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
 };
