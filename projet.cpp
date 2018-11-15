@@ -24,14 +24,14 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
 	cout << "Taille du tableau : " << tailleTab << endl;
 	for (i = 0; i < tailleTab; i++){
 		SDL_Rect rectangleEnnemi = tabEnnemis[i].getPosition();//Récupération du rectangle représentant l'ennemi
-		cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " << rectangleEnnemi.h << endl;
+		cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " <<rectangleEnnemi.h << endl;
 		valX = tabEnnemis[i].getX();
 		valY = tabEnnemis[i].getY();
-		if (posSourisX > rectangleEnnemi.x && posSourisX < rectangleEnnemi.x + rectangleEnnemi.w && posSourisY > rectangleEnnemi.y && posSourisY < rectangleEnnemi.y + rectangleEnnemi.h) {//Test si le clic de la souris est bien sur l'ennemu
-			valX -= xHeros; //DIfférence sur les X
-			valY -= yHeros;//Différence sur les Y
+		cout << "xEnnemi : " << valX << " yEnnemi : " << valY << endl;
+		cout << "xHeros : " << xHeros << " yHeros : " << yHeros << endl;
+		if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
 			cout << "Premier if attaque" << endl;
-			if ((valX == 1 || valX == -1) && (valY == 1 || valY == -1)){ //Test si l'ennemi est bien à 1 de distance du personnage
+			if ((xHeros ==  1 + valX || valX == valX - 1 || xHeros == valX) && (yHeros == 1 + valY|| yHeros == valY - 1 || yHeros == valY)){ //Test si l'ennemi est bien à 1 de distance du personnage
 				tabEnnemis[i].haveDamage(attaqueHeros);//L'ennemi subit des dégats.
 				cout << "Un ennemi subit des dégats." << endl;
 			}
