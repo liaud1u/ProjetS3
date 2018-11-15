@@ -28,12 +28,11 @@ int main(){
   int life; // Vie du joueur
   int colorkey; // Couleur pour transparence des bmp 
   int zombieTabS; // Nombre de Zombies
-  int actualX,actualY; // Coordonnées actuelles
+  int actualY,actualX; // Coordonnées actuelles
   int vertical,horizontal; // Décallage horizontal et vertical de la carte en fonction de la position initiale 
   int frame=0; // Pour les annimation 
   int wait =0; // Temporaire, pour ralentir les animations
   int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
-  
   
   life = 10;
   
@@ -167,7 +166,7 @@ int main(){
       fps++;
       if(SDL_GetTicks()%1000==0){
           if (fps != 1)
-              printf("Fps: %d\n", fps);
+             // printf("Fps: %d\n", fps);
           fps = 0;
       }
       
@@ -175,7 +174,7 @@ int main(){
       
       
     //Mise a jour du sprite du perso
-    if(wait < 40){
+    if(wait < 80){
       wait++;}
       else{
 	wait = 0;
@@ -203,8 +202,8 @@ int main(){
 	  tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
 	  tilePosition.x = vertical + D_SIZE * ib + pos_x * D_SIZE;
 	  if(tilePosition.x+16 <= LARGEUR/2 && tilePosition.x +50 +16 >= LARGEUR/2 && tilePosition.y+16 <= HAUTEUR/2 && tilePosition.y +50+16 >= HAUTEUR /2){
-	    actualX = jb;
-	    actualY = ib;
+	    actualY = jb;
+	    actualX = ib;
 	  }
 	}
       }
@@ -215,27 +214,28 @@ int main(){
 	  fin = 1;
 	}
 	
-	if (keystate[SDLK_q] ){ // si q actif
-	  leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+	if (keystate[SDLK_q]  ){ // si q actif
+	  leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 
 	}
 	if (keystate[SDLK_z] ){ // si z actif
-	  upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+	  upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 
 	}
 	if (keystate[SDLK_s] ){ // activation de S
-	  downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+	  downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	 
 	}
 	if (keystate[SDLK_d] ){ //Si touche D 
-	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualX, actualY,i,j,map);
+	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
     }
       }
       
       
       	  for(k = 0; k < zombieTabS; k++){
-	    if(!zombieTab[k].isDead())
-	      zombieTab[k].move(map,i,j,actualX+pos_y,actualY+pos_x,horizontal,vertical,life);
+	    if(!zombieTab[k].isDead() && SDL_GetTicks()%4==0)
+	      
+	      zombieTab[k].move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life);
 	  }
 	  
       //affichage fond noir
@@ -343,7 +343,7 @@ int main(){
 	}
       }
       
-      if(mapdeco[actualX][actualY]==51){
+      if(mapdeco[actualY][actualX]==51){
 	if(level <4){
 	  horizontal += 50;
 	  level++;
@@ -381,7 +381,7 @@ int main(){
       }
       
       else{
-          if(mapdeco[actualX][actualY]==52){
+          if(mapdeco[actualY][actualX]==52){
 	if(level > 0 ){
 	  level--;
 	  printf("Chargement du niveau supérieur %d\n",level);
@@ -458,6 +458,7 @@ int main(){
 	
       }
       
+
       //Affichage de la vie
       lifeprint = life;
       for(int li =0; li <10;li+=2){
