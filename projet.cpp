@@ -18,12 +18,12 @@
 
 using namespace std;
 
-void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
+void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab, int vertical, int horizontal){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
 	int i,valX,valY;
 	cout << "Positions de la souris : " << posSourisX << " " << posSourisY << endl;
 	cout << "Taille du tableau : " << tailleTab << endl;
 	for (i = 0; i < tailleTab; i++){
-		SDL_Rect rectangleEnnemi = tabEnnemis[i].getPosition();//Récupération du rectangle représentant l'ennemi
+		SDL_Rect rectangleEnnemi = tabEnnemis[i].getPositionPrint(horizontal,vertical);//Récupération du rectangle représentant l'ennemi
 		cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " <<rectangleEnnemi.h << endl;
 		valX = tabEnnemis[i].getX();
 		valY = tabEnnemis[i].getY();
@@ -235,7 +235,7 @@ int main(){
       
       if (SDL_PollEvent(&event)){
 	if (event.type == SDL_MOUSEBUTTONDOWN){
-			attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS);
+			attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS,vertical,horizontal);
 		}
 
 	if (keystate[SDLK_ESCAPE]){
