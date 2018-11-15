@@ -17,6 +17,29 @@
 
 using namespace std;
 
+void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
+	int i,valX,valY;
+	cout << "Positions de la souris : " << posSourisX << " " << posSourisY << endl;
+	cout << "Taille du tableau : " << tailleTab << endl;
+	for (i = 0; i < tailleTab; i++){
+		SDL_Rect rectangleEnnemi = tabEnnemis[i].getPosition();//Récupération du rectangle représentant l'ennemi
+		cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " << rectangleEnnemi.h << endl;
+		valX = tabEnnemis[i].getX();
+		valY = tabEnnemis[i].getY();
+		if (posSourisX > rectangleEnnemi.x && posSourisX < rectangleEnnemi.x + rectangleEnnemi.w && posSourisY > rectangleEnnemi.y && posSourisY < rectangleEnnemi.y + rectangleEnnemi.h) {//Test si le clic de la souris est bien sur l'ennemu
+			valX -= xHeros; //DIfférence sur les X
+			valY -= yHeros;//Différence sur les Y
+			cout << "Premier if attaque" << endl;
+			if ((valX == 1 || valX == -1) && (valY == 1 || valY == -1)){ //Test si l'ennemi est bien à 1 de distance du personnage
+				tabEnnemis[i].haveDamage(attaqueHeros);//L'ennemi subit des dégats.
+				cout << "Un ennemi subit des dégats." << endl;
+			}
+			
+		}
+	}
+
+}
+
 //Programme principal
 int main(){
   int level = 0;
@@ -28,7 +51,8 @@ int main(){
   int life; // Vie du joueur
   int colorkey; // Couleur pour transparence des bmp 
   int zombieTabS; // Nombre de Zombies
-  int actualY,actualX; // Coordonnées actuelles
+  int actualX,actualY; // Coordonnées actuelles
+  int valAttaque = 10; //Valeur de l'attaque du héros.
   int vertical,horizontal; // Décallage horizontal et vertical de la carte en fonction de la position initiale 
   int frame=0; // Pour les annimation 
   int wait =0; // Temporaire, pour ralentir les animations
@@ -210,6 +234,7 @@ int main(){
       
       if (SDL_PollEvent(&event)){
 	
+
 	if (keystate[SDLK_ESCAPE]){
 	  fin = 1;
 	}
@@ -229,6 +254,7 @@ int main(){
 	if (keystate[SDLK_d] ){ //Si touche D 
 	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
     }
+
       }
       
       
