@@ -19,11 +19,11 @@ using namespace std;
 
 void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
 	int i,valX,valY;
-	cout << "Positions de la souris : bite " << posSourisX << " " << posSourisY << endl;
+	cout << "Positions de la souris : " << posSourisX << " " << posSourisY << endl;
 	cout << "Taille du tableau : " << tailleTab << endl;
 	for (i = 0; i < tailleTab; i++){
 		SDL_Rect rectangleEnnemi = tabEnnemis[i].getPosition();//Récupération du rectangle représentant l'ennemi
-		//cout << "Rectangle de l'ennemi" << rectangleEnnemi << endl;
+		cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " << rectangleEnnemi.h << endl;
 		valX = tabEnnemis[i].getX();
 		valY = tabEnnemis[i].getY();
 		if (posSourisX > rectangleEnnemi.x && posSourisX < rectangleEnnemi.x + rectangleEnnemi.w && posSourisY > rectangleEnnemi.y && posSourisY < rectangleEnnemi.y + rectangleEnnemi.h) {//Test si le clic de la souris est bien sur l'ennemu
