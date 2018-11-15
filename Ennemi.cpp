@@ -11,7 +11,6 @@
 
 using namespace std;
 
-//A mettre dans Ennemi.cpp
 Ennemi::Ennemi()
 {
      id=0;

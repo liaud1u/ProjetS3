@@ -10,6 +10,7 @@
 #include "Fonction.h"
 #include "Event.h"
 #include "Map.h"
+#include "Horde.h"
 
 #define HAUTEUR 750
 #define LARGEUR 1200
@@ -233,7 +234,9 @@ int main(){
       }
       
       if (SDL_PollEvent(&event)){
-	
+	if (event.type == SDL_MOUSEBUTTONDOWN){
+			attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS);
+		}
 
 	if (keystate[SDLK_ESCAPE]){
 	  fin = 1;
@@ -371,7 +374,7 @@ int main(){
       
       if(mapdeco[actualY][actualX]==51){
 	if(level <4){
-	  horizontal += 50;
+	  horizontal-= (50-horizontal%50) + 25;
 	  level++;
 	  printf("Chargement du niveau inférieur %d\n",level);
 	  switch (level){
@@ -411,7 +414,7 @@ int main(){
 	if(level > 0 ){
 	  level--;
 	  printf("Chargement du niveau supérieur %d\n",level);
-	  horizontal += 50;
+	   horizontal-= (50-horizontal%50) + 25;
 	 switch (level){
 	    case 0:
 	      init(i,j,map,"maps/level0.map");
