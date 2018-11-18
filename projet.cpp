@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab, int vertical, int horizontal){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
+void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab, int vertical, int horizontal, int ** map, int tailleX, int tailleY){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
     int i,valX,valY;
     cout << "Positions de la souris : " << posSourisX << " " << posSourisY << endl;
     cout << "Taille du tableau : " << tailleTab << endl;
@@ -32,7 +32,8 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
         cout << "xHeros : " << xHeros << " yHeros : " << yHeros << endl;
         if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
             cout << "Premier if attaque" << endl;
-            if ((xHeros ==  1 + valX || valX == valX - 1 || xHeros == valX) && (yHeros == 1 + valY|| yHeros == valY - 1 || yHeros == valY)){ //Test si l'ennemi est bien à 1 de distance du personnage
+            int dist = distance(valX, valY, xHeros, yHeros, map,tailleX,tailleY);
+            if ( dist == 1 || dist == 0){ //Test si l'ennemi est bien à 1 de distance du personnage
                 tabEnnemis[i].haveDamage(attaqueHeros);//L'ennemi subit des dégats.
                 cout << "Un ennemi subit des dégats." << endl;
             }
@@ -304,7 +305,7 @@ int main(){
             
             if (SDL_PollEvent(&event)){
                 if (event.type == SDL_MOUSEBUTTONDOWN){
-                    attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS,vertical,horizontal);
+                    attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS,vertical,horizontal, map, i, j);
                 }
                 
                 if (keystate[SDLK_ESCAPE]){
