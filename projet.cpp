@@ -24,10 +24,11 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
     cout << "Positions de la souris : " << posSourisX << " " << posSourisY << endl;
     cout << "Taille du tableau : " << tailleTab << endl;
     for (i = 0; i < tailleTab; i++){
+        if(!tabEnnemis[i].isDead()){
         SDL_Rect rectangleEnnemi = tabEnnemis[i].getPositionPrint(horizontal,vertical);//Récupération du rectangle représentant l'ennemi
         cout << "x : " << rectangleEnnemi.x << " y : " << rectangleEnnemi.y << " w : " << rectangleEnnemi.w << " h : " <<rectangleEnnemi.h << endl;
-        valX = tabEnnemis[i].getX();
-        valY = tabEnnemis[i].getY();
+        valX = tabEnnemis[i].getX() ;
+        valY = tabEnnemis[i].getY() - 1;
         cout << "xEnnemi : " << valX << " yEnnemi : " << valY << endl;
         cout << "xHeros : " << xHeros << " yHeros : " << yHeros << endl;
         if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
@@ -38,6 +39,7 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
                 cout << "Un ennemi subit des dégats." << endl;
             }
             
+        }
         }
     }
     
@@ -71,7 +73,7 @@ int main(){
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
-    SDL_Rect tilePosition,menuPos,heartPos,zombiePos,elfPos,elfImage,zombieImage,screenPos,menuImage,statPos;
+    SDL_Rect tilePosition,menuPos,heartPos,zombiePos,elfPos,elfImage,zombieImage,screenPos,statPos;
     SDL_Surface *dirt,*d_close,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie,*screenshot,*stat;
     
     int pos_x, pos_y;

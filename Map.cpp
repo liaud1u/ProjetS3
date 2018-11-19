@@ -18,7 +18,7 @@ int ** alloc(int i, int j){
     return mapix;
 }
 
-void init(int i,int j, int ** mapix,char * adresse){
+void init(int i,int j, int ** mapix,char const * adresse){
     FILE* map;
     map = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
     char texte;

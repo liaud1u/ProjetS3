@@ -22,8 +22,6 @@ void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actua
       }
     }
   }
-  
-    int in_tab = actualX > 0 && actualY >0 && actualX < i && actualY < j;
 
 }
 
@@ -36,14 +34,20 @@ void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int
   
     if(in_tab && (mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49||mapix[actualX][actualY-1] == 52||mapix[actualX][actualY-1] == 57||mapix[actualX][actualY-1] == 54||mapix[actualX][actualY-1] == 55) && mapix[actualX][actualY-1] != 56 && mapix[actualX][actualY-1] != 99){
         ve +=1;
-
+	   printf("ve: %d %d\n",abs(ve<0?50000+ve:ve)%50,ve);
+	     printf("ho: %d %d\n",(ho<0?50000+ho:ho)%50,ho);
+       printf("^ %d v %d < %d > %d ^< %d ^> %d \n", mapix[actualX-1][actualY],mapix[actualX+1][actualY],mapix[actualX][actualY-1],mapix[actualX][actualY+1],mapix[actualX-1][actualY-1],mapix[actualX+1][actualY-1]);
+  
     }
 }
 
 void rightK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix, SDL_Rect & elfPos){
     int in_tab = actualX >= 0 && actualY >=0 && actualX < i && actualY+1 < j;
     getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,32,32,elfPos);
-if(in_tab &&(mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==100 &&((ho<0?50000+ho:ho)%50<30 || ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<35)) )) && ( mapix[actualX][actualY+1] == 49 ||abs(ve<0?50000+ve:ve)%50>15|| mapix[actualX][actualY+1] ==52|| mapix[actualX][actualY+1] ==56|| mapix[actualX][actualY+1] ==55 )){
+if(in_tab && (mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==100 &&
+    ((ho<0?50000+ho:ho)%50<30 || (abs(ve<0?50000+ve:ve)%50>10 &&
+     (abs(ve<0?50000+ve:ve)%50)<35)))) && 
+    ( mapix[actualX][actualY+1] == 49 ||abs(ve<0?50000+ve:ve)%50>15|| mapix[actualX][actualY+1] ==52|| mapix[actualX][actualY+1] ==56|| mapix[actualX][actualY+1] ==55 )){
         ve -=1;//Incrementation si le joueur est sur une case autorisée
 
 
@@ -56,13 +60,7 @@ void upK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,0,40,elfPos);
     int in_tab = actualX > 0 && actualY >=0 && actualX < i && actualY < j;
     elfImage.x = 32 * frame+4*32; // activation du sprite de déplacement
-                if(in_tab)
-	   printf("ve: %d %d\n",abs(ve<0?50000+ve:ve)%50,ve);
-	     printf("ho: %d %d\n",(ho<0?50000+ho:ho)%50,ho);
-       printf("^ %d v %d < %d > %d ^< %d ^> %d \n", mapix[actualX-1][actualY],mapix[actualX+1][actualY],mapix[actualX][actualY-1],mapix[actualX][actualY+1],mapix[actualX-1][actualY-1],mapix[actualX+1][actualY-1]);
-  
-
-    if(in_tab &&(mapix[actualX+1][actualY-1]!=97 || (mapix[actualX+1][actualY-1]==97&&((ho<0?50000+ho:ho)%50<40 || ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<20)) ))&&mapix[actualX-1][actualY] != 56&& (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49 ||mapix[actualX-1][actualY]==99||(mapix[actualX-1][actualY]==51 && abs(ve<0?50+ve:ve)%50-25>45)||mapix[actualX-1][actualY]==55|| mapix[actualX-1][actualY] ==51  )){
+    if(in_tab &&(mapix[actualX+1][actualY-1]!=97 || (mapix[actualX+1][actualY-1]==97&&((ho<0?50000+ho:ho)%50<40 ||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<20))) ))&&mapix[actualX-1][actualY] != 56&& (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49 ||mapix[actualX-1][actualY]==99||(mapix[actualX-1][actualY]==51 && abs(ve<0?50+ve:ve)%50-25>45)||mapix[actualX-1][actualY]==55|| mapix[actualX-1][actualY] ==51  )){
         ho -=1;
 
     } // Incrementation si le perso est dans les cases autorisée
@@ -72,7 +70,7 @@ getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,0,40,elfPos);
 void downK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix, SDL_Rect & elfPos){
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,0,10,elfPos);
 int in_tab = actualX >= 0 && actualY >=0 && actualX+1 < i && actualY < j;
-  if(in_tab &&(mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==100 &&((ho<0?50000+ho:ho)%50<26 || ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<35)) ))&&(mapix[actualX+1][actualY] == 49 ||mapix[actualX+1][actualY]==51||mapix[actualX+1][actualY]==51||((ho<0?50000+ho:ho)%50<26&&mapix[actualX+1][actualY] == 52))){
+  if(in_tab &&(mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==100 &&((ho<0?50000+ho:ho)%50<26 ||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<35))) ))&&(mapix[actualX+1][actualY] == 49 ||mapix[actualX+1][actualY]==51||mapix[actualX+1][actualY]==51||((ho<0?50000+ho:ho)%50<26&&mapix[actualX+1][actualY] == 52))){
         ho+=1; //Si le joueur est sur une case autorisée on incremente
 
 

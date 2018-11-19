@@ -8,5 +8,6 @@ $(BIN): $(SRC)
 	-o $(BIN) \
 	-lm
 	
+	
 clean:
 	rm -f $(BIN)
