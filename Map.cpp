@@ -3,6 +3,7 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
+
 #include "Map.h"
 
 int ** alloc(int i, int j){

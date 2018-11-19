@@ -12,6 +12,7 @@
 #include "Event.h"
 #include "Map.h"
 #include "Horde.h"
+#include "stats.h"
 
 #define HAUTEUR 750
 #define LARGEUR 1200
@@ -46,11 +47,9 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
 }
 
 
-
-
-
 //Programme principal
 int main(){
+    int stats[5];
     int level = 0;
     int i,j; // Parcours des boucles
     int k; // Parcours des boucles 
@@ -67,9 +66,16 @@ int main(){
     int wait =0; // Temporaire, pour ralentir les animations
     int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
     int menu_int;
+    int cooldown;
+    
+    
+    
+    loadStats("stats", stats);
+    printStats(stats);
+    resetStats("stats");
     
     life = 10;
-    
+    cooldown = 0;
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
@@ -92,12 +98,15 @@ int main(){
     /*Initialize SDL*/
     SDL_Init(SDL_INIT_VIDEO);
     
-    
+    Horde("maps/monstre0");
     /*Title bar*/
     SDL_WM_SetCaption("Projet","Projet");
     SDL_EnableKeyRepeat(10, 1);
     /*Window creation*/
     screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,0,0);
+    
+    
+    TTF_Init();
     
     /*BMP loading*/
     temp = SDL_LoadBMP("ressources/grass.bmp");
@@ -209,23 +218,25 @@ int main(){
     horizontal = -75;
     
     
-//     TTF_Font* font;
-//     
-//     SDL_Surface* fontSurface;
-//     SDL_Color font_color;
-//     SDL_Rect fontRect;
-//     
-//     TTF_Init();
-//     font = TTF_OpenFont("ressources/Dungeons.ttf", 38);
-//     font_color.r = 255;
-//     font_color.g = 255;
-//     font_color.b = 255;
-//     
-//     fontSurface = TTF_RenderText_Solid(font, "cccc", font_color);
-//     fontRect.x = 0;
-//     fontRect.y = 0;
-//     TTF_CloseFont( font );
-//     TTF_Quit();
+     TTF_Font* font;
+    
+    SDL_Surface* fontSurface;
+    SDL_Color font_color;
+    SDL_Rect fontRect;
+
+    font = TTF_OpenFont("ressources/Dungeons.ttf", 50);
+    font_color.r = 255;
+    font_color.g = 255;
+    font_color.b = 255;
+    char * score_string ;
+    sprintf(score_string, "%d", stats[0]);
+    TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    fontSurface = TTF_RenderText_Solid(font, score_string, font_color);
+    fontRect.x = 900;
+    fontRect.y = 200;
+    
+    TTF_CloseFont( font );
+    TTF_Quit();
     
     
     menu_int = 0;
@@ -251,9 +262,8 @@ int main(){
                 SDL_BlitSurface(screenshot, NULL, screen, &screenPos);  
                 SDL_BlitSurface(menu, NULL, screen, &menuPos);  
                 SDL_BlitSurface(stat, NULL, screen, &statPos);  
-//                 SDL_BlitSurface(fontSurface, NULL, screen, &fontRect);
-                SDL_Flip(screen);
-                
+		SDL_BlitSurface(fontSurface, NULL, screen, &fontRect);  
+              
                 //Mise a jour de l'ecran
                 SDL_UpdateRect(screen,0,0,0,0);
             }
@@ -263,7 +273,7 @@ int main(){
         fps++;
         if(SDL_GetTicks()%1000==0){
             if (fps != 1)
-                // printf("Fps: %d\n", fps);
+                printf("Fps: %d\n", fps);
                 fps = 0;
         }
         
@@ -287,7 +297,9 @@ int main(){
             
             elfImage.x = 32 * frame;
             
-            
+            if (cooldown > 0){
+	      cooldown --;
+	    }
             
             //Detection de pression des touches
             keystate = SDL_GetKeyState(NULL);
@@ -306,9 +318,10 @@ int main(){
             }
             
             if (SDL_PollEvent(&event)){
-                if (event.type == SDL_MOUSEBUTTONDOWN){
+                if (event.type == SDL_MOUSEBUTTONDOWN && cooldown == 0){
                     attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS,vertical,horizontal, map, i, j);
-                }
+		    elfImage.x = 8*32; ; //activation du sprite de déplacement
+		}
                 
                 if (keystate[SDLK_ESCAPE]){
                     fin = 1;
@@ -462,14 +475,6 @@ int main(){
                             init(i,j,map,"maps/level2.map");
                             init(i,j,mapdeco,"maps/level2.deco");
                             break;
-                        case 3:
-                            init(i,j,map,"maps/level3.map");
-                            init(i,j,mapdeco,"maps/level3.deco");
-                            break;
-                        case 4: 
-                            init(i,j,map,"maps/level4.map");
-                            init(i,j,mapdeco,"maps/level4.deco");
-                            break;
                     }
                     for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
                         if(!zombieTab[z].isDead()){
@@ -582,6 +587,8 @@ int main(){
             //Mise a jour de l'ecran
             SDL_UpdateRect(screen,0,0,0,0);
     };
+    
+    saveStats("stats",stats);
     
     //Free 
     SDL_FreeSurface(tree);

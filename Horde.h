@@ -10,16 +10,16 @@ class Horde
 public:
   //Constructeurs
   Horde();
-  Horde(char * adresse);
+  Horde(char const * adresse);
   
   //Liste des fonctions
   void moove(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie); //Mouvement de la horde
   void afficher() const; //toString()
-  void getNb() const; // nombre d'ennemi dans la horde
+  int getNb() const; // nombre d'ennemi dans la horde
   
 private:
   //Attributs
-  Ennemi * horde;
+  Ennemi horde[30];
   int nb;
 };
 

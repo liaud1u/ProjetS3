@@ -85,7 +85,7 @@ SDL_Rect Ennemi::getPositionPrint(int ve,int ho) const{ //a afficher
 
 int Ennemi::getDamage() const{
     {
-        return /*e_size + 1*/ 0;
+        return e_size + 1;
     }
 }
 
