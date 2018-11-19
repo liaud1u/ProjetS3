@@ -314,19 +314,19 @@ int main(){
                     fin = 1;
                 }
                 
-                if (keystate[SDLK_q]  ){ // si q actif
+                if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
                     leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
                     
                 }
-                if (keystate[SDLK_z] ){ // si z actif
+                if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q]){ // si z actif
                     upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
                     
                 }
-                if (keystate[SDLK_s] ){ // activation de S
+                if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] ){ // activation de S
                     downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
                     
                 }
-                if (keystate[SDLK_d] ){ //Si touche D 
+                if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
                     rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
                 }
                 
