@@ -30,21 +30,7 @@ void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int
     int in_tab = actualX >= 0 && actualY >0 && actualX < i && actualY < j;
  getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,1,50,elfPos);
     //Incrementation si le perso est sur une case autorisée
-  
- printf("ve: %d %d\n",abs(ve<0?50000+ve:ve)%50,ve);
-	     printf("ho: %d %d\n",(ho<0?50000+ho:ho)%50,ho);
-       printf("^ %d v %d < %d > %d . %d ^< %d ^> %d \n", mapix[actualX-1][actualY],mapix[actualX+1][actualY],mapix[actualX][actualY-1],mapix[actualX][actualY+1],mapix[actualX][actualY],mapix[actualX-1][actualY-1],mapix[actualX+1][actualY-1]);
-       printf("(%d || %d||%d||%d||%d||%d) && %d && ( %d && %d )= %d\n",mapix[actualX][actualY-1] == 49, mapix[actualX][actualY] == 49,mapix[actualX][actualY-1] == 52,mapix[actualX][actualY-1] == 57,mapix[actualX][actualY-1] == 54,mapix[actualX][actualY-1] == 55,mapix[actualX][actualY-1] != 56 , 
-              
-              mapix[actualX][actualY-1] == 99,
-              mapix[actualX][actualY] == 49 ,
-              
-              
-              
-              
-              (mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49||mapix[actualX][actualY-1] == 52||mapix[actualX][actualY-1] == 57||mapix[actualX][actualY-1] == 54||mapix[actualX][actualY-1] == 55) && mapix[actualX][actualY-1] != 56 && ( ( mapix[actualX][actualY-1] == 99 && mapix[actualX][actualY] == 49 )));
-        
-       
+
     if(in_tab && /*(mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49||mapix[actualX][actualY-1] == 52||mapix[actualX][actualY-1] == 57||mapix[actualX][actualY-1] == 54||mapix[actualX][actualY-1] == 55) && mapix[actualX][actualY-1] != 56 && ( ( mapix[actualX][actualY-1] == 99 && mapix[actualX][actualY] == 49))*/mapix[actualX][actualY-1]==49 || mapix[actualX][actualY]==49 ){
         ve +=1;
     }

@@ -23,7 +23,7 @@ Ennemi::Ennemi()
      e_ho = 0;
      e_ve = 0;
      e_dead = 0;
-     e_cooldown = 500; //Cooldown avant prochaine attaque
+     e_cooldown = 300; //Cooldown avant prochaine attaque
      e_cooldown_moove = 50;
      e_where = 5;
 }
@@ -39,7 +39,7 @@ Ennemi::Ennemi(int idx,int x, int y, int vie, int cat, int size){
      e_ho = 0;
      e_ve = 0;
      e_dead = 0;
-     e_cooldown = 500;
+     e_cooldown = 300;
      e_cooldown_moove = 50;
      e_where = 5;
 }
@@ -89,17 +89,18 @@ int Ennemi::getDamage() const{
     }
 }
 
-void Ennemi::haveDamage(int damage){
+void Ennemi::haveDamage(int damage, int *stat){
     {
         e_vie -= damage;
         if (e_vie <= 0){
-            dead();
+            dead(stat);
         }
     }
 }
 
-void Ennemi::dead(){
+void Ennemi::dead(int *stat){
     e_dead = 1;
+    stat[3] ++;
 }
 
 bool Ennemi::isDead() const{
@@ -205,7 +206,7 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
         case 4:
             if(e_cooldown == 0 && min <=1 && e_cooldown_moove%50 == 0/* Pour être sur que le monstre est pile sur une case*/){
         attack(vie);
-        e_cooldown = 500;
+        e_cooldown = 300;
         }
         break;
         default: 

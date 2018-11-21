@@ -24,8 +24,8 @@ class Ennemi
         int getCat() const; // type du monstre
         int getSize() const; // taille du monstre
         bool isDead() const; // 0 si vivant, 1 sinon
-        void dead(); // Tue le monstre
-        void haveDamage(int damage); //Inflige des dégats au monstre
+        void dead(int *stat); // Tue le monstre
+        void haveDamage(int damage,int *stat); //Inflige des dégats au monstre
         int getDamage() const; //Recupere les dégat infligé par le monstre ( en fonction de sa taille, type ... ) 
         void attack(int &vie) const; //Attaque un joueur.
         void move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie);
