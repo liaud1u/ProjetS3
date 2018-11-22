@@ -17,6 +17,8 @@
 #define HAUTEUR 750
 #define LARGEUR 1200
 #define D_SIZE 50
+#define LIFE 20
+#define MONSTER_SIZE 32
 
 using namespace std;
 
@@ -53,7 +55,6 @@ int main(){
   int fin; // Si fin alors la boucle principale s'arrete 
   int life; // Vie du joueur
   int colorkey; // Couleur pour transparence des bmp 
-  int zombieTabS; // Nombre de Zombies
   int actualX,actualY; // Coordonnées actuelles
   int valAttaque = 10; //Valeur de l'attaque du héros.
   int vertical,horizontal; // Décallage horizontal et vertical de la carte en fonction de la position initiale 
@@ -72,8 +73,8 @@ int main(){
   SDL_Surface *screen;
   Uint8 *keystate;
   SDL_Event event;
-  SDL_Rect tilePosition,menuPos,heartPos,zombiePos,elfPos,elfImage,zombieImage,screenPos,statPos,optionsPos;
-  SDL_Surface *dirt,*d_close,*options,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*zombie,*screenshot,*stat;
+  SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos;
+  SDL_Surface *dirt,*d_close,*options,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -93,7 +94,8 @@ int main(){
   /*Initialize SDL*/
   SDL_Init(SDL_INIT_VIDEO);
   
-  Horde("maps/monstre0");
+  Horde Horde("maps/monstre0");
+  
   /*Title bar*/
   SDL_WM_SetCaption("Projet","Projet");
   SDL_EnableKeyRepeat(10, 1);
@@ -138,8 +140,6 @@ int main(){
   crate= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/perso.bmp");
   elf= SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/zombie.bmp");
-  zombie= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/int_d.bmp");
   int_d = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/int_g.bmp");
@@ -157,15 +157,6 @@ int main(){
   temp = SDL_LoadBMP("ressources/options.bmp");
   options = SDL_DisplayFormat(temp);
   
-  //Test pour les monstres
-  zombieTabS = 5;
-  Ennemi zombieTab[zombieTabS];
-  zombieTab[0] = Ennemi(0,4+pos_x,6+pos_y,20,1,0);
-  zombieTab[1] = Ennemi(1,2+pos_x,9+pos_y,20,1,0);
-  zombieTab[2] = Ennemi(2,9+pos_x,3+pos_y,20,0,0);
-  zombieTab[3] = Ennemi(3,5+pos_x,20+pos_y,20,0,0);
-  zombieTab[4] = Ennemi(4,8+pos_x,30+pos_y,20,1,0);
-  
   /*Surface free*/
   SDL_FreeSurface(temp);
   heartPos.x = 0;
@@ -178,7 +169,6 @@ int main(){
   SDL_SetColorKey(heartb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-  SDL_SetColorKey(zombie, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   srand(time(NULL));
   
@@ -198,17 +188,12 @@ int main(){
   
   /* Define the source rectangle (elf)for the BlitSurface */
   elfImage.y = 0 +56*2*who;
-  elfImage.w = 32;
+  elfImage.w = MONSTER_SIZE;
   elfImage.h = 56;
-  elfImage.x = 32*frame;
+  elfImage.x = MONSTER_SIZE*frame;
   elfPos.x = LARGEUR/2 - 16;
   elfPos.y = HAUTEUR/2 - 56;
   
-  /* Define the source rectangle (elf)for the BlitSurface */
-  zombieImage.y = 0 ;
-  zombieImage.w = 32;
-  zombieImage.h = 40;
-  zombieImage.x = 32*frame;
   vertical = 125;
   horizontal = -75;
   
@@ -239,7 +224,7 @@ int main(){
 	      elfPos.x = LARGEUR/2 + 170;
 	      elfPos.y = HAUTEUR/2 -210 ;
 	      //Mise a jour du sprite du perso
-	      if(wait < 80){
+	      if(wait < 20){
 		wait++;}
 		else{
 		  wait = 0;
@@ -252,9 +237,9 @@ int main(){
 		}
 		
 		//Mise a jour des annimations 
-	        elfImage.y = 0 +56*2*who;
-		elfImage.x = 32 * frame;
-      
+		elfImage.y = 0 +56*2*who;
+		elfImage.x = MONSTER_SIZE * frame;
+		
 		//Affichage du perso 
 		
 		
@@ -265,8 +250,8 @@ int main(){
 			who++;
 		      }
 		      else{
-			  who --;
-			}
+			who --;
+		      }
 		    }else{
 		      if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 200+ optionsPos.y && event.motion.y < 280+ optionsPos.y){
 			resetStats("statistiques");
@@ -300,8 +285,8 @@ int main(){
       SDL_BlitSurface(stat, NULL, screen, &statPos); 
       print(stats,screen);
       
-		elfPos.x = LARGEUR/2 - 16;
-		elfPos.y = HAUTEUR/2 - 56;
+      elfPos.x = LARGEUR/2 - 16;
+      elfPos.y = HAUTEUR/2 - 56;
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
       start = SDL_GetTicks();
@@ -320,7 +305,7 @@ int main(){
     
     
     //Mise a jour du sprite du perso
-    if(wait < 80){
+    if(wait < 20){
       wait++;}
       else{
 	wait = 0;
@@ -334,7 +319,7 @@ int main(){
       
       //Mise a jour des annimations 
       
-      elfImage.x = 32 * frame;
+      elfImage.x = MONSTER_SIZE * frame;
       
       if (cooldown > 0){
 	cooldown --;
@@ -358,8 +343,8 @@ int main(){
       
       if (SDL_PollEvent(&event)){
 	if (event.type == SDL_MOUSEBUTTONDOWN && cooldown == 0){
-	  attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, zombieTab, zombieTabS,vertical,horizontal, map, i, j,stats);
-	  elfImage.x = 8*32; ; //activation du sprite de déplacement
+	  attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, Horde.Horde::getTab(), Horde.Horde::getNb(),vertical,horizontal, map, i, j,stats);
+	  elfImage.x = 8*MONSTER_SIZE; ; //activation du sprite de déplacement
 	}
 	
 	if (keystate[SDLK_ESCAPE]){
@@ -386,12 +371,7 @@ int main(){
 	
       }
       
-      
-      for(k = 0; k < zombieTabS; k++){
-	if(!zombieTab[k].isDead() && SDL_GetTicks()%4==0)
-	  
-	  zombieTab[k].move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life);
-      }
+     Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life);
       
       //affichage fond noir
       for (k=0;k<30;k++){
@@ -517,12 +497,12 @@ int main(){
 	      init(i,j,mapdeco,"maps/level2.deco");
 	      break;
 	  }
-	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-	    if(!zombieTab[z].isDead()){
-	      printf("Les mobs doivent etre clear\n");
-	    }
-	    //Chargement des monstres du niveau
-	  }  
+// 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
+// 	    if(!zombieTab[z].isDead()){
+// 	      printf("Les mobs doivent etre clear\n");
+// 	    }
+// 	    //Chargement des monstres du niveau
+// 	  }  
 	}
 	
       }
@@ -555,28 +535,18 @@ int main(){
 		init(i,j,mapdeco,"maps/level4.deco");
 		break;
 	    }
-	    for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-	      if(!zombieTab[z].isDead()){
-		printf("Les mobs doivent etre clear\n");
-	      }
-	      //Chargement des monstres du niveau
-	    }
+// 	    for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
+// 	      if(!zombieTab[z].isDead()){
+// 		printf("Les mobs doivent etre clear\n");
+// 	      }
+// 	      //Chargement des monstres du niveau
+// 	    }
 	    
 	  }
 	}
       }
       
-      //Affichage des monstres ( ici seulement zombie ) 
-      for (int z = 0; z<zombieTabS; z++){
-	if(!zombieTab[z].isDead()){
-	  zombiePos = zombieTab[z].getPositionPrint(horizontal,vertical);
-	  zombieImage.y = zombieTab[z].getDir() * 40  + 40 * zombieTab[z].getSize();
-	  zombieImage.x = zombieTab[z].getCat() * 32 * 4 + 32 * frame;
-	  SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
-	}
-      }
-      
-      
+      Horde.afficher(frame,screen, vertical, horizontal);
       
       //Affichage du perso 
       SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
@@ -667,7 +637,6 @@ int main(){
   SDL_FreeSurface(hole);
   SDL_FreeSurface(crate);
   SDL_FreeSurface(elf);
-  SDL_FreeSurface(zombie);
   SDL_FreeSurface(int_d );
   SDL_FreeSurface(int_g );
   SDL_FreeSurface(ext_d );

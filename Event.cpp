@@ -6,6 +6,7 @@
 #define HAUTEUR 500
 #define LARGEUR 900
 #define D_SIZE 50
+#define SPEED 2
 
 void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actualY, int &actualX, int &i, int &j,int **mapix, int vertical_decal, int horizontal_decal,SDL_Rect &elfPos){
     
@@ -31,8 +32,8 @@ void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int
  getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,1,50,elfPos);
     //Incrementation si le perso est sur une case autorisée
 
-    if(in_tab && /*(mapix[actualX][actualY-1] == 49 || mapix[actualX][actualY] == 49||mapix[actualX][actualY-1] == 52||mapix[actualX][actualY-1] == 57||mapix[actualX][actualY-1] == 54||mapix[actualX][actualY-1] == 55) && mapix[actualX][actualY-1] != 56 && ( ( mapix[actualX][actualY-1] == 99 && mapix[actualX][actualY] == 49))*/mapix[actualX][actualY-1]==49 || mapix[actualX][actualY]==49 ){
-        ve +=1;
+    if(in_tab && (mapix[actualX][actualY-1]==49 || mapix[actualX][actualY]==49 )){
+        ve +=SPEED;
     }
 }
 
@@ -43,7 +44,7 @@ if(in_tab && (mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==
     ((ho<0?50000+ho:ho)%50<30 || (abs(ve<0?50000+ve:ve)%50>10 &&
      (abs(ve<0?50000+ve:ve)%50)<35)))) && 
     ( mapix[actualX][actualY+1] == 49 ||abs(ve<0?50000+ve:ve)%50>15|| mapix[actualX][actualY+1] ==52|| mapix[actualX][actualY+1] ==56|| mapix[actualX][actualY+1] ==55 )){
-        ve -=1;//Incrementation si le joueur est sur une case autorisée
+        ve -=SPEED;//Incrementation si le joueur est sur une case autorisée
 
 
 }
@@ -55,8 +56,8 @@ void upK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &
 getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,0,30,elfPos);
     int in_tab = actualX > 0 && actualY >=0 && actualX < i && actualY < j;
     elfImage.x = 32 * frame+4*32; // activation du sprite de déplacement
-    if(in_tab &&((mapix[actualX][actualY] !=56&&(mapix[actualX-1][actualY] == 49||mapix[actualX-1][actualY] ==56||(mapix[actualX+1][actualY-1]!=97 || (mapix[actualX+1][actualY-1]==97&&((ho<0?50000+ho:ho)%50<40 ||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<40))) ))&&mapix[actualX-1][actualY] != 56&& (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49 ||mapix[actualX-1][actualY]==99||(mapix[actualX-1][actualY]==51 && abs(ve<0?50+ve:ve)%50-25>45)||mapix[actualX-1][actualY]==55|| mapix[actualX-1][actualY] ==51  ))))){
-        ho -=1;
+    if(in_tab &&((mapix[actualX][actualY] !=56&&(mapix[actualX-1][actualY] == 49||mapix[actualX-1][actualY] ==56||((mapix[actualX+1][actualY-1]!=97 || (mapix[actualX+1][actualY-1]==97&&((ho<0?50000+ho:ho)%50<40 ||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<40))) ))&&mapix[actualX-1][actualY] != 56 && (mapix[actualX-1][actualY] == 49 || mapix[actualX][actualY] == 49 ||mapix[actualX-1][actualY]==99||(mapix[actualX-1][actualY]==51 && abs(ve<0?50+ve:ve)%50-25>45)||mapix[actualX-1][actualY]==55|| mapix[actualX-1][actualY] ==51  )))))){
+        ho -=SPEED;
 
     } // Incrementation si le perso est dans les cases autorisée
      
@@ -68,7 +69,7 @@ int in_tab = actualX >= 0 && actualY >=0 && actualX+1 < i && actualY < j;
        
  
   if(in_tab &&((mapix[actualX+1][actualY+1]!=100 || ( (mapix[actualX+1][actualY+1]==100 )&&((ho<0?50000+ho:ho)%50<30||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<=35))) ))&&(mapix[actualX+1][actualY] == 49 ||mapix[actualX+1][actualY]==51||mapix[actualX+1][actualY]==51||((ho<0?50000+ho:ho)%50<26&&mapix[actualX+1][actualY] == 52))/*||mapix[actualX+1][actualY]==99 && abs(ve<0?50000+ve:ve)%50>=35*/)){
-        ho+=1; //Si le joueur est sur une case autorisée on incremente
+        ho+=SPEED; //Si le joueur est sur une case autorisée on incremente
 
 
     }

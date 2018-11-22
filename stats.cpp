@@ -55,8 +55,6 @@ void print(int * stats, SDL_Surface *screen){
     
     TTF_Font* font;
     
-    SDL_Surface *stat;
-    
     SDL_Surface* score_surface,*time_surface,*game_over_surface,*kill_surface,*money_surface;
     SDL_Color font_color;
     SDL_Rect fontPos;

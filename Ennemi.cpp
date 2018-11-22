@@ -8,6 +8,7 @@
 
 #define HAUTEUR 750
 #define LARGEUR 1200
+#define SPEED 2
 
 using namespace std;
 
@@ -192,16 +193,16 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
 //     printf("e_where: %d e_cooldown_moove: %d e_cooldown: %d\n",e_where,e_cooldown_moove,e_cooldown);
     switch (e_where){
         case 0:
-            mooveL(1,mapix);
+            mooveL(SPEED,mapix);
         break;
         case 1:
-            mooveR(1,mapix);
+            mooveR(SPEED,mapix);
         break;
         case 2:
-            mooveU(1,mapix);
+            mooveU(SPEED,mapix);
         break;
         case 3:
-            mooveD(1,mapix);
+            mooveD(SPEED,mapix);
         break;
         case 4:
             if(e_cooldown == 0 && min <=1 && e_cooldown_moove%50 == 0/* Pour être sur que le monstre est pile sur une case*/){

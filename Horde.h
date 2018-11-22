@@ -13,10 +13,11 @@ public:
   Horde(char const * adresse);
   
   //Liste des fonctions
-  void moove(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie); //Mouvement de la horde
-  void afficher() const; //toString()
+  void move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie); //Mouvement de la horde
+  void afficher(int frame,SDL_Surface *screen, int vertical, int horizontal) const; //toString()
   int getNb() const; // nombre d'ennemi dans la horde
-  
+  Ennemi * getTab();
+    
 private:
   //Attributs
   Ennemi horde[30];
