@@ -5,7 +5,6 @@
 #include <ctime>
 #include <string>
 #include <iostream>
-#include <SDL/SDL_ttf.h>
 
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -378,9 +377,7 @@ int main(){
 	}
 	}
       }
-      
-     Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life);
-      
+          
       //affichage fond noir
       for (k=0;k<30;k++){
 	tilePosition.y = 0 + D_SIZE * (k);
@@ -549,8 +546,10 @@ int main(){
       
       Horde.afficher(frame,screen, vertical, horizontal);
       
+      
       //Affichage du perso 
       SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
+      
       
       //Affichage du décor qui passe dessus les personnages
       for (jb=0;jb<j;jb++){
@@ -576,6 +575,8 @@ int main(){
 	
       }
       
+           Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life,screen); //Déplacement des ennemis et dégat si il y a.
+  
       
       //Affichage de la vie
       lifeprint = life;

@@ -33,11 +33,11 @@ Horde::Horde(char const * adresse){
   }
 }
 
-void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie){
+void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie,SDL_Surface *screen){
         for(int k = 0; k < nb; k++){
-	if(!horde[k].isDead() && SDL_GetTicks()%4==0)
+	if(!horde[k].isDead())
 	  
-	  horde[k].move(mapix,i,j,y,x,ho,ve,vie);
+	  horde[k].move(mapix,i,j,y,x,ho,ve,vie,screen);
       }
 }
 

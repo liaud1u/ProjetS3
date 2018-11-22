@@ -28,7 +28,7 @@ class Ennemi
         void haveDamage(int damage,int *stat); //Inflige des dégats au monstre
         int getDamage() const; //Recupere les dégat infligé par le monstre ( en fonction de sa taille, type ... ) 
         void attack(int &vie) const; //Attaque un joueur.
-        void move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie);
+        void move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie,SDL_Surface *screen);
         SDL_Rect getPositionPrint(int ve,int ho) const;
         void randomWhere();
     
@@ -47,5 +47,5 @@ class Ennemi
         int e_cooldown; // cooldown avant prochaine attaque
         int e_cooldown_moove; // cooldown avant le prochain choix de mouvement
         int e_where; //direction du déplacement en cours 0: < 1: > 2: ^ 3: v 4: static 5: NULL
-
+	int haveAttack; //Si l'ennemi a déjà attaqué
 };
