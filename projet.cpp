@@ -38,6 +38,7 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
 	}
 	
       }
+      
     }
   }
   
@@ -247,11 +248,11 @@ int main(){
 		if (SDL_PollEvent(&event)){
 		  if (event.type == SDL_MOUSEBUTTONDOWN){
 		    if(event.motion.x >= 90 + optionsPos.x && event.motion.x <= 445+ optionsPos.x && event.motion.y > 94+ optionsPos.y && event.motion.y < 170+ optionsPos.y){
-		      if(who==0){
-			who++;
+		      if(who==2){
+			who=0;
 		      }
 		      else{
-			who --;
+			who ++;
 		      }
 		    }else{
 		      if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 200+ optionsPos.y && event.motion.y < 280+ optionsPos.y){
@@ -358,26 +359,26 @@ int main(){
 	  stats[2]++; //Le nombre de game over ( stats ) augmente 
 	}
 	if(attack_cooldown == 0){
-	
-	
-	if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
-	  leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  
-	}
-	if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q]){ // si z actif
-	  upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  
-	}
-	if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] ){ // activation de S
-	  downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
-	  
-	}
-	if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
-	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
-	}
+	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
+	    leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
+	    
+	  }
+	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q]){ // si z actif
+	    upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
+	    
+	  }
+	  if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] ){ // activation de S
+	    downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
+	    
+	  }
+	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
+	    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
+	  }
 	}
       }
-          
+      
       //affichage fond noir
       for (k=0;k<30;k++){
 	tilePosition.y = 0 + D_SIZE * (k);
@@ -502,15 +503,15 @@ int main(){
 	    case 2:
 	      init(i,j,map,"maps/level2.map");
 	      init(i,j,mapdeco,"maps/level2.deco");
-		Horde.load("maps/monstre2");
+	      Horde.load("maps/monstre2");
 	      break;
 	  }
-// 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-// 	    if(!zombieTab[z].isDead()){
-// 	      printf("Les mobs doivent etre clear\n");
-// 	    }
-// 	    //Chargement des monstres du niveau
-// 	  }  
+	  // 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
+	  // 	    if(!zombieTab[z].isDead()){
+	  // 	      printf("Les mobs doivent etre clear\n");
+	  // 	    }
+	  // 	    //Chargement des monstres du niveau
+	  // 	  }  
 	}
 	
       }
@@ -575,8 +576,8 @@ int main(){
 	
       }
       
-           Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life,screen); //Déplacement des ennemis et dégat si il y a.
-  
+      Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life,screen); //Déplacement des ennemis et dégat si il y a.
+      
       
       //Affichage de la vie
       lifeprint = life;
@@ -598,6 +599,24 @@ int main(){
 	score_current -= 100; // Malus de défaite
 	stats[2]++; //Le nombre de game over ( stats ) augmente 
       }
+      
+      SDL_Rect textePos;
+      SDL_Surface *textePieces;
+      
+      //Initialisation de SDL_TTF
+      TTF_Init();
+      TTF_Font *police ;
+      police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Récuparation de la police + taille
+      SDL_Color couleurTexte = {255,255,255}; //Couleur blanche
+      //Tableau traduisant le nombre de pièces (entier) en char, la taille du tableau détermine le nombre de pièces max
+      char pieceCaractere[50];
+      //Texte + image représentant l'argent
+      sprintf(pieceCaractere,"Pieces : %d",money_current);
+      SDL_FreeSurface(textePieces);
+      textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
+      textePos.x = 0;
+      textePos.y = 50;
+      SDL_BlitSurface(textePieces,NULL,screen,&textePos);
       
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
