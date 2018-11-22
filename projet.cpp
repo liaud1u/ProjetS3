@@ -627,6 +627,7 @@ int main(){
 	stats[2]++; //Le nombre de game over ( stats ) augmente 
       }
       
+      affichePiece(money_current,screen);
      
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);

@@ -45,6 +45,36 @@ void saveStats(char const * file, int *stats){
     fclose(stat);
 }
 
+void affichePiece(int money, SDL_Surface *screen){
+
+      //Initialisation de SDL_TTF
+      TTF_Init();
+      TTF_Font *police ;
+      SDL_Surface *textePieces;
+      SDL_Rect textePos;
+      police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Récuparation de la police + taille
+      SDL_Color couleurTexte = {255,255,255}; //Couleur blanche
+      
+      //Tableau traduisant le nombre de pièces (entier) en char, la taille du tableau détermine le nombre de pièces max
+      char pieceCaractere[50];
+      
+      //Texte + image représentant l'argent
+      sprintf(pieceCaractere,"Pieces : %d",money);
+      
+      //SDL_FreeSurface(textePieces);
+      if (textePieces != NULL){
+        SDL_FreeSurface(textePieces);
+      }
+
+      textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
+      textePos.x = 0;
+      textePos.y = 50;
+      SDL_BlitSurface(textePieces,NULL,screen,&textePos);
+
+      TTF_CloseFont(police);
+      TTF_Quit();
+}
+
 void printStats(int *stats){
     printf("Score max: %d\nTemps minimum: %d:%d\nNombre de GameOver: %d\nEnnemis tuées: %d\nArgent: %d\n",stats[0],stats[1]/60,stats[1]%60,stats[2],stats[3],stats[4]);
 }

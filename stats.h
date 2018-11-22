@@ -10,4 +10,5 @@ void loadStats(char const * file,int *stats);
 void resetStats(char const * file);
 void saveStats(char const * file, int *stats);
 void printStats(int * stats);
+void affichePiece(int money, SDL_Surface *screen);
 void print(int * stats,SDL_Surface *screen);
