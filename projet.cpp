@@ -48,6 +48,7 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
 //Programme principal
 int main(){
   int stats[5];
+  int dir;
   int level = 0;
   int i,j; // Parcours des boucles
   int k; // Parcours des boucles 
@@ -65,7 +66,7 @@ int main(){
   int menu_int;
   int cooldown;
   
-  
+  dir = 0;
   
   
   loadStats("statistiques", stats);
@@ -75,8 +76,8 @@ int main(){
   SDL_Surface *screen;
   Uint8 *keystate;
   SDL_Event event;
-  SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos;
-  SDL_Surface *dirt,*d_close,*options,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
+  SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
+  SDL_Surface *dirt,*d_close,*options,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -158,6 +159,8 @@ int main(){
   stat = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/options.bmp");
   options = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/sword.bmp");
+  sword = SDL_DisplayFormat(temp);
   
   /*Surface free*/
   SDL_FreeSurface(temp);
@@ -172,6 +175,7 @@ int main(){
   SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(sword, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   srand(time(NULL));
   
   i = 32;                                                 // largeur de la map
@@ -352,6 +356,14 @@ int main(){
 	  attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, Horde.Horde::getTab(), Horde.Horde::getNb(),vertical,horizontal, map, i, j,stats);
 	  elfImage.x = 8*MONSTER_SIZE; ; //activation du sprite de déplacement
 	  attack_cooldown = ATTACK;
+	  if(event.motion.x > LARGEUR/2){
+	    dir = 0;
+	     elfImage.y = 56 * (who*2) ; //Mise a jour des sprites ( perso en mouvement ) 
+	  }
+	    else{
+	      dir = 1;
+	      elfImage.y = 56 * (who*2) + 56 ; //Mise a jour des sprites ( perso en mouvement ) 
+            }
 	}
 	if (keystate[SDLK_ESCAPE]){
 	  fin = 1;
@@ -363,7 +375,7 @@ int main(){
 	  
 	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
 	    leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
-	    
+	    dir = 1;
 	  }
 	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q]){ // si z actif
 	    upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
@@ -374,6 +386,7 @@ int main(){
 	    
 	  }
 	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
+	    dir = 0;
 	    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  }
 	}
@@ -547,9 +560,23 @@ int main(){
       
       Horde.afficher(frame,screen, vertical, horizontal);
       
+      //Define the blit surface for the sword
+      
+      swordImage.w = 60;
+      swordImage.h = 24;
+      swordImage.x = 0  + swordImage.w * dir;
+      swordImage.y = 0;
+      swordPos.x = elfPos.x + 8 - ( dir * ( swordImage.w ) ) + (!dir?15:0) ;
+      swordPos.y = elfPos.y +30;
+      
+      //Affichage de l'arme
+      if(attack_cooldown != 0){
+	SDL_BlitSurface(sword, &swordImage, screen, &swordPos);
+      }
       
       //Affichage du perso 
       SDL_BlitSurface(elf, &elfImage, screen, &elfPos);
+      
       
       
       //Affichage du décor qui passe dessus les personnages
@@ -600,29 +627,12 @@ int main(){
 	stats[2]++; //Le nombre de game over ( stats ) augmente 
       }
       
-      SDL_Rect textePos;
-      SDL_Surface *textePieces;
-      
-      //Initialisation de SDL_TTF
-      TTF_Init();
-      TTF_Font *police ;
-      police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Récuparation de la police + taille
-      SDL_Color couleurTexte = {255,255,255}; //Couleur blanche
-      //Tableau traduisant le nombre de pièces (entier) en char, la taille du tableau détermine le nombre de pièces max
-      char pieceCaractere[50];
-      //Texte + image représentant l'argent
-      sprintf(pieceCaractere,"Pieces : %d",money_current);
-      SDL_FreeSurface(textePieces);
-      textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
-      textePos.x = 0;
-      textePos.y = 50;
-      SDL_BlitSurface(textePieces,NULL,screen,&textePos);
-      
+     
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
       
       end= SDL_GetTicks();
-  };
+  }
   
   int time;
   time = (end -start)/1000;
