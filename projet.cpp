@@ -19,6 +19,7 @@
 #define D_SIZE 50
 #define LIFE 20
 #define MONSTER_SIZE 32
+#define ATTACK 30
 
 using namespace std;
 
@@ -63,6 +64,7 @@ int main(){
   int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
   int menu_int;
   int cooldown;
+  
   
   
   
@@ -177,7 +179,7 @@ int main(){
   
   fin =0;
   int jb,ib;
-  
+  int attack_cooldown = ATTACK;
   int ** map = alloc(i,j);
   int ** mapdeco = alloc(i,j);
   
@@ -224,7 +226,7 @@ int main(){
 	      elfPos.x = LARGEUR/2 + 170;
 	      elfPos.y = HAUTEUR/2 -210 ;
 	      //Mise a jour du sprite du perso
-	      if(wait < 20){
+	      if(wait < 80){
 		wait++;}
 		else{
 		  wait = 0;
@@ -319,7 +321,8 @@ int main(){
       
       //Mise a jour des annimations 
       
-      elfImage.x = MONSTER_SIZE * frame;
+      if(attack_cooldown == 0)
+	elfImage.x = MONSTER_SIZE * frame;
       
       if (cooldown > 0){
 	cooldown --;
@@ -327,6 +330,9 @@ int main(){
       
       //Detection de pression des touches
       keystate = SDL_GetKeyState(NULL);
+      if(attack_cooldown > 0){
+	attack_cooldown--;
+      };
       
       for (jb=0;jb<j;jb++){ // Detection de la case ou le joueur est 
 	tilePosition.y = - horizontal + D_SIZE * jb + pos_y * D_SIZE;
@@ -345,13 +351,15 @@ int main(){
 	if (event.type == SDL_MOUSEBUTTONDOWN && cooldown == 0){
 	  attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, Horde.Horde::getTab(), Horde.Horde::getNb(),vertical,horizontal, map, i, j,stats);
 	  elfImage.x = 8*MONSTER_SIZE; ; //activation du sprite de déplacement
+	  attack_cooldown = ATTACK;
 	}
-	
 	if (keystate[SDLK_ESCAPE]){
 	  fin = 1;
 	  score_current -= 100; // Malus d'abandon
 	  stats[2]++; //Le nombre de game over ( stats ) augmente 
 	}
+	if(attack_cooldown == 0){
+	
 	
 	if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
 	  leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
@@ -368,7 +376,7 @@ int main(){
 	if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
 	  rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	}
-	
+	}
       }
       
      Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life);
@@ -487,14 +495,17 @@ int main(){
 	    case 0:
 	      init(i,j,map,"maps/level0.map");
 	      init(i,j,mapdeco,"maps/level0.deco");
+	      Horde.load("maps/monstre0");
 	      break;
 	    case 1:
 	      init(i,j,map,"maps/level1.map");
 	      init(i,j,mapdeco,"maps/level1.deco");
+	      Horde.load("maps/monstre1");
 	      break;
 	    case 2:
 	      init(i,j,map,"maps/level2.map");
 	      init(i,j,mapdeco,"maps/level2.deco");
+		Horde.load("maps/monstre2");
 	      break;
 	  }
 // 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
@@ -517,30 +528,20 @@ int main(){
 	      case 0:
 		init(i,j,map,"maps/level0.map");
 		init(i,j,mapdeco,"maps/level0.deco");
+		Horde.load("maps/monstre0");
 		break;
 	      case 1:
 		init(i,j,map,"maps/level1.map");
 		init(i,j,mapdeco,"maps/level1.deco");
+		Horde.load("maps/monstre1");
 		break;
 	      case 2:
 		init(i,j,map,"maps/level2.map");
 		init(i,j,mapdeco,"maps/level2.deco");
+		Horde.load("maps/monstre2");
 		break;
-	      case 3:
-		init(i,j,map,"maps/level3.map");
-		init(i,j,mapdeco,"maps/level3.deco");
-		break;
-	      case 4: 
-		init(i,j,map,"maps/level4.map");
-		init(i,j,mapdeco,"maps/level4.deco");
 		break;
 	    }
-// 	    for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-// 	      if(!zombieTab[z].isDead()){
-// 		printf("Les mobs doivent etre clear\n");
-// 	      }
-// 	      //Chargement des monstres du niveau
-// 	    }
 	    
 	  }
 	}

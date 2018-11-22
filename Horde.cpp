@@ -30,7 +30,6 @@ Horde::Horde(char const * adresse){
     fscanf(ennemi_file,"%d",&size);
     
     horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
-    horde[n].afficher();
   }
 }
 
@@ -40,6 +39,23 @@ void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vi
 	  
 	  horde[k].move(mapix,i,j,y,x,ho,ve,vie);
       }
+}
+
+void Horde::load(char const * adresse){
+  FILE* ennemi_file;
+  int x,y,vie,cat,size;
+  ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
+  fscanf(ennemi_file,"%d",&nb);
+  for(int n = 0; n < nb; n++){
+    
+    fscanf(ennemi_file,"%d",&x);
+    fscanf(ennemi_file,"%d",&y);
+    fscanf(ennemi_file,"%d",&vie);
+    fscanf(ennemi_file,"%d",&cat);
+    fscanf(ennemi_file,"%d",&size);
+    
+    horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
+  }
 }
 
 void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal) const{
@@ -79,6 +95,17 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
 int Horde::getNb() const{
   return nb;
 }
+
+int Horde::getNbAlive() const{
+  int n = 0;
+    for (int z = 0; z<nb; z++){
+    if(!horde[z].isDead()){
+      n++;
+    }
+  }
+  return n;
+}
+
 
 Ennemi * Horde::getTab(){
   return horde;

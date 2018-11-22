@@ -17,6 +17,8 @@ public:
   void afficher(int frame,SDL_Surface *screen, int vertical, int horizontal) const; //toString()
   int getNb() const; // nombre d'ennemi dans la horde
   Ennemi * getTab();
+  void load(char const * adresse);
+  int getNbAlive() const;
     
 private:
   //Attributs
