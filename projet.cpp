@@ -5,6 +5,7 @@
 #include <ctime>
 #include <string>
 #include <iostream>
+// #include <SDL/SDL_mixer.h>
 
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -22,27 +23,6 @@
 
 using namespace std;
 
-void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab, int vertical, int horizontal, int ** map, int tailleX, int tailleY,int *stat){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
-  int i,valX,valY;
-  for (i = 0; i < tailleTab; i++){
-    if(!tabEnnemis[i].isDead()){
-      SDL_Rect rectangleEnnemi = tabEnnemis[i].getPositionPrint(horizontal,vertical);//Récupération du rectangle représentant l'ennemi
-      valX = tabEnnemis[i].getX() ;
-      valY = tabEnnemis[i].getY() - 1;
-      if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
-	int dist = distance(valX, valY, xHeros, yHeros, map,tailleX,tailleY);
-	if ( dist == 1 || dist == 0){ //Test si l'ennemi est bien à 1 de distance du personnage
-	  tabEnnemis[i].haveDamage(attaqueHeros,stat);//L'ennemi subit des dégats.
-	  printf("Nombre de kill: %d\n",stat[3]);
-	  saveStats("statistiques",stat);
-	}
-	
-      }
-      
-    }
-  }
-  
-}
 
 
 //Programme principal
@@ -67,9 +47,15 @@ int main(){
   int cooldown;
   int temp_money; //Utile pour le calcul de l'argent gagné en tuant un ennemi
   
+//   Mix_Music *musique;
+//   Mix_Chunk *plop,*win_sound;
+  
   temp_money= 0;
   dir = 0;
   
+//   //Initialisation de la musique
+//   Mix_AllocateChannels(32);
+//   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
   
   loadStats("statistiques", stats);
   
@@ -79,7 +65,7 @@ int main(){
   Uint8 *keystate;
   SDL_Event event;
   SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
-  SDL_Surface *dirt,*d_close,*options,*menu,*tree,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
+  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -109,23 +95,23 @@ int main(){
   
   
   /*BMP loading*/
-  temp = SDL_LoadBMP("ressources/grass.bmp");
-  tree = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/dirt.bmp");
-  dirt = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_hg.bmp");
+  temp = SDL_LoadBMP("ressources/map/background.bmp");
+  background = SDL_DisplayFormat(temp);
+  temp = SDL_LoadBMP("ressources/map/slab.bmp");
+  slab = SDL_DisplayFormat(temp);
+  temp = SDL_LoadBMP("ressources/map/coin_hg.bmp");
   hg = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_hd.bmp");
+  temp = SDL_LoadBMP("ressources/map/coin_hd.bmp");
   hd = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_bg.bmp");
+  temp = SDL_LoadBMP("ressources/map/coin_bg.bmp");
   bg = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_bd.bmp");
+  temp = SDL_LoadBMP("ressources/map/coin_bd.bmp");
   bd = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/haut.bmp");
+  temp = SDL_LoadBMP("ressources/map/haut.bmp");
   haut = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/droite.bmp");
+  temp = SDL_LoadBMP("ressources/map/droite.bmp");
   droite = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/gauche.bmp");
+  temp = SDL_LoadBMP("ressources/map/gauche.bmp");
   gauche= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/fullheart.bmp");
   heart= SDL_DisplayFormat(temp);
@@ -133,8 +119,6 @@ int main(){
   heartb= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/half_heart.bmp");
   hearth= SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/doors_close.bmp");
-  d_close= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/skull.bmp");
   skull= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/ladder.bmp");
@@ -145,13 +129,13 @@ int main(){
   crate= SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/perso.bmp");
   elf= SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/int_d.bmp");
+  temp = SDL_LoadBMP("ressources/map/int_d.bmp");
   int_d = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/int_g.bmp");
+  temp = SDL_LoadBMP("ressources/map/int_g.bmp");
   int_g = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_ext_d.bmp");
+  temp = SDL_LoadBMP("ressources/map/coin_ext_d.bmp");
   ext_d = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/coin_ext_g.bmp");
+  temp = SDL_LoadBMP("ressources/map/coin_ext_g.bmp");
   ext_g = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/menu.bmp");
   menu = SDL_DisplayFormat(temp);
@@ -203,6 +187,8 @@ int main(){
   elfImage.x = MONSTER_SIZE*frame;
   elfPos.x = LARGEUR/2 - 16;
   elfPos.y = HAUTEUR/2 - 56;
+  elfPos.w = MONSTER_SIZE;
+  elfPos.h = 56;
   
 
   
@@ -302,7 +288,6 @@ int main(){
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
       start = SDL_GetTicks();
-      
     }
     
     
@@ -383,19 +368,19 @@ int main(){
 	if(attack_cooldown == 0){
 	  
 	  
-	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ // si q actif
+	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,0)){ // si q actif
 	    leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    dir = 1;
 	  }
-	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q]){ // si z actif
+	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q] && !Horde.collide(elfPos,1)){ // si z actif
 	    upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    
 	  }
-	  if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] ){ // activation de S
+	  if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] && !Horde.collide(elfPos,2)){ // activation de S
 	    downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    
 	  }
-	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] ){ //Si touche D 
+	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,3)){ //Si touche D 
 	    dir = 0;
 	    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  }
@@ -407,7 +392,7 @@ int main(){
 	tilePosition.y = 0 + D_SIZE * (k);
 	tilePosition.x = 0;
 	for(int p=0;p<40;p++){
-	  SDL_BlitSurface(tree, NULL, screen, &tilePosition);
+	  SDL_BlitSurface(background, NULL, screen, &tilePosition);
 	  tilePosition.y = 0  + D_SIZE * k;
 	  tilePosition.x = 0 + D_SIZE * p;
 	}
@@ -422,10 +407,10 @@ int main(){
 	  tilePosition.x = vertical+ D_SIZE * ib + pos_x * D_SIZE;
 	  switch (map[jb][ib]){
 	    case 48:
-	      SDL_BlitSurface(tree, NULL, screen, &tilePosition);
+	      SDL_BlitSurface(background, NULL, screen, &tilePosition);
 	      break;
 	    case 49:
-	      SDL_BlitSurface(dirt, NULL, screen, &tilePosition);
+	      SDL_BlitSurface(slab, NULL, screen, &tilePosition);
 	      break;
 	    case 50:
 	      SDL_BlitSurface(droite, NULL, screen, &tilePosition);
@@ -477,11 +462,6 @@ int main(){
 	  switch (mapdeco[jb][ib]){
 	    case 48:
 	      break;
-	    case 49:
-	      tilePosition.y = - horizontal + D_SIZE * jb-59;
-	      SDL_BlitSurface(d_close, NULL, screen, &tilePosition);
-	      tilePosition.y = - horizontal + D_SIZE * jb+59;
-	      break;
 	    case 50:
 	      r = 8;
 	      tilePosition.x +=r;
@@ -510,7 +490,7 @@ int main(){
  
       if(mapdeco[actualY][actualX]==51 && SDL_PollEvent(&event) && keystate[SDLK_RETURN] ){
 	keystate = SDL_GetKeyState(NULL);
-	if(level <4){
+	if(level <6){
 	  level++;
 	  horizontal += 50;
 	  printf("Chargement du niveau inférieur %d\n",level);
@@ -529,6 +509,19 @@ int main(){
 	      init(i,j,map,"maps/level2.map");
 	      init(i,j,mapdeco,"maps/level2.deco");
 	      Horde.load("maps/monstre2");
+	    case 3:
+	      init(i,j,map,"maps/level3.map");
+	      init(i,j,mapdeco,"maps/level3.deco");
+	      Horde.load("maps/monstre3");
+	    case 4:
+	      init(i,j,map,"maps/level4.map");
+	      init(i,j,mapdeco,"maps/level4.deco");
+	      Horde.load("maps/monstre4");
+	      break;
+	    case 5:
+	      init(i,j,map,"maps/level5.map");
+	      init(i,j,mapdeco,"maps/level5.deco");
+	      Horde.load("maps/monstre5");
 	      break;
 	  }
 	  // 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
@@ -565,6 +558,20 @@ int main(){
 		init(i,j,mapdeco,"maps/level2.deco");
 		Horde.load("maps/monstre2");
 		break;
+		    case 3:
+	      init(i,j,map,"maps/level3.map");
+	      init(i,j,mapdeco,"maps/level3.deco");
+	      Horde.load("maps/monstre3");
+	    case 4:
+	      init(i,j,map,"maps/level4.map");
+	      init(i,j,mapdeco,"maps/level4.deco");
+	      Horde.load("maps/monstre4");
+	      break;
+	    case 5:
+	      init(i,j,map,"maps/level5.map");
+	      init(i,j,mapdeco,"maps/level5.deco");
+	      Horde.load("maps/monstre5");
+	      break;
 		break;
 	    }
 	    
@@ -671,8 +678,8 @@ int main(){
   saveStats("statistiques",stats);
   
   //Free 
-  SDL_FreeSurface(tree);
-  SDL_FreeSurface(dirt);
+  SDL_FreeSurface(background);
+  SDL_FreeSurface(slab);
   SDL_FreeSurface(hg);
   SDL_FreeSurface(hd);
   SDL_FreeSurface(bg);
@@ -683,7 +690,6 @@ int main(){
   SDL_FreeSurface(heart);
   SDL_FreeSurface(heartb);
   SDL_FreeSurface(hearth);
-  SDL_FreeSurface(d_close);
   SDL_FreeSurface(skull);
   SDL_FreeSurface(ladder);
   SDL_FreeSurface(hole);

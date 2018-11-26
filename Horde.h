@@ -19,7 +19,8 @@ public:
   Ennemi * getTab();
   void load(char const * adresse);
   int getNbAlive() const;
-    
+  int collide(SDL_Rect &perso, int dir);
+  
 private:
   //Attributs
   Ennemi horde[30];

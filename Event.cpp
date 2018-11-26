@@ -3,10 +3,40 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
+
+#include "stats.h"
+#include "Ennemi.h"
+#include "Fonction.h"
+
+
+
 #define HAUTEUR 500
 #define LARGEUR 900
 #define D_SIZE 50
 #define SPEED 2
+
+
+void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int attaqueHeros, Ennemi* tabEnnemis, int tailleTab, int vertical, int horizontal, int ** map, int tailleX, int tailleY,int *stat){ //On regarde si il y a un ennemi à proximité dans les alentours, mais aussi que le joueur a bien cliqué sur celui-ci
+  int i,valX,valY;
+  for (i = 0; i < tailleTab; i++){
+    if(!tabEnnemis[i].isDead()){
+      SDL_Rect rectangleEnnemi = tabEnnemis[i].getPositionPrint(horizontal,vertical);//Récupération du rectangle représentant l'ennemi
+      valX = tabEnnemis[i].getX() ;
+      valY = tabEnnemis[i].getY() - 1;
+      if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
+	int dist = distance(valX, valY, xHeros, yHeros, map,tailleX,tailleY);
+	if ( dist == 1 || dist == 0){ //Test si l'ennemi est bien à 1 de distance du personnage
+	  tabEnnemis[i].haveDamage(attaqueHeros,stat);//L'ennemi subit des dégats.
+	  printf("Nombre de kill: %d\n",stat[3]);
+	  saveStats("statistiques",stat);
+	}
+	
+      }
+      
+    }
+  }
+  
+}
 
 void getPos(SDL_Rect &tilePosition, int &ho, int &ve, int &y, int &x, int &actualY, int &actualX, int &i, int &j,int **mapix, int vertical_decal, int horizontal_decal,SDL_Rect &elfPos){
     
