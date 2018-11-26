@@ -45,32 +45,51 @@ void saveStats(char const * file, int *stats){
     fclose(stat);
 }
 
-void affichePiece(int money, SDL_Surface *screen){
+void affichePiece(int money, SDL_Surface *screen, int frame){
 
       //Initialisation de SDL_TTF
       TTF_Init();
       TTF_Font *police ;
-      SDL_Surface *textePieces;
-      SDL_Rect textePos;
+      SDL_Surface *textePieces,*temp,*piece;
+      SDL_Rect textePos,pieceImage,piecePos;
       police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Récuparation de la police + taille
       SDL_Color couleurTexte = {255,255,255}; //Couleur blanche
       
+    int colorkey; // Couleur pour transparence des bmp 
+      
+      temp = SDL_LoadBMP("ressources/piece.bmp");
+      piece = SDL_DisplayFormat(temp);
+      
+      
+  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+  
+  SDL_SetColorKey(piece, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    
       //Tableau traduisant le nombre de pièces (entier) en char, la taille du tableau détermine le nombre de pièces max
       char pieceCaractere[50];
       
       //Texte + image représentant l'argent
-      sprintf(pieceCaractere,"Pieces : %d",money);
+      sprintf(pieceCaractere,"x%d",money);
       
-      //SDL_FreeSurface(textePieces);
-      if (textePieces != NULL){
-        SDL_FreeSurface(textePieces);
-      }
-
       textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
-      textePos.x = 0;
-      textePos.y = 50;
+      textePos.x = 1200 - textePieces->w -10;
+      textePos.y = 15;
       SDL_BlitSurface(textePieces,NULL,screen,&textePos);
-
+      
+          /* Define the source rectangle (piece)for the BlitSurface */
+      pieceImage.y = 0 ;
+      pieceImage.w = 50;
+      pieceImage.h = 50;
+      pieceImage.x = 50 * frame;
+      
+      piecePos.x = textePos.x - 50 ;
+      piecePos.y = textePos.y -10;
+  
+      SDL_BlitSurface(piece,&pieceImage,screen,&piecePos);
+      
+	    
+      SDL_FreeSurface(textePieces);
+      SDL_FreeSurface(piece);
       TTF_CloseFont(police);
       TTF_Quit();
 }

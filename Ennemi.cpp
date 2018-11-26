@@ -107,6 +107,9 @@ void Ennemi::haveDamage(int damage, int *stat){
 void Ennemi::dead(int *stat){
   e_dead = 1;
   stat[3] ++;
+  srand(SDL_GetTicks());
+  stat[4] += 1 + rand()%3;
+  
 }
 
 bool Ennemi::isDead() const{

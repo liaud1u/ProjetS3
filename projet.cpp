@@ -65,7 +65,9 @@ int main(){
   int lifeprint; // Variable temporaire servant a l'affichage des coeurs *
   int menu_int;
   int cooldown;
+  int temp_money; //Utile pour le calcul de l'argent gagné en tuant un ennemi
   
+  temp_money= 0;
   dir = 0;
   
   
@@ -161,6 +163,7 @@ int main(){
   options = SDL_DisplayFormat(temp);
     temp = SDL_LoadBMP("ressources/sword.bmp");
   sword = SDL_DisplayFormat(temp);
+ 
   
   /*Surface free*/
   SDL_FreeSurface(temp);
@@ -169,6 +172,7 @@ int main(){
   
   /* setup sprite colorkey and turn on RLE */
   colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+  
   SDL_SetColorKey(skull, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(heart, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(heartb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
@@ -199,6 +203,8 @@ int main(){
   elfImage.x = MONSTER_SIZE*frame;
   elfPos.x = LARGEUR/2 - 16;
   elfPos.y = HAUTEUR/2 - 56;
+  
+
   
   vertical = 125;
   horizontal = -75;
@@ -353,9 +359,13 @@ int main(){
       
       if (SDL_PollEvent(&event)){
 	if (event.type == SDL_MOUSEBUTTONDOWN && cooldown == 0){
+	  temp_money = stats[4];
 	  attaqueHeros(event.motion.x, event.motion.y, actualX, actualY, valAttaque, Horde.Horde::getTab(), Horde.Horde::getNb(),vertical,horizontal, map, i, j,stats);
 	  elfImage.x = 8*MONSTER_SIZE; ; //activation du sprite de déplacement
 	  attack_cooldown = ATTACK;
+	  money_current += stats[4] - temp_money;
+	  
+	  
 	  if(event.motion.x > LARGEUR/2){
 	    dir = 0;
 	     elfImage.y = 56 * (who*2) ; //Mise a jour des sprites ( perso en mouvement ) 
@@ -558,6 +568,11 @@ int main(){
 	}
       }
       
+      if(actualX >= 0 && actualY >= 0 && mapdeco[actualY][actualX]==53){
+	money_current += rand() %3 + 1;
+	mapdeco[actualY][actualX] = 0;
+      }
+      
       Horde.afficher(frame,screen, vertical, horizontal);
       
       //Define the blit surface for the sword
@@ -605,7 +620,7 @@ int main(){
       
       Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life,screen); //Déplacement des ennemis et dégat si il y a.
       
-      
+
       //Affichage de la vie
       lifeprint = life;
       for(int li =0; li <10;li+=2){
@@ -627,7 +642,7 @@ int main(){
 	stats[2]++; //Le nombre de game over ( stats ) augmente 
       }
       
-      affichePiece(money_current,screen);
+      affichePiece(money_current,screen,frame);
      
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
