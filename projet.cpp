@@ -507,10 +507,12 @@ int main(){
 	}
       }
       
-      if(mapdeco[actualY][actualX]==51){
+ 
+      if(mapdeco[actualY][actualX]==51 && SDL_PollEvent(&event) && keystate[SDLK_RETURN] ){
+	keystate = SDL_GetKeyState(NULL);
 	if(level <4){
-	  horizontal-= (50-horizontal%50) + 25;
 	  level++;
+	  horizontal += 50;
 	  printf("Chargement du niveau inférieur %d\n",level);
 	  switch (level){
 	    case 0:
@@ -540,11 +542,13 @@ int main(){
       }
       
       else{
-	if(mapdeco[actualY][actualX]==52){
+	if(mapdeco[actualY][actualX]==52 && SDL_PollEvent(&event) && keystate[SDLK_RETURN] ){
+	  keystate = SDL_GetKeyState(NULL);
 	  if(level > 0 ){
 	    level--;
+	    
+	  horizontal += 50;
 	    printf("Chargement du niveau supérieur %d\n",level);
-	    horizontal-= (50-horizontal%50) + 25;
 	    switch (level){
 	      case 0:
 		init(i,j,map,"maps/level0.map");
@@ -567,6 +571,7 @@ int main(){
 	  }
 	}
       }
+      
       
       if(actualX >= 0 && actualY >= 0 && mapdeco[actualY][actualX]==53){
 	money_current += rand() %3 + 1;
