@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <math.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include <ctime>
 #include <string>
 #include <iostream>
@@ -13,6 +14,7 @@
 #include "Map.h"
 #include "Horde.h"
 #include "stats.h"
+#include "Shop.h"
 
 #define HAUTEUR 750
 #define LARGEUR 1200
@@ -86,6 +88,7 @@ int main(){
   SDL_Init(SDL_INIT_VIDEO);
   
   Horde Horde("maps/monstre0");
+
   
   /*Title bar*/
   SDL_WM_SetCaption("Projet","Projet");
@@ -190,7 +193,6 @@ int main(){
   elfPos.w = MONSTER_SIZE;
   elfPos.h = 56;
   
-
   
   vertical = 125;
   horizontal = -75;
@@ -314,7 +316,7 @@ int main(){
 	}
       }	  
       
-      //Mise a jour des annimations 
+      //Mise a jour des animations 
       
       if(attack_cooldown == 0)
 	elfImage.x = MONSTER_SIZE * frame;
@@ -384,6 +386,22 @@ int main(){
 	    dir = 0;
 	    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  }
+	  if (keystate[SDLK_b]){
+
+	  		Shop *shop = new Shop(screen);
+
+			Uint8 *keystateShop;
+			bool shopContinuer = true;
+			while ( shopContinuer ){
+				if (event.type == SDL_MOUSEBUTTONDOWN){
+					shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y);
+				}
+				keystateShop = SDL_GetKeyState(NULL);
+				if (keystateShop[SDLK_ESCAPE]){
+					shopContinuer = false;
+				}
+			}
+	  	}
 	}
       }
       
