@@ -514,40 +514,46 @@ int main(){
 	  printf("Chargement du niveau inférieur %d\n",level);
 	  switch (level){
 	    case 0:
+            if(exists("maps/level0.map")){
 	      init(i,j,map,"maps/level0.map");
 	      init(i,j,mapdeco,"maps/level0.deco");
 	      Horde.load("maps/monstre0");
+            }
 	      break;
 	    case 1:
+            if(exists("maps/level1.map")){
 	      init(i,j,map,"maps/level1.map");
 	      init(i,j,mapdeco,"maps/level1.deco");
 	      Horde.load("maps/monstre1");
+            }
 	      break;
 	    case 2:
-	      init(i,j,map,"maps/level2.map");
-	      init(i,j,mapdeco,"maps/level2.deco");
-	      Horde.load("maps/monstre2");
+            if(exists("maps/level2.map")){
+init(i,j,map,"maps/level2.map");
+		init(i,j,mapdeco,"maps/level2.deco");
+		Horde.load("maps/monstre2");
+            }
 	    case 3:
+            if(exists("maps/level3.map")){
 	      init(i,j,map,"maps/level3.map");
 	      init(i,j,mapdeco,"maps/level3.deco");
 	      Horde.load("maps/monstre3");
+            }
 	    case 4:
+            if(exists("maps/level4.map")){
 	      init(i,j,map,"maps/level4.map");
 	      init(i,j,mapdeco,"maps/level4.deco");
 	      Horde.load("maps/monstre4");
+            }
 	      break;
 	    case 5:
+            if(exists("maps/level5.map")){
 	      init(i,j,map,"maps/level5.map");
 	      init(i,j,mapdeco,"maps/level5.deco");
 	      Horde.load("maps/monstre5");
+            }
 	      break;
 	  }
-	  // 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-	  // 	    if(!zombieTab[z].isDead()){
-	  // 	      printf("Les mobs doivent etre clear\n");
-	  // 	    }
-	  // 	    //Chargement des monstres du niveau
-	  // 	  }  
 	}
 	
       }
@@ -562,35 +568,41 @@ int main(){
 	    printf("Chargement du niveau supérieur %d\n",level);
 	    switch (level){
 	      case 0:
+              if(exists("maps/level0.map")){
 		init(i,j,map,"maps/level0.map");
 		init(i,j,mapdeco,"maps/level0.deco");
 		Horde.load("maps/monstre0");
+              }
 		break;
 	      case 1:
+              if(exists("maps/level1.map")){
 		init(i,j,map,"maps/level1.map");
 		init(i,j,mapdeco,"maps/level1.deco");
 		Horde.load("maps/monstre1");
+              }
 		break;
 	      case 2:
+              if(exists("maps/level2.map")){
 		init(i,j,map,"maps/level2.map");
 		init(i,j,mapdeco,"maps/level2.deco");
 		Horde.load("maps/monstre2");
+              }
 		break;
-		    case 3:
-	      init(i,j,map,"maps/level3.map");
-	      init(i,j,mapdeco,"maps/level3.deco");
-	      Horde.load("maps/monstre3");
-	    case 4:
-	      init(i,j,map,"maps/level4.map");
-	      init(i,j,mapdeco,"maps/level4.deco");
-	      Horde.load("maps/monstre4");
-	      break;
-	    case 5:
-	      init(i,j,map,"maps/level5.map");
-	      init(i,j,mapdeco,"maps/level5.deco");
-	      Horde.load("maps/monstre5");
-	      break;
+        	      case 3:
+              if(exists("maps/level3.map")){
+		init(i,j,map,"maps/level3.map");
+		init(i,j,mapdeco,"maps/level3.deco");
+		Horde.load("maps/monstre3");
+              }
 		break;
+        	      case 4:
+              if(exists("maps/level4.map")){
+		init(i,j,map,"maps/level4.map");
+		init(i,j,mapdeco,"maps/level4.deco");
+		Horde.load("maps/monstre4");
+              }
+		break;
+
 	    }
 	    
 	  }

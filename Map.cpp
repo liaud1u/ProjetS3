@@ -19,7 +19,18 @@ int ** alloc(int i, int j){
     return mapix;
 }
 
+int exists(const char * adresse)
+{
+    if (FILE * map = fopen(adresse, "r"))
+    {
+        fclose(map);
+        return 1;
+    }
+    return 0;
+}
+
 void init(int i,int j, int ** mapix,char const * adresse){
+    if(exists(adresse)){
     FILE* map;
     map = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
     char texte;
@@ -37,6 +48,7 @@ void init(int i,int j, int ** mapix,char const * adresse){
         }
     }
     fclose(map); //Fermeture du fichier
+}
 }
 
 void free_tab(int i,int ** mapix){

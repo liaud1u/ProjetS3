@@ -7,3 +7,4 @@
 int ** alloc(int i,int j); //Allocation dynamique d'un tableau
 void init(int i,int j, int ** mapix,char const *adresse); //Charge un fichier dans le tableau 
 void free_tab(int i, int ** mapix); //Free des tableaux
+int exists(const char * adresse);
