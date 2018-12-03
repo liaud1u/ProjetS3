@@ -19,7 +19,7 @@ public:
   Ennemi * getTab();
   void load(char const * adresse);
   int getNbAlive() const;
-  int collide(SDL_Rect &perso, int dir);
+  int collide(SDL_Rect &perso, int dir, int ve, int ho);
   
 private:
   //Attributs

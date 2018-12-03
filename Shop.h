@@ -14,7 +14,7 @@ public:
 	void quitterMenu();
 
 private://Attributs de la classe Shop
-	SDL_Surface *menu,*texteDegats,*textePotion,*temp;
+	SDL_Surface *menu,*texteDegats,*textePotion,*temp,*scre;
 	SDL_Rect posMenu,posTexteDegats,posTextePotion;
 	TTF_Font *police;
 	int prixDegats,prixPotion;

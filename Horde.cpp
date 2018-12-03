@@ -111,12 +111,17 @@ Ennemi * Horde::getTab(){
   return horde;
 }
 
-int Horde::collide(SDL_Rect &perso, int dir){
+int Horde::collide(SDL_Rect &perso, int dir,int ve, int ho){
   int res = 0;
+  SDL_Rect ennemi;
   switch (dir){
     case 0:
       for (int z = 0; z<nb; z++){
+	ennemi = horde[z].getPositionPrint(ho,ve);
 	if(!horde[z].isDead() && res != 1){
+	 if(!(ennemi.x + ennemi.w< perso.x+3 || perso.y > ennemi.y || perso.y + perso.h < ennemi.y)){
+	    res ++;
+	  }
 	}
       }
       return res;

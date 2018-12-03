@@ -6,7 +6,7 @@ Shop::Shop(SDL_Surface *screen){
 
 	prixDegats = 5;
 	prixPotion = 3;
-
+	scre = screen;
 	SDL_Init(SDL_INIT_VIDEO);
 	temp = SDL_LoadBMP("ressources/cadre.bmp");
 	menu = SDL_DisplayFormat(temp);
@@ -35,8 +35,11 @@ Shop::Shop(SDL_Surface *screen){
 	SDL_BlitSurface(texteDegats,NULL,menu,&posTexteDegats);
 	SDL_BlitSurface(textePotion,NULL,menu,&posTextePotion);
 
-	SDL_FreeSurface(texteDegats);
-	SDL_FreeSurface(textePotion);
+
+}
+
+void Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY){
+	
 
 	//Position du menu
 	posMenu.x = 30;
@@ -44,12 +47,9 @@ Shop::Shop(SDL_Surface *screen){
 
 	//Ajout du menu à la fenêtre
 	cout << "Je crée le menu" << endl;
-	SDL_BlitSurface(menu,NULL,screen,&posMenu);
-	SDL_UpdateRect(screen,0,0,0,0);
-
-}
-
-void Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY){
+	SDL_BlitSurface(menu,NULL,scre,&posMenu);
+	SDL_UpdateRect(scre,0,0,0,0);
+	
 	if (posSourisX >= posTextePotion.x && posSourisX <= posTextePotion.x + posTextePotion.h && posSourisY >= posTextePotion.y && posSourisY <= posTextePotion.y + posTextePotion.w){
 		if (money >= prixPotion){ //SI on a l'argent, on achète
 			money -= prixPotion; //On paye
