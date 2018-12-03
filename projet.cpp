@@ -6,7 +6,7 @@
 #include <ctime>
 #include <string>
 #include <iostream>
-// #include <SDL/SDL_mixer.h>
+#include <SDL/SDL_mixer.h>
 
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -51,15 +51,15 @@ int main(){
     int menu_end; // for the game over and win menu
     int credit;
     
-    //   Mix_Music *musique;
-    //   Mix_Chunk *plop,*win_sound;
+      Mix_Music *musique;
+      Mix_Chunk *plop,*win_sound;
     
     temp_money= 0;
     dir = 0;
     
-    //   //Initialisation de la musique
-    //   Mix_AllocateChannels(32);
-    //   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+      //Initialisation de la musique
+      Mix_AllocateChannels(32);
+      Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
     
     loadStats("statistiques", stats);
     
