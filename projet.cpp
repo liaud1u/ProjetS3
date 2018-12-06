@@ -95,7 +95,6 @@ int main(){
   
    //Création du magasin et des variables utiles à son fonctionnement
   Shop *shop = new Shop(screen);
-	Uint8 *keystateShop;
 	bool shopContinuer = true;
     
   /*BMP loading*/

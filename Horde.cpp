@@ -13,144 +13,160 @@ using namespace std;
 
 Horde::Horde()
 {
-  
+    
 }
 
 Horde::Horde(char const * adresse){
-  FILE* ennemi_file;
-  int x,y,vie,cat,size;
-  ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
-  fscanf(ennemi_file,"%d",&nb);
-  for(int n = 0; n < nb; n++){
-    
-    fscanf(ennemi_file,"%d",&x);
-    fscanf(ennemi_file,"%d",&y);
-    fscanf(ennemi_file,"%d",&vie);
-    fscanf(ennemi_file,"%d",&cat);
-    fscanf(ennemi_file,"%d",&size);
-    
-    horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
-  }
+    FILE* ennemi_file;
+    int x,y,vie,cat,size;
+    ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
+    fscanf(ennemi_file,"%d",&nb);
+    for(int n = 0; n < nb; n++){
+        
+        fscanf(ennemi_file,"%d",&x);
+        fscanf(ennemi_file,"%d",&y);
+        fscanf(ennemi_file,"%d",&vie);
+        fscanf(ennemi_file,"%d",&cat);
+        fscanf(ennemi_file,"%d",&size);
+        
+        horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
+    }
 }
 
 void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie,SDL_Surface *screen){
-//   for(int k = 0; k < nb; k++){
-//     if(!horde[k].isDead())
-//       
-//       horde[k].move(mapix,i,j,y,x,ho,ve,vie,screen);
-//   }
+      for(int k = 0; k < nb; k++){
+        if(!horde[k].isDead())
+          
+          horde[k].move(mapix,i,j,y,x,ho,ve,vie,screen);
+      }
 }
 
 void Horde::load(char const * adresse){
-  FILE* ennemi_file;
-  int x,y,vie,cat,size;
-  ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
-  fscanf(ennemi_file,"%d",&nb);
-  for(int n = 0; n < nb; n++){
-    
-    fscanf(ennemi_file,"%d",&x);
-    fscanf(ennemi_file,"%d",&y);
-    fscanf(ennemi_file,"%d",&vie);
-    fscanf(ennemi_file,"%d",&cat);
-    fscanf(ennemi_file,"%d",&size);
-    
-    horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
-  }
+    FILE* ennemi_file;
+    int x,y,vie,cat,size;
+    ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
+    fscanf(ennemi_file,"%d",&nb);
+    for(int n = 0; n < nb; n++){
+        
+        fscanf(ennemi_file,"%d",&x);
+        fscanf(ennemi_file,"%d",&y);
+        fscanf(ennemi_file,"%d",&vie);
+        fscanf(ennemi_file,"%d",&cat);
+        fscanf(ennemi_file,"%d",&size);
+        
+        horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
+    }
 }
 
 void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal) const{
-  
-  SDL_Rect zombiePos,zombieImage;
-  SDL_Surface *temp,*zombie;
-  
-  
-  temp = SDL_LoadBMP("ressources/zombie.bmp");
-  zombie= SDL_DisplayFormat(temp);
-  
-  int colorkey; // Couleur pour transparence des bmp 
-  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
-  
-  SDL_SetColorKey(zombie, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-  
-  /* Define the source rectangle (elf)for the BlitSurface */
-  zombieImage.y = 0 ;
-  zombieImage.w = MONSTER_SIZE;
-  zombieImage.h = 40;
-  zombieImage.x = MONSTER_SIZE*frame;
-  
-  //Affichage des monstres ( ici seulement zombie ) 
-  for (int z = 0; z<nb; z++){
-    if(!horde[z].isDead()){
-      zombiePos = horde[z].getPositionPrint(horizontal,vertical);
-      zombieImage.y = horde[z].getDir() * 40  + 40 * horde[z].getSize();
-      zombieImage.x = horde[z].getCat() * MONSTER_SIZE * 4 + MONSTER_SIZE * frame;
-      SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
+    
+    SDL_Rect zombiePos,zombieImage;
+    SDL_Surface *temp,*zombie;
+    
+    
+    temp = SDL_LoadBMP("ressources/zombie.bmp");
+    zombie= SDL_DisplayFormat(temp);
+    
+    int colorkey; // Couleur pour transparence des bmp 
+    colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+    
+    SDL_SetColorKey(zombie, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    
+    /* Define the source rectangle (elf)for the BlitSurface */
+    zombieImage.y = 0 ;
+    zombieImage.w = MONSTER_SIZE;
+    zombieImage.h = 40;
+    zombieImage.x = MONSTER_SIZE*frame;
+    
+    //Affichage des monstres ( ici seulement zombie ) 
+    for (int z = 0; z<nb; z++){
+        if(!horde[z].isDead()){
+            zombiePos = horde[z].getPositionPrint(horizontal,vertical);
+            zombieImage.y = horde[z].getDir() * 40  + 40 * horde[z].getSize();
+            zombieImage.x = horde[z].getCat() * MONSTER_SIZE * 4 + MONSTER_SIZE * frame;
+            SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
+        }
     }
-  }
-  
-  SDL_FreeSurface(zombie);
-  
+    
+    SDL_FreeSurface(zombie);
+    
 }
 
 int Horde::getNb() const{
-  return nb;
+    return nb;
 }
 
 int Horde::getNbAlive() const{
-  int n = 0;
-  for (int z = 0; z<nb; z++){
-    if(!horde[z].isDead()){
-      n++;
+    int n = 0;
+    for (int z = 0; z<nb; z++){
+        if(!horde[z].isDead()){
+            n++;
+        }
     }
-  }
-  return n;
+    return n;
 }
 
 
 Ennemi * Horde::getTab(){
-  return horde;
+    return horde;
 }
 
 int Horde::collide(SDL_Rect &perso, int dir,int ve, int ho){
-  int res = 0;
-  SDL_Rect ennemi;
-  switch (dir){
-    case 0:
-      for (int z = 0; z<nb; z++){
-	ennemi = horde[z].getPositionPrint(ho,ve);
-	if(!horde[z].isDead() && res != 1){
-	 if(!(ennemi.x + ennemi.w< perso.x+3 || perso.y > ennemi.y || perso.y + perso.h < ennemi.y)){
-	    res ++;
-	  }
-	}
-      }
-      return res;
-      break;
-    case 1:
-      for (int z = 0; z<nb; z++){
-	if(!horde[z].isDead() && res != 1){
-	}
-      }
-      return res;
-      break;
-    case 2:
-      for (int z = 0; z<nb; z++){
-	if(!horde[z].isDead() && res != 1){
-	}
-      }
-      return res;
-      break;
-    case 3:
-      for (int z = 0; z<nb; z++){
-	if(!horde[z].isDead() && res != 1){
-	}
-      }
-      return res;
-      break;
-      
-    default:
-      return 1;
-      break;
-  }
+    int res = 0;
+
+    SDL_Rect ennemi;
+    switch (dir){
+        case 0:
+            for (int z = 0; z<nb; z++){
+                ennemi = horde[z].getPositionPrint(ho,ve);
+                if(!horde[z].isDead() && res != 1){
+                    if(!(ennemi.x + ennemi.w +10< perso.x|| perso.y > ennemi.y || perso.y + perso.h < ennemi.y|| ennemi.x  > perso.x + perso.w)){
+                        res ++;
+                    }
+                }
+            }
+            return res;
+            break;
+        case 1:
+            for (int z = 0; z<nb; z++){
+                
+                ennemi = horde[z].getPositionPrint(ho,ve);
+                if(!horde[z].isDead() && res != 1){
+                    if(!(ennemi.y  - 32> perso.y  || ennemi.y - 32+ ennemi.h < perso.y|| ennemi.x + ennemi.w < perso.x || ennemi.x  > perso.x + perso.w)){
+                        res ++;
+                    }
+                }
+            }
+            return res;
+            break;
+        case 2:
+            for (int z = 0; z<nb; z++){
+                
+                ennemi = horde[z].getPositionPrint(ho,ve);
+                if(!horde[z].isDead() && res != 1){
+                    
+                    if(!(ennemi.y < perso.y  || ennemi.y  > perso.y + perso.h + 10|| ennemi.x + ennemi.w < perso.x || ennemi.x  > perso.x + perso.w)){
+                        res ++;
+                    }
+                }
+            }
+            return res;
+            break;
+        case 3:
+            for (int z = 0; z<nb; z++){
+                ennemi = horde[z].getPositionPrint(ho,ve);
+                if(!horde[z].isDead() && res != 1){
+                    if(!(ennemi.x + ennemi.w < perso.x|| perso.y > ennemi.y || perso.y + perso.h < ennemi.y|| ennemi.x  -10> perso.x + perso.w)){
+                        res ++;
+                    }
+                }
+            }
+            return res;
+            break;
+            
+        default:
+            return 1;
+            break;
+    }
 }
 

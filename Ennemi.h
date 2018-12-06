@@ -31,6 +31,7 @@ class Ennemi
         void move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie,SDL_Surface *screen);
         SDL_Rect getPositionPrint(int ve,int ho) const;
         void randomWhere();
+        int equal(SDL_Rect ennem, int ve, int ho);
     
     private:
         //Attributs

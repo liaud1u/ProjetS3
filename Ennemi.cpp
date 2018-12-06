@@ -146,6 +146,16 @@ void Ennemi::mooveR(int c,int ** mapix){
   }
 }
 
+int Ennemi::equal(SDL_Rect ennem, int ve, int ho){
+  int res = 0;
+  SDL_Rect me = getPositionPrint(ve,ho);
+  res += ennem.x != me.x;
+  res += ennem.y != me.y;
+  res += ennem.w != me.w;
+  res += ennem.h != me.h;
+  return res;
+}
+
 void Ennemi::mooveU(int c,int ** mapix){
   if (getY() -2 > 0 && mapix[getY()-2][getX()] == 49){
     e_ve = e_ve +c ;
