@@ -6,7 +6,6 @@
 #include <ctime>
 #include <string>
 #include <iostream>
-// #include <SDL/SDL_mixer.h>
 
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -48,16 +47,13 @@ int main(){
   int menu_int;
   int cooldown;
   int temp_money; //Utile pour le calcul de l'argent gagné en tuant un ennemi
+  int menu_end; // for the game over and win menu
+  int credit;
   
-//   Mix_Music *musique;
-//   Mix_Chunk *plop,*win_sound;
   
   temp_money= 0;
   dir = 0;
   
-//   //Initialisation de la musique
-//   Mix_AllocateChannels(32);
-//   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
   
   loadStats("statistiques", stats);
   
@@ -67,7 +63,7 @@ int main(){
   Uint8 *keystate;
   SDL_Event event;
   SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
-  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*screenshot,*stat;
+  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -83,17 +79,12 @@ int main(){
   statPos.y = 70;
   
   who = 0;
-
-  //Création du magasin et des variables utiles à son fonctionnement
-  Shop *shop = new Shop(screen);
-	Uint8 *keystateShop;
-	bool shopContinuer = true;
-  
+    
   /*Initialize SDL*/
   SDL_Init(SDL_INIT_VIDEO);
   
   Horde Horde("maps/monstre0");
-
+  
   
   /*Title bar*/
   SDL_WM_SetCaption("Projet","Projet");
@@ -102,6 +93,11 @@ int main(){
   screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,0,0);
   
   
+   //Création du magasin et des variables utiles à son fonctionnement
+  Shop *shop = new Shop(screen);
+	Uint8 *keystateShop;
+	bool shopContinuer = true;
+    
   /*BMP loading*/
   temp = SDL_LoadBMP("ressources/map/background.bmp");
   background = SDL_DisplayFormat(temp);
@@ -153,9 +149,11 @@ int main(){
   stat = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/options.bmp");
   options = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("ressources/sword.bmp");
+  temp = SDL_LoadBMP("ressources/sword.bmp");
   sword = SDL_DisplayFormat(temp);
- 
+  temp = SDL_LoadBMP("ressources/credit.bmp");
+  credit_surface= SDL_DisplayFormat(temp);
+  
   
   /*Surface free*/
   SDL_FreeSurface(temp);
@@ -212,12 +210,14 @@ int main(){
   
   menu_int = 0;
   int fps = 0;
+  
   while(!fin){
     
     while(menu_int!=1){
       
       
       if (SDL_PollEvent(&event)){
+	
 	if (event.type == SDL_MOUSEBUTTONDOWN){
 	  if(event.motion.x >= 140 && event.motion.x <= 495 && event.motion.y > 363 && event.motion.y < 436){
 	    menu_int = 1;
@@ -263,7 +263,19 @@ int main(){
 			loadStats("statistiques", stats);
 		      }else{
 			if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
-			  printf("3");
+			  credit = 1;
+			  while(credit){
+			    if (SDL_PollEvent(&event)){
+			      if (event.type == SDL_MOUSEBUTTONDOWN){
+				credit = 0;
+				
+			      }
+			    }
+			    SDL_BlitSurface(screenshot, NULL, screen, &screenPos);  
+			    SDL_BlitSurface(credit_surface, NULL, screen, &optionsPos);  
+			    SDL_UpdateRect(screen,0,0,0,0);
+			    
+			  }
 			}else{
 			  if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
 			    menu_int = 0;
@@ -309,7 +321,7 @@ int main(){
     
     
     //Mise a jour du sprite du perso
-    if(wait < 20){
+    if(wait < 10){
       wait++;}
       else{
 	wait = 0;
@@ -360,52 +372,91 @@ int main(){
 	  
 	  if(event.motion.x > LARGEUR/2){
 	    dir = 0;
-	     elfImage.y = 56 * (who*2) ; //Mise a jour des sprites ( perso en mouvement ) 
+	    elfImage.y = 56 * (who*2) ; //Mise a jour des sprites ( perso en mouvement ) 
 	  }
-	    else{
-	      dir = 1;
-	      elfImage.y = 56 * (who*2) + 56 ; //Mise a jour des sprites ( perso en mouvement ) 
-            }
+	  else{
+	    dir = 1;
+	    elfImage.y = 56 * (who*2) + 56 ; //Mise a jour des sprites ( perso en mouvement ) 
+	  }
 	}
 	if (keystate[SDLK_ESCAPE]){
-	  fin = 1;
+	  menu_end=0;
+	temp = SDL_LoadBMP("ressources/pause.bmp");
+		end_menu = SDL_DisplayFormat(temp);
+	  	while(menu_end!=1){ //Menu de fin
+	  if (SDL_PollEvent(&event)){
+	    if (event.type == SDL_MOUSEBUTTONDOWN){
+	      if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+		menu_end=1;
+			  fin = 1;
 	  score_current -= 100; // Malus d'abandon
 	  stats[2]++; //Le nombre de game over ( stats ) augmente 
+	      }else{
+		if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+		  menu_end = 1;
+		}
+	      }
+	    }
+	  }
+	  SDL_BlitSurface(end_menu, NULL, screen, &optionsPos);  
+	  SDL_UpdateRect(screen,0,0,0,0);
+	  
+	}
+
 	}
 	if(attack_cooldown == 0){
 	  
 	  
-	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,0)){ // si q actif
+	  if (keystate[SDLK_q] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,0,vertical,horizontal)){ // si q actif
 	    leftK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    dir = 1;
 	  }
-	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q] && !Horde.collide(elfPos,1)){ // si z actif
+	  if (keystate[SDLK_z] && !keystate[SDLK_d] && !keystate[SDLK_s] && !keystate[SDLK_q] && !Horde.collide(elfPos,1,vertical,horizontal)){ // si z actif
 	    upK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    
 	  }
-	  if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] && !Horde.collide(elfPos,2)){ // activation de S
+	  if (keystate[SDLK_s]&& !keystate[SDLK_d] && !keystate[SDLK_q] && !keystate[SDLK_z] && !Horde.collide(elfPos,2,vertical,horizontal)){ // activation de S
 	    downK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	    
 	  }
-	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,3)){ //Si touche D 
+	  if (keystate[SDLK_d]&& !keystate[SDLK_q] && !keystate[SDLK_s] && !keystate[SDLK_z] && !Horde.collide(elfPos,3,vertical,horizontal)){ //Si touche D 
 	    dir = 0;
 	    rightK(elfImage, who, frame, tilePosition, horizontal, pos_y, vertical, pos_x, actualY, actualX,i,j,map,elfPos);
 	  }
 	  if (keystate[SDLK_b]){
-	  		shop->miseAJourPrix(screen);
-	  		
-
-
+	  		shopContinuer = true;
 			while ( shopContinuer ){
+                //Mise a jour de la variable frame pour l'affichage du nombre de piece sur l'ecran du shop
+                if(wait < 20){
+                    wait++;}
+                    else{
+                        wait = 0;
+                        if (frame <3 ){
+                            frame++;
+                        }
+                        else{
+                            frame = 0;
+                        }
+                    }
+                //Affichage du shop
+                shop->miseAJourPrix(screen,frame,money_current);
+                //Verification de click sur les boutons
 				if (event.type == SDL_MOUSEBUTTONDOWN){
-					shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen);
+					shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen, frame);
+                    
 				}
-				keystateShop = SDL_GetKeyState(NULL);
-				if (keystateShop[SDLK_ESCAPE]){
-					shopContinuer = false;
-				}
+				 if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){
+			      if (event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+             
+				shopContinuer = false;
+				
+			      }
+			    }
 			}
-	  	}
+	  	
+	  	
+	  	
+	  }
 	}
       }
       
@@ -509,7 +560,7 @@ int main(){
 	}
       }
       
- 
+      
       if(mapdeco[actualY][actualX]==51 && SDL_PollEvent(&event) && keystate[SDLK_RETURN] ){
 	keystate = SDL_GetKeyState(NULL);
 	if(level <6){
@@ -518,40 +569,46 @@ int main(){
 	  printf("Chargement du niveau inférieur %d\n",level);
 	  switch (level){
 	    case 0:
-	      init(i,j,map,"maps/level0.map");
-	      init(i,j,mapdeco,"maps/level0.deco");
-	      Horde.load("maps/monstre0");
+	      if(exists("maps/level0.map")){
+		init(i,j,map,"maps/level0.map");
+		init(i,j,mapdeco,"maps/level0.deco");
+		Horde.load("maps/monstre0");
+	      }
 	      break;
 	    case 1:
-	      init(i,j,map,"maps/level1.map");
-	      init(i,j,mapdeco,"maps/level1.deco");
-	      Horde.load("maps/monstre1");
+	      if(exists("maps/level1.map")){
+		init(i,j,map,"maps/level1.map");
+		init(i,j,mapdeco,"maps/level1.deco");
+		Horde.load("maps/monstre1");
+	      }
 	      break;
 	    case 2:
-	      init(i,j,map,"maps/level2.map");
-	      init(i,j,mapdeco,"maps/level2.deco");
-	      Horde.load("maps/monstre2");
+	      if(exists("maps/level2.map")){
+		init(i,j,map,"maps/level2.map");
+		init(i,j,mapdeco,"maps/level2.deco");
+		Horde.load("maps/monstre2");
+	      }
 	    case 3:
-	      init(i,j,map,"maps/level3.map");
-	      init(i,j,mapdeco,"maps/level3.deco");
-	      Horde.load("maps/monstre3");
+	      if(exists("maps/level3.map")){
+		init(i,j,map,"maps/level3.map");
+		init(i,j,mapdeco,"maps/level3.deco");
+		Horde.load("maps/monstre3");
+	      }
 	    case 4:
-	      init(i,j,map,"maps/level4.map");
-	      init(i,j,mapdeco,"maps/level4.deco");
-	      Horde.load("maps/monstre4");
+	      if(exists("maps/level4.map")){
+		init(i,j,map,"maps/level4.map");
+		init(i,j,mapdeco,"maps/level4.deco");
+		Horde.load("maps/monstre4");
+	      }
 	      break;
 	    case 5:
-	      init(i,j,map,"maps/level5.map");
-	      init(i,j,mapdeco,"maps/level5.deco");
-	      Horde.load("maps/monstre5");
+	      if(exists("maps/level5.map")){
+		init(i,j,map,"maps/level5.map");
+		init(i,j,mapdeco,"maps/level5.deco");
+		Horde.load("maps/monstre5");
+	      }
 	      break;
 	  }
-	  // 	  for (int z = 0; z<zombieTabS; z++){ //On tue les anciens monstres
-	  // 	    if(!zombieTab[z].isDead()){
-	  // 	      printf("Les mobs doivent etre clear\n");
-	  // 	    }
-	  // 	    //Chargement des monstres du niveau
-	  // 	  }  
 	}
 	
       }
@@ -562,39 +619,45 @@ int main(){
 	  if(level > 0 ){
 	    level--;
 	    
-	  horizontal += 50;
+	    horizontal += 50;
 	    printf("Chargement du niveau supérieur %d\n",level);
 	    switch (level){
 	      case 0:
-		init(i,j,map,"maps/level0.map");
-		init(i,j,mapdeco,"maps/level0.deco");
-		Horde.load("maps/monstre0");
+		if(exists("maps/level0.map")){
+		  init(i,j,map,"maps/level0.map");
+		  init(i,j,mapdeco,"maps/level0.deco");
+		  Horde.load("maps/monstre0");
+		}
 		break;
 	      case 1:
-		init(i,j,map,"maps/level1.map");
-		init(i,j,mapdeco,"maps/level1.deco");
-		Horde.load("maps/monstre1");
+		if(exists("maps/level1.map")){
+		  init(i,j,map,"maps/level1.map");
+		  init(i,j,mapdeco,"maps/level1.deco");
+		  Horde.load("maps/monstre1");
+		}
 		break;
 	      case 2:
-		init(i,j,map,"maps/level2.map");
-		init(i,j,mapdeco,"maps/level2.deco");
-		Horde.load("maps/monstre2");
+		if(exists("maps/level2.map")){
+		  init(i,j,map,"maps/level2.map");
+		  init(i,j,mapdeco,"maps/level2.deco");
+		  Horde.load("maps/monstre2");
+		}
 		break;
-		    case 3:
-	      init(i,j,map,"maps/level3.map");
-	      init(i,j,mapdeco,"maps/level3.deco");
-	      Horde.load("maps/monstre3");
-	    case 4:
-	      init(i,j,map,"maps/level4.map");
-	      init(i,j,mapdeco,"maps/level4.deco");
-	      Horde.load("maps/monstre4");
-	      break;
-	    case 5:
-	      init(i,j,map,"maps/level5.map");
-	      init(i,j,mapdeco,"maps/level5.deco");
-	      Horde.load("maps/monstre5");
-	      break;
+	      case 3:
+		if(exists("maps/level3.map")){
+		  init(i,j,map,"maps/level3.map");
+		  init(i,j,mapdeco,"maps/level3.deco");
+		  Horde.load("maps/monstre3");
+		}
 		break;
+	      case 4:
+		if(exists("maps/level4.map")){
+		  init(i,j,map,"maps/level4.map");
+		  init(i,j,mapdeco,"maps/level4.deco");
+		  Horde.load("maps/monstre4");
+		}
+		break;
+		
 	    }
 	    
 	  }
@@ -654,7 +717,38 @@ int main(){
       
       Horde.move(map,i,j,actualY+pos_y,actualX+pos_x,horizontal,vertical,life,screen); //Déplacement des ennemis et dégat si il y a.
       
-
+      if(Horde.getNbAlive() == 0){
+       switch (level){
+	      case 0:
+		if(exists("maps/level0.map")){
+		  Horde.load("maps/monstre0");
+		}
+		break;
+	      case 1:
+		if(exists("maps/level1.map")){
+		  Horde.load("maps/monstre1");
+		}
+		break;
+	      case 2:
+		if(exists("maps/level2.map")){
+		  Horde.load("maps/monstre2");
+		}
+		break;
+	      case 3:
+		if(exists("maps/level3.map")){
+		  Horde.load("maps/monstre3");
+		}
+		break;
+	      case 4:
+		if(exists("maps/level4.map")){
+		  Horde.load("maps/monstre4");
+		}
+		break;
+		
+	    }
+      }
+	
+      
       //Affichage de la vie
       lifeprint = life;
       for(int li =0; li <10;li+=2){
@@ -670,14 +764,47 @@ int main(){
 	  }}
 	  lifeprint -=2;
       }
-      if (life <= 0){
-	fin = 1;
-	score_current -= 100; // Malus de défaite
+      if (life <= 0){ //Game over
 	stats[2]++; //Le nombre de game over ( stats ) augmente 
+	menu_end = 0;
+	pos_x = 0; // Position de départ
+	pos_y = 0; // Position de départ 
+	vertical = 125;
+	horizontal = -75;
+	init(i,j,map,"maps/level0.map");
+	init(i,j,mapdeco,"maps/level0.deco");
+	Horde.load("maps/monstre0");
+	temp = SDL_LoadBMP("ressources/game_over.bmp");
+	level = 0;
+	temp_money= 0;
+	money_current = 0;
+	dir = 0;
+	life = 10;
+	cooldown = 0;
+	end_menu = SDL_DisplayFormat(temp);
+	while(menu_end!=1){ //Menu de fin
+	  if (SDL_PollEvent(&event)){
+	    if (event.type == SDL_MOUSEBUTTONDOWN){
+	      if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+		menu_end=1;
+		
+	      }else{
+		if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+		  menu_end = 1;
+		  menu_int = 0;
+		}
+	      }
+	    }
+	  }
+	  SDL_BlitSurface(screenshot, NULL, screen, NULL);  
+	  SDL_BlitSurface(end_menu, NULL, screen, &optionsPos);  
+	  SDL_UpdateRect(screen,0,0,0,0);
+	  
+	}
       }
       
       affichePiece(money_current,screen,frame);
-     
+      
       //Mise a jour de l'ecran
       SDL_UpdateRect(screen,0,0,0,0);
       
@@ -687,12 +814,12 @@ int main(){
   int time;
   time = (end -start)/1000;
   
-  score_current += ( life*2  + 600 - time + money_current ) / 1 ;
   
+  score_current += ( life*2  + 600 - time + money_current ) / 1 ;
   stats[0] = score_current>stats[0]?score_current:stats[0];
   
   if(stats[1] > 0){
-    stats[1] = time<stats[1]?time:stats[1];
+    stats[1] = time>stats[1]?time:stats[1];
   }else{
     stats[1] = time;
   }
