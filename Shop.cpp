@@ -36,7 +36,7 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 
 	TTF_Init(); //Init ttf
 
-	SDL_Color couleurTexte = {255,255,255}; //Couleur blanche pour le texte
+	SDL_Color couleurTexte = {0,0,0}; //Couleur noire pour le texte
 	char degatsCarac[50];
 	sprintf(degatsCarac,"x%d",prixDegats);
 	char potionCarac[50];
@@ -45,18 +45,17 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 	textePotion = TTF_RenderText_Blended(police,potionCarac,couleurTexte);
 
 	//Position du texte
-	posTexteDegats.x = 60;
-	posTexteDegats.y = 60;
+	posTexteDegats.x = 280;
+	posTexteDegats.y = 165;
 
-	posTextePotion.x = 60;
-	posTextePotion.y = 130;
+	posTextePotion.x = 280;
+	posTextePotion.y = 345;
 
 	//Position du menu
 	posMenu.x = 300;
 	posMenu.y = 70;
 
 	//Ajout du menu à la fenêtre
-	cout << "Je modifie le menu" << endl;
     SDL_BlitSurface(back,NULL,screen,NULL    );
 	SDL_BlitSurface(menu,NULL,screen,&posMenu);
 	SDL_BlitSurface(texteDegats,NULL,menu,&posTexteDegats);
@@ -65,8 +64,15 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 	SDL_UpdateRect(screen,0,0,0,0);
 }
 
-void Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){
-	if (posSourisX >= posTextePotion.x && posSourisX <= posTextePotion.x + posTextePotion.h && posSourisY >= posTextePotion.y && posSourisY <= posTextePotion.y + posTextePotion.w){
+int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){
+	//x = 140 / 440 , y = 330 / 390 --> potion
+	// x = 140 / 440 , y = 150 / 210 --> arme
+	int *tabVieEtDegats = new int[3];
+	posSourisX -= 300;
+	posSourisY -= 70; //Pour que le X et le Y correspondent à ceux de la boutique
+	cout << "Entrée dans la boucle" << endl;
+	cout << "x : " << posSourisX << " y : " << posSourisY << endl;
+	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 330 && posSourisY <= 390){
 		if (money >= prixPotion){ //SI on a l'argent, on achète
 			money -= prixPotion; //On paye
 			life += 5;
@@ -77,7 +83,7 @@ void Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 		}
 	}
 
-	if (posSourisX >= posTexteDegats.x && posSourisX <= posTexteDegats.x + posTexteDegats.h && posSourisY >= posTexteDegats.y && posSourisY <= posTexteDegats.y + posTexteDegats.w){
+	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 150 && posSourisY <= 210){
 		if (money >= prixDegats){ //SI on a l'argent, on achète
 			money -= prixDegats; //On paye
 			attaque *= 1.2;
@@ -86,6 +92,10 @@ void Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 			cout << "Attaque modifiée !" << endl;
 		}
 	}
+	tabVieEtDegats[0] = life;
+	tabVieEtDegats[1] = attaque;
+	tabVieEtDegats[2] = money;
+	return tabVieEtDegats;
 
 
 }

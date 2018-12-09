@@ -441,7 +441,10 @@ int main(){
                 shop->miseAJourPrix(screen,frame,money_current);
                 //Verification de click sur les boutons
 				if (event.type == SDL_MOUSEBUTTONDOWN){
-					shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen, frame);
+					int *tabAchats = shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen, frame);
+					life = tabAchats[0];
+					valAttaque = tabAchats[1];
+					money_current = tabAchats[2];
                     
 				}
 				 if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){

@@ -11,7 +11,7 @@ public:
 	Shop(SDL_Surface *screen); //Constructeur du menu d'achat
 
 	void miseAJourPrix(SDL_Surface *screen, int frame,int money_current);
-	void gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY,SDL_Surface *screen, int frame);
+	int* gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY,SDL_Surface *screen, int frame);
 	void quitterMenu();
 
 private://Attributs de la classe Shop
