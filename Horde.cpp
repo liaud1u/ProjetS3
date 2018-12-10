@@ -89,7 +89,7 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
             SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
         }
     }
-    
+   
     SDL_FreeSurface(zombie);
 }
 

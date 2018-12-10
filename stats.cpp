@@ -131,6 +131,45 @@ TTF_Init();
 	return score_surface;
 }
 
+void refreshTime(SDL_Surface * screen, int time){
+TTF_Init();
+    
+    TTF_Font* font;
+    
+    SDL_Surface *time_surface;
+    SDL_Color font_color;
+    SDL_Rect fontPos;
+    
+    
+    //Création de la police d'ecriture
+    font = TTF_OpenFont("ressources/Dungeons.ttf", 50);
+    font_color.r = 255;
+    font_color.g = 255;
+    font_color.b = 255;
+    
+    //Conversion des entiers stocké en string 
+    char time_string[15] ;
+
+    
+  sprintf(time_string, "%d%d:%d%d", time/600==0?0:time/600,(time/60==0)%10?0:(time/60)%10,time%60/10==0?0:time%60/10,time%10==0?0:time%10);
+  
+   //Application du gras
+   TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+        
+        
+        //Conversion des string en image
+        time_surface = TTF_RenderText_Solid(font,time_string, font_color);
+	
+	fontPos.x = 10;
+        fontPos.y = 715;
+        SDL_BlitSurface(time_surface, NULL, screen, &fontPos); 
+	
+	SDL_FreeSurface(time_surface);
+	
+        TTF_CloseFont( font );
+        TTF_Quit();
+}
+
 void print(int * stats, SDL_Surface *screen){
     
     TTF_Init();

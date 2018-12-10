@@ -52,6 +52,9 @@ int main(){
     int time;
     int pos_x;
     int pos_y;
+    int pause = 0;
+    int pause_start = 0;
+    
     SDL_Surface *screen;
     Uint8 *keystate;
     SDL_Event event;
@@ -358,7 +361,7 @@ int main(){
                 }
                 if (keystate[SDLK_ESCAPE]){
                     menu_end=0;
-                    
+                    pause_start = SDL_GetTicks();
                     while(menu_end!=1){ //Menu de fin
                         if (SDL_PollEvent(&event)){
                             if (event.type == SDL_MOUSEBUTTONDOWN){
@@ -378,6 +381,7 @@ int main(){
                         SDL_UpdateRect(screen,0,0,0,0);
                         
                     }
+                    pause += SDL_GetTicks() - pause_start;
                     
                 }
                 if(attack_cooldown == 0){
@@ -681,7 +685,7 @@ int main(){
                 dir = 0;
                 life = 10;
                 cooldown = 0;
-                time = (end -start)/1000;
+                time = (end -start - pause )/1000;
                 if(stats[1] > 0){
                     stats[1] = time<stats[1]?time:stats[1];
                 }else{
@@ -827,6 +831,7 @@ int main(){
                 life = 10;
                 cooldown = 0;
                 stats[0] = 0;
+		pause = 0;
                 saveStats("statistiques",stats);
                 while(menu_end!=1){ //Menu de fin
                     if (SDL_PollEvent(&event)){
@@ -850,7 +855,7 @@ int main(){
             }
             
             affichePiece(money_current,screen,frame);
-            
+            refreshTime(screen ,( SDL_GetTicks() - start - pause)/ 1000);
             //Mise a jour de l'ecran
             SDL_UpdateRect(screen,0,0,0,0);
             end= SDL_GetTicks();
