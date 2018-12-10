@@ -63,7 +63,7 @@ int main(){
   Uint8 *keystate;
   SDL_Event event;
   SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
-  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
+  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*slab2,*slab3,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -100,7 +100,11 @@ int main(){
   /*BMP loading*/
   temp = SDL_LoadBMP("ressources/map/background.bmp");
   background = SDL_DisplayFormat(temp);
-  temp = SDL_LoadBMP("ressources/map/slab.bmp");
+  temp = SDL_LoadBMP("ressources/map/slab2.bmp");
+  slab2 = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/map/slab3.bmp");
+  slab3 = SDL_DisplayFormat(temp);
+    temp = SDL_LoadBMP("ressources/map/slab.bmp");
   slab = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/map/coin_hg.bmp");
   hg = SDL_DisplayFormat(temp);
@@ -570,7 +574,13 @@ int main(){
 	      break;
 	      	    case 55:
 	      SDL_BlitSurface(door, NULL, screen, &tilePosition);
-	      
+	      break;
+	      case 56:
+	      SDL_BlitSurface(slab2, NULL, screen, &tilePosition);
+	      break;
+	      case 57:
+	      SDL_BlitSurface(slab3, NULL, screen, &tilePosition);
+	      break;
 	    default:
 	      break;
 	  }
@@ -906,6 +916,11 @@ int main(){
   SDL_FreeSurface(int_g );
   SDL_FreeSurface(ext_d );
   SDL_FreeSurface(ext_g );
+    SDL_FreeSurface(slab2 );
+  SDL_FreeSurface(slab3 );
+    SDL_FreeSurface(chest );
+  SDL_FreeSurface(door );
+  
   free_tab(i,map);
   free_tab(i,mapdeco);
   
