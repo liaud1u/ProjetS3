@@ -12,3 +12,4 @@ void saveStats(char const * file, int *stats);
 void printStats(int * stats);
 void affichePiece(int money, SDL_Surface *screen,int frame);
 void print(int * stats,SDL_Surface *screen);
+SDL_Surface * getScore(int score);

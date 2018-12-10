@@ -98,6 +98,38 @@ void printStats(int *stats){
     printf("Score max: %d\nTemps minimum: %d:%d\nNombre de GameOver: %d\nEnnemis tuées: %d\nArgent: %d\n",stats[0],stats[1]/60,stats[1]%60,stats[2],stats[3],stats[4]);
 }
 
+SDL_Surface * getScore(int score){
+TTF_Init();
+    
+    TTF_Font* font;
+    
+    SDL_Surface* score_surface;
+    SDL_Color font_color;
+    
+    
+    //Création de la police d'ecriture
+    font = TTF_OpenFont("ressources/Dungeons.ttf", 50);
+    font_color.r = 166;
+    font_color.g = 141;
+    font_color.b = 122;
+    
+    //Conversion des entiers stocké en string 
+    char score_string[15] ;
+
+    
+    sprintf(score_string, "%d", score);
+        
+        //Application du gras
+        TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+        
+        //Conversion des string en image
+        score_surface = TTF_RenderText_Solid(font, score_string, font_color);
+
+        TTF_CloseFont( font );
+        TTF_Quit();
+	return score_surface;
+}
+
 void print(int * stats, SDL_Surface *screen){
     
     TTF_Init();

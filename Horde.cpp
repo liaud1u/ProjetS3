@@ -53,6 +53,7 @@ void Horde::load(char const * adresse){
         fscanf(ennemi_file,"%d",&vie);
         fscanf(ennemi_file,"%d",&cat);
         fscanf(ennemi_file,"%d",&size);
+	
         
         horde[n] = Ennemi(n,x,  y,  vie,  cat, size);
     }
@@ -82,7 +83,6 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
     for (int z = 0; z<nb; z++){
         if(!horde[z].isDead()){
             zombiePos = horde[z].getPositionPrint(horizontal,vertical);
-            zombieImage.y = horde[z].getDir() * 40  + 40 * horde[z].getSize();
             zombieImage.x = horde[z].getCat() * MONSTER_SIZE * 4 + MONSTER_SIZE * frame;
             SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
         }

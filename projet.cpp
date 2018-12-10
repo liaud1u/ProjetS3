@@ -62,8 +62,8 @@ int main(){
   SDL_Surface *screen;
   Uint8 *keystate;
   SDL_Event event;
-  SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
-  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*slab2,*slab3,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
+  SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos,scorePos;
+  SDL_Surface *slab,*options,*score_surface,*menu,*background,*ext_d,*ext_g,*slab2,*slab3,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -723,6 +723,9 @@ int main(){
   score_current = ( life*2  + 600 - time + money_current ) / 1 ;
   stats[0] = score_current>stats[0]?score_current:stats[0];
 	saveStats("statistiques",stats);
+	score_surface = getScore(score_current);
+		scorePos.x = 600 - score_surface->w /2;
+	scorePos.y = 300;
 	while(menu_end!=1){ //Menu de fin
 	  if (SDL_PollEvent(&event)){
 	    if (event.type == SDL_MOUSEBUTTONDOWN){
@@ -739,7 +742,8 @@ int main(){
 	    }
 	  }
 	  SDL_BlitSurface(screenshot, NULL, screen, NULL);  
-	  SDL_BlitSurface(end_menu, NULL, screen, &optionsPos);  
+	  SDL_BlitSurface(end_menu, NULL, screen, &optionsPos);
+	  SDL_BlitSurface(score_surface, NULL, screen, &scorePos);  
 	  SDL_UpdateRect(screen,0,0,0,0);
 	  
 	}
@@ -859,7 +863,6 @@ int main(){
 	end_menu = SDL_DisplayFormat(temp);
 	stats[0] = 0;
 	saveStats("statistiques",stats);
-	
 	while(menu_end!=1){ //Menu de fin
 	  if (SDL_PollEvent(&event)){
 	    if (event.type == SDL_MOUSEBUTTONDOWN){
