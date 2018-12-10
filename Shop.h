@@ -13,6 +13,7 @@ public:
 	void miseAJourPrix(SDL_Surface *screen, int frame,int money_current);
 	int* gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY,SDL_Surface *screen, int frame);
 	void quitterMenu();
+    ~Shop();
 
 private://Attributs de la classe Shop
 	SDL_Surface *menu,*texteDegats,*textePotion,*temp, *back;

@@ -41,3 +41,11 @@ int collide(SDL_Rect A, SDL_Rect B){
     //Si conditions collision detectee
     return true;
 }
+
+SDL_Surface * load(char const * src){
+    SDL_Surface *temp, *res;
+    temp = SDL_LoadBMP(src);
+    res = SDL_DisplayFormat(temp);
+    SDL_FreeSurface(temp);
+    return res;
+}

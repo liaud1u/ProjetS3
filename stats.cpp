@@ -90,6 +90,7 @@ void affichePiece(int money, SDL_Surface *screen, int frame){
 	    
       SDL_FreeSurface(textePieces);
       SDL_FreeSurface(piece);
+      SDL_FreeSurface(temp);
       TTF_CloseFont(police);
       TTF_Quit();
 }

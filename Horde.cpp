@@ -67,6 +67,7 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
     
     temp = SDL_LoadBMP("ressources/zombie.bmp");
     zombie= SDL_DisplayFormat(temp);
+    SDL_FreeSurface(temp);
     
     int colorkey; // Couleur pour transparence des bmp 
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
@@ -89,7 +90,6 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
     }
     
     SDL_FreeSurface(zombie);
-    
 }
 
 int Horde::getNb() const{

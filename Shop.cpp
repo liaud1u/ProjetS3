@@ -9,12 +9,8 @@ Shop::Shop(SDL_Surface *screen){
 	prixDegats = 5;
 	prixPotion = 3;
 
-	SDL_Init(SDL_INIT_VIDEO);
-	temp = SDL_LoadBMP("ressources/shop.bmp");
-	menu = SDL_DisplayFormat(temp);
-    temp = SDL_LoadBMP("ressources/screen.bmp");
-	back = SDL_DisplayFormat(temp);
-	SDL_FreeSurface(temp);
+	menu = load("ressources/shop.bmp");
+	back = load("ressources/screen.bmp");
 
 	TTF_Init(); //Init ttf
 
@@ -27,7 +23,8 @@ Shop::Shop(SDL_Surface *screen){
 	sprintf(potionCarac,"x%d",prixPotion);
 	texteDegats = TTF_RenderText_Blended(police,degatsCarac,couleurTexte);
 	textePotion = TTF_RenderText_Blended(police,potionCarac,couleurTexte);
-
+    
+    TTF_Quit();
 	
 
 }
@@ -62,6 +59,7 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 	SDL_BlitSurface(textePotion,NULL,menu,&posTextePotion);
     affichePiece(money_current,screen,frame);
 	SDL_UpdateRect(screen,0,0,0,0);
+    TTF_Quit();
 }
 
 int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){
@@ -99,7 +97,10 @@ int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 
 }
 
-void Shop::quitterMenu(){
-
+Shop::~Shop()
+{
+    SDL_FreeSurface(menu);
+    SDL_FreeSurface(texteDegats);
+    SDL_FreeSurface(textePotion);
+    SDL_FreeSurface(back);
 }
-
