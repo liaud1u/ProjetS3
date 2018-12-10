@@ -24,10 +24,13 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
       valX = tabEnnemis[i].getX() ;
       valY = tabEnnemis[i].getY() - 1;
       if (posSourisX >= rectangleEnnemi.x && posSourisX <= rectangleEnnemi.x + rectangleEnnemi.h && posSourisY >= rectangleEnnemi.y && posSourisY <= rectangleEnnemi.y + rectangleEnnemi.w) {//Test si le clic de la souris est bien sur l'ennemu
-	int dist = distance(valX, valY, xHeros, yHeros, map,tailleX,tailleY);
-	if ( dist == 1 || dist == 0){ //Test si l'ennemi est bien à 1 de distance du personnage
+	int dist = mini(9999,distance(valX, valY, xHeros+1, yHeros, map,tailleX,tailleY));
+	dist = mini(dist,distance(valX, valY, xHeros-1, yHeros, map,tailleX,tailleY));
+	dist = mini(dist,distance(valX, valY, xHeros, yHeros+1, map,tailleX,tailleY));
+	dist = mini(dist,distance(valX, valY, xHeros, yHeros-1, map,tailleX,tailleY));
+	printf("%d\n",dist);
+	if ( dist <=1){ //Test si l'ennemi est bien à 1 de distance du personnage
 	  tabEnnemis[i].haveDamage(attaqueHeros,stat);//L'ennemi subit des dégats.
-	  printf("Nombre de kill: %d\n",stat[3]);
 	  saveStats("statistiques",stat);
 	}
 	

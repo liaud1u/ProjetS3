@@ -168,12 +168,15 @@ void Ennemi::mooveU(int c,int ** mapix){
 void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie, SDL_Surface *screen){
   int min = 999;
   //Recuperation d'une distance
-
-  min = mini(min,distance(getX(), getY(), x, y, mapix, i,j));
-
+  min = mini(min,distance(getX(), getY()-1, x, y, mapix, i,j));
+  min = mini(min,distance(getX()-1, getY()-1, x, y, mapix, i,j));
+  min = mini(min,distance(getX(), getY()-2, x, y, mapix, i,j));
+  min = mini(min,distance(getX()+1, getY()-1, x, y, mapix, i,j));
+  
+ 
   srand(time(NULL));
   //Tirage de la prochaine direction si le cooldown n'est pas arreté
-  if (e_cooldown_moove == 0){
+  if (e_cooldown_moove <= 0){
 
     randomWhere();
     e_cooldown_moove = rand()%4 * 50;;

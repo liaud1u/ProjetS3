@@ -124,7 +124,7 @@ void print(int * stats, SDL_Surface *screen){
     
     sprintf(score_string, "%d", stats[0]);
     if(stats[1]>0){
-        sprintf(time_string, "%d%d:%d%d", stats[1]/600==0?0:stats[1]/600,(stats[1]/60==0)%10?0:(stats[1]/60)%10,stats[1]%60==0?0:stats[1]/10%10,stats[1]%10==0?0:stats[1]%10);}
+        sprintf(time_string, "%d%d:%d%d", stats[1]/600==0?0:stats[1]/600,(stats[1]/60==0)%10?0:(stats[1]/60)%10,stats[1]%60/10==0?0:stats[1]%60/10,stats[1]%10==0?0:stats[1]%10);}
         else{
             sprintf(time_string,"AUCUN TEMPS");
         }

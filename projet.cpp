@@ -49,7 +49,7 @@ int main(){
   int temp_money; //Utile pour le calcul de l'argent gagné en tuant un ennemi
   int menu_end; // for the game over and win menu
   int credit;
-  
+  int time;
   
   temp_money= 0;
   dir = 0;
@@ -63,7 +63,7 @@ int main(){
   Uint8 *keystate;
   SDL_Event event;
   SDL_Rect tilePosition,menuPos,heartPos,elfPos,elfImage,screenPos,statPos,optionsPos,swordImage,swordPos;
-  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*heart,*hg,*int_g,*int_d,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
+  SDL_Surface *slab,*options,*menu,*background,*ext_d,*ext_g,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*temp,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*elf,*credit_surface,*screenshot,*stat,*end_menu;
   
   int pos_x, pos_y;
   pos_x = 0; // Position de départ
@@ -152,7 +152,10 @@ int main(){
   sword = SDL_DisplayFormat(temp);
   temp = SDL_LoadBMP("ressources/credit.bmp");
   credit_surface= SDL_DisplayFormat(temp);
-  
+  temp = SDL_LoadBMP("ressources/chest.bmp");
+  chest= SDL_DisplayFormat(temp);
+  temp = SDL_LoadBMP("ressources/door.bmp");
+  door = SDL_DisplayFormat(temp);
   
   /*Surface free*/
   SDL_FreeSurface(temp);
@@ -169,7 +172,8 @@ int main(){
   SDL_SetColorKey(elf, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_SetColorKey(sword, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-  srand(time(NULL));
+  SDL_SetColorKey(chest, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(door, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   
   i = 32;                                                 // largeur de la map
   j = 32;                                                 // hauteur  de la map
@@ -445,6 +449,7 @@ int main(){
 					life = tabAchats[0];
 					valAttaque = tabAchats[1];
 					money_current = tabAchats[2];
+					shopContinuer = tabAchats[3];
                     
 				}
 				 if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){
@@ -555,6 +560,16 @@ int main(){
 	      SDL_BlitSurface(crate, NULL, screen, &tilePosition);
 	      tilePosition.x -= r;
 	      break;
+	    case 54:
+	      r = 9;
+	      tilePosition.x +=r;
+	      tilePosition.y += r;
+	      SDL_BlitSurface(chest, NULL, screen, &tilePosition);
+	      tilePosition.x -= r;
+	      tilePosition.y -=r;
+	      break;
+	      	    case 55:
+	      SDL_BlitSurface(door, NULL, screen, &tilePosition);
 	      
 	    default:
 	      break;
@@ -672,6 +687,54 @@ int main(){
 	mapdeco[actualY][actualX] = 0;
       }
       
+      if(actualX >= 0 && actualY >= 0 && mapdeco[actualY][actualX]==54){ //Victoire ( récupération du coffre)
+	menu_end = 0;
+	pos_x = 0; // Position de départ
+	pos_y = 0; // Position de départ 
+	vertical = 125;
+	horizontal = -75;
+	init(i,j,map,"maps/level0.map");
+	init(i,j,mapdeco,"maps/level0.deco");
+	Horde.load("maps/monstre0");
+	temp = SDL_LoadBMP("ressources/win.bmp");
+	level = 0;
+	temp_money= 0;
+	money_current = 0;
+	dir = 0;
+	life = 10;
+	cooldown = 0;
+	end_menu = SDL_DisplayFormat(temp);
+	  time = (end -start)/1000;
+    if(stats[1] > 0){
+    stats[1] = time<stats[1]?time:stats[1];
+  }else{
+    stats[1] = time;
+  }
+  score_current = ( life*2  + 600 - time + money_current ) / 1 ;
+  stats[0] = score_current>stats[0]?score_current:stats[0];
+	saveStats("statistiques",stats);
+	while(menu_end!=1){ //Menu de fin
+	  if (SDL_PollEvent(&event)){
+	    if (event.type == SDL_MOUSEBUTTONDOWN){
+	      if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+		menu_end=1;
+		start = SDL_GetTicks();
+		
+	      }else{
+		if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+		  menu_end = 1;
+		  menu_int = 0;
+		}
+	      }
+	    }
+	  }
+	  SDL_BlitSurface(screenshot, NULL, screen, NULL);  
+	  SDL_BlitSurface(end_menu, NULL, screen, &optionsPos);  
+	  SDL_UpdateRect(screen,0,0,0,0);
+	  
+	}
+      }
+      
       Horde.afficher(frame,screen, vertical, horizontal);
       
       //Define the blit surface for the sword
@@ -784,11 +847,15 @@ int main(){
 	life = 10;
 	cooldown = 0;
 	end_menu = SDL_DisplayFormat(temp);
+	stats[0] = 0;
+	saveStats("statistiques",stats);
+	
 	while(menu_end!=1){ //Menu de fin
 	  if (SDL_PollEvent(&event)){
 	    if (event.type == SDL_MOUSEBUTTONDOWN){
 	      if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
 		menu_end=1;
+		start = SDL_GetTicks();
 		
 	      }else{
 		if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
@@ -812,20 +879,9 @@ int main(){
       
       end= SDL_GetTicks();
   }
+
   
-  int time;
-  time = (end -start)/1000;
-  
-  
-  score_current += ( life*2  + 600 - time + money_current ) / 1 ;
-  stats[0] = score_current>stats[0]?score_current:stats[0];
-  
-  if(stats[1] > 0){
-    stats[1] = time>stats[1]?time:stats[1];
-  }else{
-    stats[1] = time;
-  }
-  
+
   saveStats("statistiques",stats);
   
   //Free 

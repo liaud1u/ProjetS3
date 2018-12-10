@@ -67,16 +67,15 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){
 	//x = 140 / 440 , y = 330 / 390 --> potion
 	// x = 140 / 440 , y = 150 / 210 --> arme
-	int *tabVieEtDegats = new int[3];
+	int *tabVieEtDegats = new int[4];
+	tabVieEtDegats[3] = 1; 
 	posSourisX -= 300;
 	posSourisY -= 70; //Pour que le X et le Y correspondent à ceux de la boutique
-	cout << "Entrée dans la boucle" << endl;
-	cout << "x : " << posSourisX << " y : " << posSourisY << endl;
 	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 330 && posSourisY <= 390){
 		if (money >= prixPotion){ //SI on a l'argent, on achète
 			money -= prixPotion; //On paye
 			life += 5;
-			cout << "Vous êtes soigné !" << endl;
+			tabVieEtDegats[3] = 0; //Pour quitter le shop, on retourne un booleen.
 			if (life > 10){ //Pour éviter de trop se heal
 				life = 10;
 			}
@@ -86,10 +85,10 @@ int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 150 && posSourisY <= 210){
 		if (money >= prixDegats){ //SI on a l'argent, on achète
 			money -= prixDegats; //On paye
+			tabVieEtDegats[3] = 0; //Pour quitter le shop, on retourne un booleen.
 			attaque *= 1.2;
 			prixDegats += 3;
 			this->miseAJourPrix(screen,money,frame);
-			cout << "Attaque modifiée !" << endl;
 		}
 	}
 	tabVieEtDegats[0] = life;
