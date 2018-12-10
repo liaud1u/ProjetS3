@@ -191,7 +191,14 @@ void print(int * stats, SDL_Surface *screen){
         SDL_BlitSurface(kill_surface, NULL, screen, &fontPos); 
         fontPos.y += 90;
         fontPos.x = 933 - money_surface->w /2;
-        SDL_BlitSurface(money_surface, NULL, screen, &fontPos); 
+        SDL_BlitSurface(money_surface, NULL, screen, &fontPos);
+	
+	SDL_FreeSurface(score_surface);
+	SDL_FreeSurface(time_surface);
+	SDL_FreeSurface(game_over_surface);
+	SDL_FreeSurface(kill_surface);
+	SDL_FreeSurface(money_surface);
+	
         TTF_CloseFont( font );
         TTF_Quit();
 }

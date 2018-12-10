@@ -89,7 +89,7 @@ int main(){
     
     
     //Création du magasin et des variables utiles à son fonctionnement
-    Shop *shop = new Shop(screen); 
+    Shop shop = Shop(screen); 
     bool shopContinuer = true;
     
     /*BMP loading*/
@@ -180,7 +180,7 @@ int main(){
     
     int start, end;
     int score_current = 0; //dépend du nombre d'ennemis tués, de l'argent récolté et si il y a game over. 
-    int money_current = 0; //Argent actuel
+    int money_current = 10; //Argent actuel
     
     start = 0;
     end = 0;
@@ -415,10 +415,10 @@ int main(){
                                     }
                                 }
                                 //Affichage du shop
-                                shop->miseAJourPrix(screen,frame,money_current);
+                                shop.miseAJourPrix(screen,frame,money_current);
                                 //Verification de click sur les boutons
                                 if (event.type == SDL_MOUSEBUTTONDOWN){
-                                    int *tabAchats = shop->gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen, frame);
+                                    int *tabAchats = shop.gererAchats(money_current,life,valAttaque,event.motion.x,event.motion.y,screen, frame);
                                     life = tabAchats[0];
                                     valAttaque = tabAchats[1];
                                     money_current = tabAchats[2];
@@ -751,7 +751,7 @@ int main(){
                             SDL_BlitSurface(crate, NULL, screen, &tilePosition);
                             tilePosition.x -= r;
                             break;
-                            
+                        
                         default:
                             
                             break;
@@ -886,7 +886,7 @@ int main(){
     SDL_FreeSurface(win_menu);
     SDL_FreeSurface(pause_menu);
     
-    shop->~Shop();
+    shop.~Shop();
     SDL_Quit(); 
     TTF_Quit();
     

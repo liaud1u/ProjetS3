@@ -1,6 +1,6 @@
 #include "Shop.h"
 #include "stats.h"
-
+#include "Fonction.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ Shop::Shop(SDL_Surface *screen){
 	TTF_Init(); //Init ttf
 
 	police = TTF_OpenFont("ressources/Dungeons.ttf",55); //Police + taille
-
+TTF_SetFontStyle(police, TTF_STYLE_BOLD);
 	SDL_Color couleurTexte = {255,255,255}; //Couleur blanche pour le texte
 	char degatsCarac[50];
 	sprintf(degatsCarac,"x%d",prixDegats);
@@ -30,22 +30,24 @@ Shop::Shop(SDL_Surface *screen){
 }
 
 void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
-
 	TTF_Init(); //Init ttf
 
 	SDL_Color couleurTexte = {0,0,0}; //Couleur noire pour le texte
 	char degatsCarac[50];
-	sprintf(degatsCarac,"x%d",prixDegats);
+	sprintf(degatsCarac,"x%d Pieces",prixDegats);
 	char potionCarac[50];
-	sprintf(potionCarac,"x%d",prixPotion);
+	sprintf(potionCarac,"x%d Pieces",prixPotion);
+	police = TTF_OpenFont("ressources/Dungeons.ttf",55); //Police + taille
+
+TTF_SetFontStyle(police, TTF_STYLE_BOLD);
 	texteDegats = TTF_RenderText_Blended(police,degatsCarac,couleurTexte);
 	textePotion = TTF_RenderText_Blended(police,potionCarac,couleurTexte);
 
 	//Position du texte
-	posTexteDegats.x = 280;
-	posTexteDegats.y = 165;
+	posTexteDegats.x = 280 - texteDegats->w/2;
+	posTexteDegats.y = 165 ;
 
-	posTextePotion.x = 280;
+	posTextePotion.x = 280- textePotion->w/2;
 	posTextePotion.y = 345;
 
 	//Position du menu
@@ -82,11 +84,16 @@ int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 
 	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 150 && posSourisY <= 210){
 		if (money >= prixDegats){ //SI on a l'argent, on achète
+		  
 			money -= prixDegats; //On paye
+			
 			tabVieEtDegats[3] = 0; //Pour quitter le shop, on retourne un booleen.
+			
 			attaque *= 1.2;
+			
 			prixDegats += 3;
-			this->miseAJourPrix(screen,money,frame);
+			
+			this->miseAJourPrix(screen,prixDegats,frame);
 		}
 	}
 	tabVieEtDegats[0] = life;
@@ -103,4 +110,5 @@ Shop::~Shop()
     SDL_FreeSurface(texteDegats);
     SDL_FreeSurface(textePotion);
     SDL_FreeSurface(back);
+    TTF_CloseFont(police);
 }
