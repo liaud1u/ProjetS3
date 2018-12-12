@@ -29,7 +29,7 @@ int exists(const char * adresse)
     return 0;
 }
 
-void init(int i,int j, int ** mapix,char const * adresse){
+int init(int i,int j, int ** mapix,char const * adresse){
     if(exists(adresse)){
     FILE* map;
     map = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
@@ -38,9 +38,9 @@ void init(int i,int j, int ** mapix,char const * adresse){
         //Initialisation du tableau
     for (int ib = 0; ib < j ; ib++){
         for(int jb = 0; jb<i;jb++){
-            mapix[ib][jb] = 49;
+            mapix[ib][jb] = 48;
             texte = fgetc(map); //On recupere le caractere 
-            while( texte== 32  || texte ==10 ||texte ==47 || texte==EOF){
+            while( (texte== 32  || texte ==10 ||texte ==47) && texte!=EOF){
                 texte = fgetc(map); //Tant que le caractere n'est pas un caractere  attendu on en recupere un nouveau
                 mapix[ib][jb] = texte; //On ajoute le caractere dans la premiere case libre 
             }
@@ -48,7 +48,11 @@ void init(int i,int j, int ** mapix,char const * adresse){
         }
     }
     fclose(map); //Fermeture du fichier
-}
+    return 0;
+}else{
+    printf("Mauvais format / fichier inexistant\n");}
+    return 1;
+    
 }
 
 void free_tab(int i,int ** mapix){

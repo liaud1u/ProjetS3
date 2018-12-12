@@ -28,7 +28,6 @@ void attaqueHeros(int posSourisX, int posSourisY, int xHeros, int yHeros, int at
 	dist = mini(dist,distance(valX, valY, xHeros-1, yHeros, map,tailleX,tailleY));
 	dist = mini(dist,distance(valX, valY, xHeros, yHeros+1, map,tailleX,tailleY));
 	dist = mini(dist,distance(valX, valY, xHeros, yHeros-1, map,tailleX,tailleY));
-	printf("%d\n",dist);
 	if ( dist <=1){ //Test si l'ennemi est bien à 1 de distance du personnage
 	  tabEnnemis[i].haveDamage(attaqueHeros,stat);//L'ennemi subit des dégats.
 	  saveStats("statistiques",stat);

@@ -2,6 +2,9 @@
 #include "stats.h"
 #include "Fonction.h"
 
+#define HAUTEUR 750
+#define LARGEUR 1200
+
 using namespace std;
 
 Shop::Shop(SDL_Surface *screen){
@@ -9,29 +12,21 @@ Shop::Shop(SDL_Surface *screen){
 	prixDegats = 5;
 	prixPotion = 3;
 
-	menu = load("ressources/shop.bmp");
-	back = load("ressources/screen.bmp");
 
-	TTF_Init(); //Init ttf
-
-	police = TTF_OpenFont("ressources/Dungeons.ttf",55); //Police + taille
-TTF_SetFontStyle(police, TTF_STYLE_BOLD);
-	SDL_Color couleurTexte = {255,255,255}; //Couleur blanche pour le texte
-	char degatsCarac[50];
-	sprintf(degatsCarac,"x%d",prixDegats);
-	char potionCarac[50];
-	sprintf(potionCarac,"x%d",prixPotion);
-	texteDegats = TTF_RenderText_Blended(police,degatsCarac,couleurTexte);
-	textePotion = TTF_RenderText_Blended(police,potionCarac,couleurTexte);
-    
-    TTF_Quit();
-	
 
 }
 
 void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 	TTF_Init(); //Init ttf
+    
+	SDL_Rect posMenu,posTexteDegats,posTextePotion;
+    	SDL_Surface *menu,*texteDegats,*textePotion, *back;
+        
+	TTF_Font *police;
 
+    back = load("ressources/screen.bmp");
+    menu = load("ressources/shop.bmp");
+    
 	SDL_Color couleurTexte = {0,0,0}; //Couleur noire pour le texte
 	char degatsCarac[50];
 	sprintf(degatsCarac,"x%d Pieces",prixDegats);
@@ -40,15 +35,16 @@ void Shop::miseAJourPrix(SDL_Surface *screen, int frame, int money_current){
 	police = TTF_OpenFont("ressources/Dungeons.ttf",55); //Police + taille
 
 TTF_SetFontStyle(police, TTF_STYLE_BOLD);
+
 	texteDegats = TTF_RenderText_Blended(police,degatsCarac,couleurTexte);
 	textePotion = TTF_RenderText_Blended(police,potionCarac,couleurTexte);
 
 	//Position du texte
-	posTexteDegats.x = 280 - texteDegats->w/2;
-	posTexteDegats.y = 165 ;
+	posTexteDegats.x = LARGEUR/2 - texteDegats->w/2;
+	posTexteDegats.y = 235 ;
 
-	posTextePotion.x = 280- textePotion->w/2;
-	posTextePotion.y = 345;
+	posTextePotion.x = LARGEUR/2- textePotion->w/2;
+	posTextePotion.y = 415;
 
 	//Position du menu
 	posMenu.x = 300;
@@ -57,10 +53,14 @@ TTF_SetFontStyle(police, TTF_STYLE_BOLD);
 	//Ajout du menu à la fenêtre
     SDL_BlitSurface(back,NULL,screen,NULL    );
 	SDL_BlitSurface(menu,NULL,screen,&posMenu);
-	SDL_BlitSurface(texteDegats,NULL,menu,&posTexteDegats);
-	SDL_BlitSurface(textePotion,NULL,menu,&posTextePotion);
-    affichePiece(money_current,screen,frame);
+	SDL_BlitSurface(texteDegats,NULL,screen,&posTexteDegats);
+	SDL_BlitSurface(textePotion,NULL,screen,&posTextePotion);
 	SDL_UpdateRect(screen,0,0,0,0);
+    SDL_FreeSurface(textePotion);
+    SDL_FreeSurface(texteDegats);
+        SDL_FreeSurface(menu);
+    SDL_FreeSurface(back);
+    TTF_CloseFont(police);
     TTF_Quit();
 }
 
@@ -93,7 +93,6 @@ int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 			
 			prixDegats += 3;
 			
-			this->miseAJourPrix(screen,prixDegats,frame);
 		}
 	}
 	tabVieEtDegats[0] = life;
@@ -104,11 +103,3 @@ int* Shop::gererAchats(int money, int life, int attaque, int posSourisX, int pos
 
 }
 
-Shop::~Shop()
-{
-    SDL_FreeSurface(menu);
-    SDL_FreeSurface(texteDegats);
-    SDL_FreeSurface(textePotion);
-    SDL_FreeSurface(back);
-    TTF_CloseFont(police);
-}
