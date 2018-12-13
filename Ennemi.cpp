@@ -118,11 +118,6 @@ bool Ennemi::isDead() const{
 
 void Ennemi::attack(int &vie) const{
   vie = vie - getDamage();
-  
-
-  if(vie<=0){
-    printf("GAME OVER\n");
-  }
 }
 
 
