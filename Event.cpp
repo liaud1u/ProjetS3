@@ -58,13 +58,16 @@ void leftK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int
 
 void rightK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix, SDL_Rect & elfPos){
     int in_tab = actualX >= 0 && actualY >=0 && actualX < i && actualY+1 < j;
+    elfPos.x += 32;
+    elfPos.y += 15;
     getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,32,32,elfPos);
-    if(in_tab && (mapix[actualX+1][actualY+1]!=100 || (mapix[actualX+1][actualY+1]==100 &&
-        ((ho<0?50000+ho:ho)%50<30 || (abs(ve<0?50000+ve:ve)%50>10 &&
-        (abs(ve<0?50000+ve:ve)%50)<35)))) && 
-        ( mapix[actualX][actualY+1] == 49 ||abs(ve<0?50000+ve:ve)%50>15|| mapix[actualX][actualY+1] ==52|| mapix[actualX][actualY+1] ==56|| mapix[actualX][actualY+1] ==55 )){
+
+    if(in_tab && (mapix[actualX][actualY+1]==49 || mapix[actualX][actualY]==49 )){
         ve -=SPEED_EVENT;//move right if possible
+
         }
+         elfPos.x -= 32;
+         elfPos.y -= 15;
         elfImage.y = 56 * (who*2) ; //activate moovement sprite
         elfImage.x = 32 * frame+4*32;
 }
@@ -81,7 +84,6 @@ void upK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &
 void downK(SDL_Rect &elfImage, int &who, int &frame, SDL_Rect &tilePosition, int &ho, int &y, int &ve, int &x, int &actualX, int &actualY, int & i, int &j,int **mapix, SDL_Rect & elfPos){
     getPos(tilePosition, ho, ve, y, x, actualX, actualY, i, j,mapix,0,10,elfPos);
     int in_tab = actualX >= 0 && actualY >=0 && actualX+1 < i && actualY < j;
-    
     
     if(in_tab &&((mapix[actualX+1][actualY+1]!=100 || ( (mapix[actualX+1][actualY+1]==100 )&&((ho<0?50000+ho:ho)%50<30||( ((abs(ve<0?50000+ve:ve)%50>10))&&(abs(ve<0?50000+ve:ve)%50<=35))) ))&&(mapix[actualX+1][actualY] == 49 ||mapix[actualX+1][actualY]==51||mapix[actualX+1][actualY]==51||((ho<0?50000+ho:ho)%50<26&&mapix[actualX+1][actualY] == 52)))){
         ho+=SPEED_EVENT; //if it possible moove down
