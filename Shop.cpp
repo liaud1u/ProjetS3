@@ -7,7 +7,7 @@ using namespace std;
 
 /*CONSTRUCTOR*/
 Shop::Shop(SDL_Surface *screen){
-	degat_price = 5;
+	degat_price = 5; //Setting up the price of the damage upgrade and the potion price.
 	potion_price = 3;
 }
 
@@ -36,14 +36,14 @@ TTF_SetFontStyle(police, TTF_STYLE_BOLD);
 
 	//Set text position
 	pos_degat_text.x = LARGEUR/2 - degat_text->w/2;
-	pos_degat_text.y = 235 ;
+	pos_degat_text.y = POSITION_SHOP_TEXTE_DEGAT_Y ;
 
 	pos_potion_text.x = LARGEUR/2- potion_text->w/2;
-	pos_potion_text.y = 415;
+	pos_potion_text.y = POSITION_SHOP_TEXTE_POTION_Y;
 
 	//Set menu position
-	pos_Menu.x = 300;
-	pos_Menu.y = 70;
+	pos_Menu.x = POSITION_SHOP_X;
+	pos_Menu.y = POSITION_SHOP_Y;
 
 	//Add menu to the windows
     SDL_BlitSurface(back,NULL,screen,NULL    );
@@ -53,20 +53,18 @@ TTF_SetFontStyle(police, TTF_STYLE_BOLD);
 	SDL_UpdateRect(screen,0,0,0,0);
     SDL_FreeSurface(potion_text);
     SDL_FreeSurface(degat_text);
-        SDL_FreeSurface(menu);
+    SDL_FreeSurface(menu);
     SDL_FreeSurface(back);
     TTF_CloseFont(police);
     TTF_Quit();
 }
 
 int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){ 
-	//x = 140 / 440 , y = 330 / 390 --> potion
-	// x = 140 / 440 , y = 150 / 210 --> weapon
 	int *return_tab = new int[4];
 	return_tab[3] = 1; 
-	posSourisX -= 300;
-	posSourisY -= 70; //Synchronise shop and mouse pos
-	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 330 && posSourisY <= 390){
+	posSourisX -= POSITION_SHOP_X;
+	posSourisY -= POSITION_SHOP_Y; //Synchronise shop and mouse pos
+	if (posSourisX >= DEBUT_BOUTON_POTION_X && posSourisX <= FIN_BOUTON_POTION_X && posSourisY >= DEBUT_BOUTON_POTION_Y && posSourisY <= FIN_BOUTON_POTION_Y){
 		if (money >= potion_price){ //if it's possible, buy the item
 			money -= potion_price; //we pay
 			life += 5;
@@ -77,7 +75,7 @@ int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posS
 		}
 	}
 
-	if (posSourisX >= 140 && posSourisX <= 440 && posSourisY >= 150 && posSourisY <= 210){
+	if (posSourisX >= DEBUT_BOUTON_DEGAT_X && posSourisX <= FIN_BOUTON_DEGAT_X && posSourisY >= DEBUT_BOUTON_DEGAT_Y && posSourisY <= FIN_BOUTON_DEGAT_Y){
 		if (money >= degat_price){ //if it's possible, buy the item
 			money -= degat_price; //we pay
 			return_tab[3] = 0; //to leave shop
