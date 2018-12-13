@@ -117,7 +117,10 @@ int main(){
     heartPos.y = 0;
     
     /*FIRST ENNEMY WAVE CREATION*/
-    Horde Horde("maps/monstre0"); //Loading the first ennemy tab
+    Horde Horde;
+    
+    if(exists("maps/monstre0"))
+        Horde.load("maps/monstre0"); //Loading the first ennemy tab
     
     /*INITIALIZE SDL*/
     SDL_Init(SDL_INIT_VIDEO);
@@ -601,7 +604,8 @@ int main(){
                                 fin = 1;
                             if(init(i,j,mapdeco,"maps/level0.deco"))
                                 printf("Pas de fichier déco");
-                            Horde.load("maps/monstre0");
+                            if(exists("maps/monstre0"))
+                                Horde.load("maps/monstre0");
                         }
                         break;
                     case 1:
@@ -610,7 +614,8 @@ int main(){
                                 fin = 1;
                             if(init(i,j,mapdeco,"maps/level1.deco"))
                                 printf("Pas de fichier déco");
-                            Horde.load("maps/monstre1");
+                            if(exists("maps/monstre1"))
+                                Horde.load("maps/monstre1");
                         }
                         break;
                     case 2:
@@ -619,7 +624,8 @@ int main(){
                                 fin = 1;
                             if(init(i,j,mapdeco,"maps/level2.deco"))
                                 printf("Pas de fichier déco");
-                            Horde.load("maps/monstre2");
+                            if(exists("maps/monstre2"))
+                                Horde.load("maps/monstre2");
                         }
                     case 3:
                         if(exists("maps/level3.map")){
@@ -627,7 +633,8 @@ int main(){
                                 fin = 1;
                             if(init(i,j,mapdeco,"maps/level3.deco"))
                                 printf("Pas de fichier déco");
-                            Horde.load("maps/monstre3");
+                            if(exists("maps/monstre3"))
+                                Horde.load("maps/monstre3");
                         }
                     case 4:
                         if(exists("maps/level4.map")){
@@ -635,16 +642,8 @@ int main(){
                                 fin = 1;
                             if(init(i,j,mapdeco,"maps/level4.deco"))
                                 printf("Pas de fichier déco");
-                            Horde.load("maps/monstre4");
-                        }
-                        break;
-                    case 5:
-                        if(exists("maps/level5.map")){
-                            if(init(i,j,map,"maps/level5.map"))
-                                fin = 1;
-                            if(init(i,j,mapdeco,"maps/level5.deco"))
-                                printf("Pas de fichier déco");
-                            Horde.load("maps/monstre5");
+                            if(exists("maps/monstre4"))
+                                Horde.load("maps/monstre4");
                         }
                         break;
                 }
@@ -665,7 +664,8 @@ int main(){
                                     fin = 1;
                                 if(init(i,j,mapdeco,"maps/level0.deco"))
                                     printf("Pas de fichier déco");
-                                Horde.load("maps/monstre0");
+                                if(exists("maps/monstre0"))
+                                    Horde.load("maps/monstre0");
                             }
                             break;
                         case 1:
@@ -674,7 +674,8 @@ int main(){
                                     fin = 1;
                                 if(init(i,j,mapdeco,"maps/level1.deco"))
                                     printf("Pas de fichier déco");
-                                Horde.load("maps/monstre1");
+                                if(exists("maps/monstre1"))
+                                    Horde.load("maps/monstre1");
                             }
                             break;
                         case 2:
@@ -683,7 +684,8 @@ int main(){
                                     fin = 1;
                                 if(init(i,j,mapdeco,"maps/level2.deco"))
                                     printf("Pas de fichier déco");
-                                Horde.load("maps/monstre2");
+                                if(exists("maps/monstre2"))
+                                    Horde.load("maps/monstre2");
                             }
                             break;
                         case 3:
@@ -692,7 +694,8 @@ int main(){
                                     fin = 1;
                                 if(init(i,j,mapdeco,"maps/level3.deco"))
                                     printf("Pas de fichier déco");
-                                Horde.load("maps/monstre3");
+                                if(exists("maps/monstre3"))
+                                    Horde.load("maps/monstre3");
                             }
                             break;
                         case 4:
@@ -701,7 +704,8 @@ int main(){
                                     fin = 1;
                                 if(init(i,j,mapdeco,"maps/level4.deco"))
                                     printf("Pas de fichier déco");
-                                Horde.load("maps/monstre4");
+                                if(exists("maps/monstre4"))
+                                    Horde.load("maps/monstre4");
                             }
                             break;
                     }
@@ -728,7 +732,8 @@ int main(){
                 fin = 1;
             if(init(i,j,mapdeco,"maps/level0.deco"))
                 printf("Pas de fichier déco");
-            Horde.load("maps/monstre0");
+            if(exists("maps/monstre0"))
+                Horde.load("maps/monstre0");
             level = 0;
             temp_money= 0;
             money_current = 0;
@@ -829,27 +834,27 @@ int main(){
         if(Horde.getNbAlive() == 0){
             switch (level){
                 case 0:
-                    if(exists("maps/level0.map")){
+                    if(exists("maps/monstre0.map")){
                         Horde.load("maps/monstre0");
                     }
                     break;
                 case 1:
-                    if(exists("maps/level1.map")){
+                    if(exists("maps/monstre1.map")){
                         Horde.load("maps/monstre1");
                     }
                     break;
                 case 2:
-                    if(exists("maps/level2.map")){
+                    if(exists("maps/monstre2.map")){
                         Horde.load("maps/monstre2");
                     }
                     break;
                 case 3:
-                    if(exists("maps/level3.map")){
+                    if(exists("maps/monstre3.map")){
                         Horde.load("maps/monstre3");
                     }
                     break;
                 case 4:
-                    if(exists("maps/level4.map")){
+                    if(exists("maps/monstre4.map")){
                         Horde.load("maps/monstre4");
                     }
                     break;
@@ -886,7 +891,8 @@ int main(){
                 fin = 1;
             if(init(i,j,mapdeco,"maps/level0.deco"))
                 printf("Pas de fichier déco");;
-            Horde.load("maps/monstre0");
+            if(exists("maps/monstre0"))
+                Horde.load("maps/monstre0");
             level = 0;
             temp_money= 0;
             money_current = 0;

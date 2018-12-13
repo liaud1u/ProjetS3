@@ -12,6 +12,7 @@ using namespace std;
 
 /*CONSTRUCOR*/
 Horde::Horde(){
+    nb = 0;
 }
 
 /*METHOD*/
