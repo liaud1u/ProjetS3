@@ -1,9 +1,7 @@
+#include "Define.h"
 #include "Shop.h"
 #include "stats.h"
 #include "Fonction.h"
-
-#define HAUTEUR 750
-#define LARGEUR 1200
 
 using namespace std;
 
@@ -61,7 +59,7 @@ TTF_SetFontStyle(police, TTF_STYLE_BOLD);
     TTF_Quit();
 }
 
-int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){
+int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posSourisY, SDL_Surface *screen,int frame){ 
 	//x = 140 / 440 , y = 330 / 390 --> potion
 	// x = 140 / 440 , y = 150 / 210 --> weapon
 	int *return_tab = new int[4];
@@ -87,7 +85,7 @@ int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posS
 			degat_price += 3;
 		}
 	}
-	return_tab[0] = life;
+	return_tab[0] = life; //Adding all the modified things in a tab, to return it, and, edit the money, life, damage value of the playable character
 	return_tab[1] = attack;
 	return_tab[2] = money;
 	return return_tab;

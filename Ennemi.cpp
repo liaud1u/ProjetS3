@@ -3,14 +3,11 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
+#include "Define.h"
 #include "Ennemi.h"
 #include "Fonction.h"
 
 #include <SDL/SDL_ttf.h>
-
-#define HAUTEUR 750
-#define LARGEUR 1200
-#define SPEED 1
 
 using namespace std;
 
@@ -184,16 +181,16 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
     /*If possible moove*/
     switch (e_where){
         case 0:
-            mooveL(SPEED,mapix);
+            mooveL(SPEED_ENNEMI,mapix);
             break;
         case 1:
-            mooveR(SPEED,mapix);
+            mooveR(SPEED_ENNEMI,mapix);
             break;
         case 2:
-            mooveU(SPEED,mapix);
+            mooveU(SPEED_ENNEMI,mapix);
             break;
         case 3:
-            mooveD(SPEED,mapix);
+            mooveD(SPEED_ENNEMI,mapix);
             break;
         case 4:
             if(e_cooldown == 0 && min <=1 && e_cooldown_moove%50 == 0){

@@ -3,11 +3,10 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
+#include "Define.h"
 #include "Ennemi.h"
 #include "Fonction.h"
 #include "Horde.h"
-
-#define MONSTER_SIZE 32 
 
 using namespace std;
 
