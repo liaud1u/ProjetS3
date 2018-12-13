@@ -9,13 +9,13 @@
 void loadStats(char const * file,int *stats){
     int score,time,game_over,ennemi,money;
     FILE* stat;
-    stat = fopen(file,"r"); //Chargement du fichier en lecture seulement
-    fscanf(stat,"%d",&score); //Recuperation de toute les stats
+    stat = fopen(file,"r"); //Load file
+    fscanf(stat,"%d",&score); //Get all stats
     fscanf(stat,"%d",&time);
     fscanf(stat,"%d",&game_over);
     fscanf(stat,"%d",&ennemi);
     fscanf(stat,"%d",&money);
-    stats[0] = score; //Sauvegarde des stats dans un tableau temporaire
+    stats[0] = score; //Save all file in a tab
     stats[1] = time;
     stats[2] = game_over;
     stats[3] = ennemi;
@@ -25,8 +25,8 @@ void loadStats(char const * file,int *stats){
 
 void resetStats(char const * file){
     FILE* stat;
-    stat = fopen(file,"w+"); //Chargement du fichier en lecture seulement
-    fprintf(stat, "%d\n", 0);  //Ecriture du fichier stat en initialisant tout a zero
+    stat = fopen(file,"w+"); //Load file
+    fprintf(stat, "%d\n", 0);  //Save tab in the file
     fprintf(stat, "%d\n", 0);  
     fprintf(stat, "%d\n", 0);  
     fprintf(stat, "%d\n", 0);  
@@ -36,8 +36,8 @@ void resetStats(char const * file){
 
 void saveStats(char const * file, int *stats){
     FILE* stat;
-    stat = fopen(file,"w+"); //Chargement du fichier en lecture seulement
-    fprintf(stat, "%d\n", stats[0]);  //Sauvegarde de toutes les stats
+    stat = fopen(file,"w+"); //Load file
+    fprintf(stat, "%d\n", stats[0]);  //Save Tab in the file
     fprintf(stat, "%d\n", stats[1]);  
     fprintf(stat, "%d\n", stats[2]);  
     fprintf(stat, "%d\n", stats[3]);  
@@ -46,53 +46,51 @@ void saveStats(char const * file, int *stats){
 }
 
 void affichePiece(int money, SDL_Surface *screen, int frame){
-
-      //Initialisation de SDL_TTF
-      TTF_Init();
-      TTF_Font *police ;
-      SDL_Surface *textePieces,*temp,*piece;
-      SDL_Rect textePos,pieceImage,piecePos;
-      police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Récuparation de la police + taille
-      SDL_Color couleurTexte = {255,255,255}; //Couleur blanche
-      
-    int colorkey; // Couleur pour transparence des bmp 
-      
-      temp = SDL_LoadBMP("ressources/piece.bmp");
-      piece = SDL_DisplayFormat(temp);
-      
-      
-  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
-  
-  SDL_SetColorKey(piece, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    //Init SDL_ttf
+    TTF_Init();
+    TTF_Font *police ;
+    SDL_Surface *textePieces,*temp,*piece;
+    SDL_Rect textePos,pieceImage,piecePos;
+    police = TTF_OpenFont("ressources/Dungeons.ttf",65); //Set size of the font
+    SDL_Color couleurTexte = {255,255,255}; //Color white
     
-      //Tableau traduisant le nombre de pièces (entier) en char, la taille du tableau détermine le nombre de pièces max
-      char pieceCaractere[50];
-      
-      //Texte + image représentant l'argent
-      sprintf(pieceCaractere,"x%d",money);
-      
-      textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
-      textePos.x = 1200 - textePieces->w -10;
-      textePos.y = 15;
-      SDL_BlitSurface(textePieces,NULL,screen,&textePos);
-      
-          /* Define the source rectangle (piece)for the BlitSurface */
-      pieceImage.y = 0 ;
-      pieceImage.w = 50;
-      pieceImage.h = 50;
-      pieceImage.x = 50 * frame;
-      
-      piecePos.x = textePos.x - 50 ;
-      piecePos.y = textePos.y -10;
-  
-      SDL_BlitSurface(piece,&pieceImage,screen,&piecePos);
-      
-	    
-      SDL_FreeSurface(textePieces);
-      SDL_FreeSurface(piece);
-      SDL_FreeSurface(temp);
-      TTF_CloseFont(police);
-      TTF_Quit();
+    int colorkey; // Transparancy color
+    
+    temp = SDL_LoadBMP("ressources/piece.bmp");
+    piece = SDL_DisplayFormat(temp);
+    
+    
+    colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+    
+    SDL_SetColorKey(piece, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    
+    //Convert int in string
+    char pieceCaractere[50];
+    
+    //Convert the string in surface
+    sprintf(pieceCaractere,"x%d",money);
+    
+    textePieces = TTF_RenderText_Blended(police,pieceCaractere,couleurTexte);
+    textePos.x = 1200 - textePieces->w -10;
+    textePos.y = 15;
+    SDL_BlitSurface(textePieces,NULL,screen,&textePos);
+    
+    /* DEFINE SOURCE RECTANGLE FOR THE MONEY */
+    pieceImage.y = 0 ;
+    pieceImage.w = 50;
+    pieceImage.h = 50;
+    pieceImage.x = 50 * frame;
+    
+    piecePos.x = textePos.x - 50 ;
+    piecePos.y = textePos.y -10;
+    
+    SDL_BlitSurface(piece,&pieceImage,screen,&piecePos);
+    
+    SDL_FreeSurface(textePieces);
+    SDL_FreeSurface(piece);
+    SDL_FreeSurface(temp);
+    TTF_CloseFont(police);
+    TTF_Quit();
 }
 
 void printStats(int *stats){
@@ -100,39 +98,37 @@ void printStats(int *stats){
 }
 
 SDL_Surface * getScore(int score){
-TTF_Init();
+    TTF_Init();
     
     TTF_Font* font;
     
     SDL_Surface* score_surface;
     SDL_Color font_color;
     
-    
-    //Création de la police d'ecriture
+    //Create font
     font = TTF_OpenFont("ressources/Dungeons.ttf", 50);
     font_color.r = 166;
     font_color.g = 141;
     font_color.b = 122;
     
-    //Conversion des entiers stocké en string 
+    //Convert int to string
     char score_string[15] ;
-
     
     sprintf(score_string, "%d", score);
-        
-        //Application du gras
-        TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-        
-        //Conversion des string en image
-        score_surface = TTF_RenderText_Solid(font, score_string, font_color);
-
-        TTF_CloseFont( font );
-        TTF_Quit();
-	return score_surface;
+    
+    //Set bold to the font
+    TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    
+    //Convert string to surface
+    score_surface = TTF_RenderText_Solid(font, score_string, font_color);
+    
+    TTF_CloseFont( font );
+    TTF_Quit();
+    return score_surface;
 }
 
 void refreshTime(SDL_Surface * screen, int time){
-TTF_Init();
+    TTF_Init();
     
     TTF_Font* font;
     
@@ -149,25 +145,25 @@ TTF_Init();
     
     //Conversion des entiers stocké en string 
     char time_string[15] ;
-
     
-  sprintf(time_string, "%d%d:%d%d", time/600==0?0:time/600,(time/60==0)%10?0:(time/60)%10,time%60/10==0?0:time%60/10,time%10==0?0:time%10);
-  
-   //Application du gras
-   TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-        
-        
-        //Conversion des string en image
-        time_surface = TTF_RenderText_Solid(font,time_string, font_color);
-	
-	fontPos.x = 10;
-        fontPos.y = 715;
-        SDL_BlitSurface(time_surface, NULL, screen, &fontPos); 
-	
-	SDL_FreeSurface(time_surface);
-	
-        TTF_CloseFont( font );
-        TTF_Quit();
+    
+    sprintf(time_string, "%d%d:%d%d", time/600==0?0:time/600,(time/60==0)%10?0:(time/60)%10,time%60/10==0?0:time%60/10,time%10==0?0:time%10);
+    
+    //Application du gras
+    TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    
+    
+    //Conversion des string en image
+    time_surface = TTF_RenderText_Solid(font,time_string, font_color);
+    
+    fontPos.x = 10;
+    fontPos.y = 715;
+    SDL_BlitSurface(time_surface, NULL, screen, &fontPos); 
+    
+    SDL_FreeSurface(time_surface);
+    
+    TTF_CloseFont( font );
+    TTF_Quit();
 }
 
 void print(int * stats, SDL_Surface *screen){
@@ -231,13 +227,13 @@ void print(int * stats, SDL_Surface *screen){
         fontPos.y += 90;
         fontPos.x = 933 - money_surface->w /2;
         SDL_BlitSurface(money_surface, NULL, screen, &fontPos);
-	
-	SDL_FreeSurface(score_surface);
-	SDL_FreeSurface(time_surface);
-	SDL_FreeSurface(game_over_surface);
-	SDL_FreeSurface(kill_surface);
-	SDL_FreeSurface(money_surface);
-	
+        
+        SDL_FreeSurface(score_surface);
+        SDL_FreeSurface(time_surface);
+        SDL_FreeSurface(game_over_surface);
+        SDL_FreeSurface(kill_surface);
+        SDL_FreeSurface(money_surface);
+        
         TTF_CloseFont( font );
         TTF_Quit();
 }

@@ -14,6 +14,6 @@ public:
 	int* gererAchats(int money, int life, int attaque, int posSourisX, int posSourisY,SDL_Surface *screen, int frame);
 private://Attributs de la classe Shop
 
-	int prixDegats,prixPotion;
+	int degat_price,potion_price;
 
 };

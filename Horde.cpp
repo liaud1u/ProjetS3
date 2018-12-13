@@ -11,17 +11,17 @@
 
 using namespace std;
 
-Horde::Horde()
-{
-    
+/*CONSTRUCOR*/
+Horde::Horde(){
 }
 
+/*METHOD*/
 Horde::Horde(char const * adresse){
     FILE* ennemi_file;
     int x,y,vie,cat,size;
-    ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
+    ennemi_file = fopen(adresse,"r"); //Load file
     fscanf(ennemi_file,"%d",&nb);
-    for(int n = 0; n < nb; n++){
+    for(int n = 0; n < nb; n++){ //Get constructor argument in the file
         
         fscanf(ennemi_file,"%d",&x);
         fscanf(ennemi_file,"%d",&y);
@@ -36,7 +36,6 @@ Horde::Horde(char const * adresse){
 void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vie,SDL_Surface *screen){
       for(int k = 0; k < nb; k++){
         if(!horde[k].isDead())
-          
           horde[k].move(mapix,i,j,y,x,ho,ve,vie,screen);
       }
 }
@@ -44,9 +43,9 @@ void Horde::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &vi
 void Horde::load(char const * adresse){
     FILE* ennemi_file;
     int x,y,vie,cat,size;
-    ennemi_file = fopen(adresse,"r"); //Chargement du fichier en lecture seulement
+    ennemi_file = fopen(adresse,"r"); //Load file
     fscanf(ennemi_file,"%d",&nb);
-    for(int n = 0; n < nb; n++){
+    for(int n = 0; n < nb; n++){//Get constructor argument in the file
         
         fscanf(ennemi_file,"%d",&x);
         fscanf(ennemi_file,"%d",&y);
@@ -64,23 +63,22 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
     SDL_Rect zombiePos,zombieImage;
     SDL_Surface *temp,*zombie;
     
-    
     temp = SDL_LoadBMP("ressources/zombie.bmp");
     zombie= SDL_DisplayFormat(temp);
     SDL_FreeSurface(temp);
     
-    int colorkey; // Couleur pour transparence des bmp 
+    int colorkey; // Colorkey for transparancy
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
     
     SDL_SetColorKey(zombie, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     
-    /* Define the source rectangle (elf)for the BlitSurface */
+    /*DEFINE THE SORUCE RECTANGLE FOR ENNEMY*/
     zombieImage.y = 0 ;
     zombieImage.w = MONSTER_SIZE;
     zombieImage.h = 40;
     zombieImage.x = MONSTER_SIZE*frame;
     
-    //Affichage des monstres ( ici seulement zombie ) 
+    /*PRINT ALL ENNEMY*/
     for (int z = 0; z<nb; z++){
         if(!horde[z].isDead()){
             zombiePos = horde[z].getPositionPrint(horizontal,vertical);
@@ -107,7 +105,6 @@ int Horde::getNbAlive() const{
     return n;
 }
 
-
 Ennemi * Horde::getTab(){
     return horde;
 }
@@ -116,7 +113,7 @@ int Horde::collide(SDL_Rect &perso, int dir,int ve, int ho){
     int res = 0;
 
     SDL_Rect ennemi;
-    switch (dir){
+    switch (dir){ 
         case 0:
             for (int z = 0; z<nb; z++){
                 ennemi = horde[z].getPositionPrint(ho,ve);
@@ -164,10 +161,10 @@ int Horde::collide(SDL_Rect &perso, int dir,int ve, int ho){
             }
             return res;
             break;
-            
         default:
             return 1;
             break;
     }
 }
 
+/*NO NEED OF DESTRUCTOR ( NO MALLOC ) */
