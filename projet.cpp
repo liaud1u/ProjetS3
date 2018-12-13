@@ -64,6 +64,11 @@ int main(){
     /*INITIALIZATION OF ALL VARIABLE*/
     temp_money= 0; //Money current
     dir = 0; //Player Direction
+    if(!exists("statistiques")){
+         FILE *temp = fopen("statistiques", "w");  /* write */   
+         fclose(temp);
+         resetStats("statistiques");
+    }
     loadStats("statistiques", stats); //Initialization of stats in the stats tab
     life = LIFE;
     cooldown = 0; //Attack cooldown

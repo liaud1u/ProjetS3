@@ -21,6 +21,7 @@ void loadStats(char const * file,int *stats){
     stats[3] = ennemi;
     stats[4] = money;
     fclose(stat);
+    
 }
 
 void resetStats(char const * file){
