@@ -26,7 +26,7 @@
 #define FIN_OPTION_Y 546
 #define CAR_X_MENU 770 //Caracter choice menu 
 #define CAR_Y_MENU 170  //Caracter choice menu
-#define SLOW 10
+#define SLOW 5
 #define SWORD_W 60
 #define SWORD_H 24
 

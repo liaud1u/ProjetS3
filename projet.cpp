@@ -6,6 +6,7 @@
 #include <ctime>
 #include <string>
 #include <iostream>
+
 #include "Define.h"
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -47,7 +48,7 @@ int main(){
     int pause_start = 0; //Used to calculate the pause time.
     int shop_continue = 1; //Shop loop
     int jb,ib; //Used to get Player position ( on the map)
-    int attack_cooldown = ATTACK; //Attack cooldown
+    int attack_cooldown = 0; //Attack cooldown
     int start, end; //Used for the time calculation
     int score_current = 0; //Score of the actual game
     int money_current = 0; //Actual money
@@ -57,7 +58,7 @@ int main(){
     Uint8 *keystate; //Key 
     SDL_Event event; //Event for the key entry
     SDL_Rect tilePosition, menuPos,heartPos,caracterPos,caracterImage,screenPos,statPos,optionsPos,swordImage,swordPos,scorePos; //Position for all the BlitSurface and Image for the blit surface
-    SDL_Surface *options,*crate,*background,*score_surface,*menu,*heart,*hearth,*heartb,*sword,*caracter,*credit_surface,*screenshot,*stat,*end_menu,*pause_menu,*win_menu;
+    SDL_Surface *options,*slab,*ext_d,*ext_g,*hd,*bd,*slab2,*slab3,*door,*chest,*skull,*hole,*ladder,*bg,*hg,*int_g,*int_d,*haut,*droite,*gauche,*crate,*background,*score_surface,*menu,*heart,*hearth,*heartb,*sword,*caracter,*credit_surface,*screenshot,*stat,*end_menu,*pause_menu,*win_menu;
     //All sprite of the game
     
     /*INITIALIZATION OF ALL VARIABLE*/
@@ -140,7 +141,26 @@ int main(){
     Shop shop = Shop(screen); 
     
     /*BMP LOADING*/
+    slab2 = load("ressources/map/slab2.bmp");
+    slab3 = load("ressources/map/slab3.bmp");
+    skull = load("ressources/skull.bmp");
+    ladder = load("ressources/ladder.bmp");
+    hole = load("ressources/hole.bmp");
+    chest = load("ressources/chest.bmp");
+    door = load("ressources/door.bmp");
     background = load("ressources/map/background.bmp");
+    slab = load("ressources/map/slab.bmp");
+    hg = load("ressources/map/coin_hg.bmp");
+    hd = load("ressources/map/coin_hd.bmp");
+    bg = load("ressources/map/coin_bg.bmp");
+    bd = load("ressources/map/coin_bd.bmp");
+    haut = load("ressources/map/haut.bmp");
+    droite = load("ressources/map/droite.bmp");
+    gauche = load("ressources/map/gauche.bmp");
+    int_d = load("ressources/map/int_d.bmp");
+    int_g = load("ressources/map/int_g.bmp");
+    ext_d = load("ressources/map/coin_ext_d.bmp");
+    ext_g = load("ressources/map/coin_ext_g.bmp");
     pause_menu = load("ressources/pause.bmp");
     end_menu = load("ressources/game_over.bmp");
     win_menu = load("ressources/win.bmp");
@@ -154,7 +174,7 @@ int main(){
     options = load("ressources/options.bmp");
     sword = load("ressources/sword.bmp");
     credit_surface= load("ressources/credit.bmp");
-    crate = load("ressources/crate.bmp");
+    crate= load("ressources/crate.bmp");
     
     /* SETUP TRANSPARENCY */
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
@@ -165,6 +185,10 @@ int main(){
     SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(sword, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(skull, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(chest, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    SDL_SetColorKey(door, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     
     /*MAIN LOOP*/
     while(!fin){
@@ -451,8 +475,6 @@ int main(){
             }
         }
         
-        printMap(horizontal, vertical, jb, ib,pos_y, pos_x,  map, screen);
-        printDeco(horizontal, vertical, jb, ib,pos_y, pos_x,  mapdeco, screen);
         
         
         /*LADDER USED*/
@@ -654,6 +676,109 @@ int main(){
                 SDL_UpdateRect(screen,0,0,0,0);
             }
         }
+        /*MAP PRINT*/
+        for (jb=0;jb<j;jb++){
+            tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+            tilePosition.x =  vertical+ pos_x * D_SIZE;
+            for(ib=0;ib<i;ib++){
+                tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                tilePosition.x = vertical+ D_SIZE * ib + pos_x * D_SIZE;
+                switch (map[jb][ib]){
+                    case 48:
+                        SDL_BlitSurface(background, NULL, screen, &tilePosition);
+                        break;
+                    case 49:
+                        SDL_BlitSurface(slab, NULL, screen, &tilePosition);
+                        break;
+                    case 50:
+                        SDL_BlitSurface(droite, NULL, screen, &tilePosition);
+                        break;
+                    case 51:
+                        SDL_BlitSurface(gauche, NULL, screen, &tilePosition);
+                        break;
+                    case 52:
+                        SDL_BlitSurface(haut, NULL, screen, &tilePosition);
+                        break;
+                    case 55:
+                        SDL_BlitSurface(hg, NULL, screen, &tilePosition);
+                        break;
+                    case 54:
+                        SDL_BlitSurface(hd, NULL, screen, &tilePosition);
+                        break;
+                    case 57:
+                        SDL_BlitSurface(bg, NULL, screen, &tilePosition);
+                        break;
+                    case 56:
+                        SDL_BlitSurface(bd, NULL, screen, &tilePosition);
+                        break;
+                    case 98:
+                        SDL_BlitSurface(int_g, NULL, screen, &tilePosition);
+                        break;
+                    case 97:
+                        SDL_BlitSurface(int_d, NULL, screen, &tilePosition);
+                        break;
+                    case 100:
+                        SDL_BlitSurface(ext_g, NULL, screen, &tilePosition);
+                        break;
+                    case 99:
+                        SDL_BlitSurface(ext_d, NULL, screen, &tilePosition);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        /*DECORATION PRINT*/
+        for (jb=0;jb<j;jb++){
+            tilePosition.y =  - horizontal + D_SIZE * jb + pos_y *D_SIZE;
+            tilePosition.x =  vertical+ pos_x *D_SIZE;
+            for(ib=0;ib<i;ib++){
+                tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
+                tilePosition.x =  vertical+ D_SIZE * ib + pos_x * D_SIZE;
+                switch (mapdeco[jb][ib]){
+                    case 48:
+                        break;
+                    case 50:
+                        r = 8;
+                        tilePosition.x +=r;
+                        SDL_BlitSurface(skull, NULL, screen, &tilePosition);
+                        tilePosition.x -= r;
+                        break;
+                    case 51:
+                        SDL_BlitSurface(hole, NULL, screen, &tilePosition);
+                        break;
+                    case 52:
+                        SDL_BlitSurface(ladder, NULL, screen, &tilePosition);
+                        break;
+                    case 53:
+                        r = 3;
+                        tilePosition.x +=r;
+                        SDL_BlitSurface(crate, NULL, screen, &tilePosition);
+                        tilePosition.x -= r;
+                        break;
+                    case 54:
+                        r = 9;
+                        tilePosition.x +=r;
+                        tilePosition.y += r;
+                        SDL_BlitSurface(chest, NULL, screen, &tilePosition);
+                        tilePosition.x -= r;
+                        tilePosition.y -=r;
+                        break;
+                    case 55:
+                        SDL_BlitSurface(door, NULL, screen, &tilePosition);
+                        break;
+                    case 56:
+                        SDL_BlitSurface(slab2, NULL, screen, &tilePosition);
+                        break;
+                    case 57:
+                        SDL_BlitSurface(slab3, NULL, screen, &tilePosition);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         
         /*ENNEMY PRINT*/
         Horde.afficher(frame,screen, vertical, horizontal);
@@ -829,6 +954,25 @@ int main(){
     SDL_FreeSurface(sword);
     SDL_FreeSurface(options);
     SDL_FreeSurface(credit_surface);
+    SDL_FreeSurface(slab);
+    SDL_FreeSurface(hg);
+    SDL_FreeSurface(hd);
+    SDL_FreeSurface(bg);
+    SDL_FreeSurface(bd);
+    SDL_FreeSurface(haut);
+    SDL_FreeSurface(droite);
+    SDL_FreeSurface(gauche);
+    SDL_FreeSurface(int_d );
+    SDL_FreeSurface(int_g );
+    SDL_FreeSurface(ext_d );
+    SDL_FreeSurface(ext_g );
+    SDL_FreeSurface(skull);
+    SDL_FreeSurface(ladder);
+    SDL_FreeSurface(hole);
+    SDL_FreeSurface(slab2 );
+    SDL_FreeSurface(slab3 );
+    SDL_FreeSurface(chest );
+    SDL_FreeSurface(door );
     
     /*LEAVE SDL AND TTF*/
     SDL_Quit(); 
