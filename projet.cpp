@@ -6,7 +6,6 @@
 #include <ctime>
 #include <string>
 #include <iostream>
-
 #include "Define.h"
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -185,7 +184,7 @@ int main(){
                         caracterPos.y = CAR_Y_MENU ;
                         /*OPTION MENU LOOP*/
                         while(menu_int!=0){
-                            if(wait < SLOW){ //Update of the frame varibale for the caracter animation.
+                            if(wait < SLOW * 10){ //Update of the frame varibale for the caracter animation.
                                 wait++;}
                                 else{
                                     wait = 0;
@@ -195,7 +194,7 @@ int main(){
                                         frame = 0;
                                     }
                                 }
-                                
+                               
                                 /*ANIMATION UPDATE*/
                                 caracterImage.y = 0 +CAR_H*2*who;
                                 caracterImage.x = MONSTER_SIZE * frame;
@@ -280,7 +279,7 @@ int main(){
         }
         
         /*SPRITE UPDATE*/
-        if(wait < SLOW/SPEED_EVENT){
+        if(wait < SLOW){
             wait++;
             
         }else{
@@ -413,19 +412,7 @@ int main(){
                     SDL_UpdateRect(screen,0,0,0,0);
                     
                     /*SHOP LOOP*/
-                    while ( shop_continue ){   
-                        if(wait < SLOW/SPEED_EVENT){ //Frame update
-                            wait++;}
-                            else{
-                                wait = 0;
-                                if (frame <3 ){
-                                    frame++;
-                                }
-                                else{
-                                    frame = 0;
-                                }
-                            }
-                            
+                    while ( shop_continue ){  
                             /*EVENT CHECK*/
                             if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){
                                 /*BUY CASE*/
