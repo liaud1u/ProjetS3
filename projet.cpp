@@ -31,7 +31,7 @@ int main(){
     int life; // Life of the main caracter
     int colorkey; // Color for the transparency 
     int actualX,actualY; // Actual position
-    int val_attaque = 10; //Attack value
+    int val_attaque = DEFAULT_ATTACK; //Attack value
     int vertical,horizontal; // Variable used for the scroll of the map
     int frame=0; // Frame for all the sprite
     int wait =0; // Used to slow animation
@@ -58,16 +58,16 @@ int main(){
     Uint8 *keystate; //Key 
     SDL_Event event; //Event for the key entry
     SDL_Rect tilePosition, menuPos,heartPos,caracterPos,caracterImage,screenPos,statPos,optionsPos,swordImage,swordPos,scorePos; //Position for all the BlitSurface and Image for the blit surface
-    SDL_Surface *slab,*options,*score_surface,*menu,*background,*ext_d,*ext_g,*slab2,*slab3,*hd,*bd,*bg,*door,*heart,*hg,*int_g,*int_d,*chest,*hearth,*heartb,*haut,*crate,*skull,*droite,*sword,*gauche,*hole,*ladder,*caracter,*credit_surface,*screenshot,*stat,*end_menu,*pause_menu,*win_menu;
+    SDL_Surface *options,*crate,*background,*score_surface,*menu,*heart,*hearth,*heartb,*sword,*caracter,*credit_surface,*screenshot,*stat,*end_menu,*pause_menu,*win_menu;
     //All sprite of the game
     
     /*INITIALIZATION OF ALL VARIABLE*/
     temp_money= 0; //Money current
     dir = 0; //Player Direction
     if(!exists("statistiques")){
-         FILE *temp = fopen("statistiques", "w");  /* write */   
-         fclose(temp);
-         resetStats("statistiques");
+        FILE *temp = fopen("statistiques", "w");  /* write */   
+        fclose(temp);
+        resetStats("statistiques");
     }
     loadStats("statistiques", stats); //Initialization of stats in the stats tab
     life = LIFE;
@@ -75,8 +75,8 @@ int main(){
     pos_x = 0; // Start position
     pos_y = 0; //  
     who = 0;
-    i = 32;                                                 // Map width
-    j = 32;                                                 // Map height
+    i = MAP_SIZE;                                                 // Map width
+    j = MAP_SIZE;                                                 // Map height
     fin =0;
     vertical = 125;
     horizontal = -75;
@@ -90,32 +90,32 @@ int main(){
     int ** mapdeco = alloc(i,j);
     
     /* Define the source rectangle (caracter)for the BlitSurface */
-    caracterImage.y = 0 +56*2*who;
+    caracterImage.y = 0 +CAR_H*2*who;
     caracterImage.w = MONSTER_SIZE;
-    caracterImage.h = 56;
+    caracterImage.h = CAR_H;
     caracterImage.x = MONSTER_SIZE*frame;
     
     /*Define position of caracter*/
     caracterPos.x = LARGEUR/2 - 16;
-    caracterPos.y = HAUTEUR/2 - 56;
+    caracterPos.y = HAUTEUR/2 - CAR_H;
     caracterPos.w = MONSTER_SIZE;
-    caracterPos.h = 56;
+    caracterPos.h = CAR_H;
     
     /*Define position of option*/
-    optionsPos.x = 300; 
-    optionsPos.y = 70; 
+    optionsPos.x = OPTION_POS_X; 
+    optionsPos.y = OPTION_POS_Y; 
     
     /*Define position of menu*/
-    menuPos.x = 50; 
-    menuPos.y = 70; 
+    menuPos.x = MENU_POS_X; 
+    menuPos.y = MENU_POS_Y; 
     
     /*Define position of screen*/
     screenPos.x = 0; 
     screenPos.y = 0;
     
     /*Define position of stat menu*/
-    statPos.x = 710; 
-    statPos.y = 70; 
+    statPos.x = STAT_POS_X; 
+    statPos.y = STAT_POS_Y; 
     
     /*Define position of heart*/
     heartPos.x = 0;
@@ -126,7 +126,7 @@ int main(){
     
     if(exists("maps/monstre0"))
         Horde.load("maps/monstre0"); //Loading the first ennemy tab
-    
+        
     /*INITIALIZE SDL*/
     SDL_Init(SDL_INIT_VIDEO);
     SDL_EnableKeyRepeat(10, 1); //Activating the key repeat
@@ -141,56 +141,31 @@ int main(){
     Shop shop = Shop(screen); 
     
     /*BMP LOADING*/
+    background = load("ressources/map/background.bmp");
     pause_menu = load("ressources/pause.bmp");
     end_menu = load("ressources/game_over.bmp");
     win_menu = load("ressources/win.bmp");
-    background = load("ressources/map/background.bmp");
-    slab2 = load("ressources/map/slab2.bmp");
-    slab3 = load("ressources/map/slab3.bmp");
-    slab = load("ressources/map/slab.bmp");
-    hg = load("ressources/map/coin_hg.bmp");
-    hd = load("ressources/map/coin_hd.bmp");
-    bg = load("ressources/map/coin_bg.bmp");
-    bd = load("ressources/map/coin_bd.bmp");
-    haut = load("ressources/map/haut.bmp");
-    droite = load("ressources/map/droite.bmp");
-    gauche = load("ressources/map/gauche.bmp");
     heart = load("ressources/fullheart.bmp");
     heartb = load("ressources/heart.bmp");
     hearth = load("ressources/half_heart.bmp");
-    skull = load("ressources/skull.bmp");
-    ladder = load("ressources/ladder.bmp");
-    hole = load("ressources/hole.bmp");
-    crate = load("ressources/crate.bmp");
     caracter = load("ressources/perso.bmp");
-    int_d = load("ressources/map/int_d.bmp");
-    int_g = load("ressources/map/int_g.bmp");
-    ext_d = load("ressources/map/coin_ext_d.bmp");
-    ext_g = load("ressources/map/coin_ext_g.bmp");
     menu = load("ressources/menu.bmp");
     screenshot = load("ressources/screen.bmp");
     stat = load("ressources/stats.bmp");
     options = load("ressources/options.bmp");
     sword = load("ressources/sword.bmp");
     credit_surface= load("ressources/credit.bmp");
-    chest = load("ressources/chest.bmp");
-    door = load("ressources/door.bmp");
+    crate = load("ressources/crate.bmp");
     
     /* SETUP TRANSPARENCY */
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
     
-    SDL_SetColorKey(skull, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(heart, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(heartb, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-    SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(caracter, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(hearth, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     SDL_SetColorKey(sword, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-    SDL_SetColorKey(chest, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-    SDL_SetColorKey(door, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-    
-    /*SET ICON OF THE APPLICATION*/
-    SDL_WM_SetIcon(chest,NULL);
+    SDL_SetColorKey(crate, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
     
     /*MAIN LOOP*/
     while(!fin){
@@ -200,17 +175,17 @@ int main(){
             if (SDL_PollEvent(&event)){
                 if (event.type == SDL_MOUSEBUTTONDOWN){
                     /*PLAY BUTTON*/
-                    if(event.motion.x >= 140 && event.motion.x <= 495 && event.motion.y > 363 && event.motion.y < 436){
+                    if(event.motion.x >= DEBUT_PLAY_X && event.motion.x <= FIN_PLAY_X&& event.motion.y > DEBUT_PLAY_Y && event.motion.y < FIN_PLAY_Y){
                         menu_int = 1; //Leave the loop
                     }
                     /*OPTION BUTTON*/
-                    if(event.motion.x >= 196 && event.motion.x <= 553 && event.motion.y > 466 && event.motion.y < 546){
+                    if(event.motion.x >= DEBUT_OPTION_X && event.motion.x <= FIN_OPTION_X && event.motion.y > DEBUT_OPTION_Y && event.motion.y < FIN_OPTION_Y){
                         menu_int = 2; //Open the option loop
-                        caracterPos.x = LARGEUR/2 + 170; //Position of the caracter for the caracter choice button
-                        caracterPos.y = HAUTEUR/2 -210 ;
+                        caracterPos.x = CAR_X_MENU; //Position of the caracter for the caracter choice button
+                        caracterPos.y = CAR_Y_MENU ;
                         /*OPTION MENU LOOP*/
                         while(menu_int!=0){
-                            if(wait < 80){ //Update of the frame varibale for the caracter animation.
+                            if(wait < SLOW){ //Update of the frame varibale for the caracter animation.
                                 wait++;}
                                 else{
                                     wait = 0;
@@ -222,7 +197,7 @@ int main(){
                                 }
                                 
                                 /*ANIMATION UPDATE*/
-                                caracterImage.y = 0 +56*2*who;
+                                caracterImage.y = 0 +CAR_H*2*who;
                                 caracterImage.x = MONSTER_SIZE * frame;
                                 
                                 /*DETECT OF BUTTON PRESSURE*/
@@ -230,7 +205,7 @@ int main(){
                                     if (event.type == SDL_MOUSEBUTTONDOWN){
                                         
                                         /*CHANGE CARACTER BUTTON*/
-                                        if(event.motion.x >= 90 + optionsPos.x && event.motion.x <= 445+ optionsPos.x && event.motion.y > 94+ optionsPos.y && event.motion.y < 170+ optionsPos.y){
+                                        if(event.motion.x >= DEBUT_CAR_X + optionsPos.x && event.motion.x <= FIN_CAR_X+ optionsPos.x && event.motion.y > DEBUT_CAR_Y+ optionsPos.y && event.motion.y < FIN_CAR_Y+ optionsPos.y){
                                             if(who==2){
                                                 who=0;
                                             }else{
@@ -238,13 +213,13 @@ int main(){
                                             }
                                         }else{
                                             
-                                            /*RESET STATS BUTTON*/                                            if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 200+ optionsPos.y && event.motion.y < 280+ optionsPos.y){
+                                            /*RESET STATS BUTTON*/                                            if(event.motion.x >= DEBUT_RESET_X + optionsPos.x&& event.motion.x <= FIN_RESET_X+ optionsPos.x && event.motion.y > DEBUT_RESET_Y+ optionsPos.y && event.motion.y < FIN_RESET_Y+ optionsPos.y){
                                                 resetStats("statistiques");
                                                 loadStats("statistiques", stats);
                                             }else{
                                                 
                                                 /*CREDIT BUTTON*/
-                                                if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+                                                if(event.motion.x >= DEBUT_CREDIT_X + optionsPos.x&& event.motion.x <= FIN_CREDIT_X+ optionsPos.x && event.motion.y > DEBUT_CREDIT_Y+ optionsPos.y && event.motion.y < FIN_CREDIT_Y+ optionsPos.y){
                                                     credit = 1;
                                                     
                                                     /*CREDIT LOOP ( LEAVE BY CLICK )*/
@@ -263,7 +238,7 @@ int main(){
                                                 }else{
                                                     
                                                     /*LEAVE OPTION BUTTON*/
-                                                    if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+                                                    if(event.motion.x >= DEBUT_LEAVE_X + optionsPos.x&& event.motion.x <= FIN_LEAVE_X+ optionsPos.x && event.motion.y > DEBUT_LEAVE_Y+ optionsPos.y && event.motion.y < FIN_LEAVE_Y+ optionsPos.y){
                                                         menu_int = 0;
                                                     }
                                                 }
@@ -291,8 +266,8 @@ int main(){
             print(stats,screen);
             
             /*RESET CARACTER POSITION TO DEFAULT*/
-            caracterPos.x = LARGEUR/2 - 16;
-            caracterPos.y = HAUTEUR/2 - 56;
+            caracterPos.x = LARGEUR/2 - MONSTER_SIZE/2;
+            caracterPos.y = HAUTEUR/2 - CAR_H;
             
             /*SCREEN UPDATE*/
             SDL_UpdateRect(screen,0,0,0,0);
@@ -305,7 +280,7 @@ int main(){
         }
         
         /*SPRITE UPDATE*/
-        if(wait < 10){
+        if(wait < SLOW/SPEED_EVENT){
             wait++;
             
         }else{
@@ -336,7 +311,7 @@ int main(){
             for(ib=0;ib<i;ib++){
                 tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
                 tilePosition.x = vertical + D_SIZE * ib + pos_x * D_SIZE;
-                if(tilePosition.x+16 <= LARGEUR/2 && tilePosition.x +50 +16 >= LARGEUR/2 && tilePosition.y+16 <= HAUTEUR/2 && tilePosition.y +50+16 >= HAUTEUR /2){
+                if(tilePosition.x+MONSTER_SIZE/2 <= LARGEUR/2 && tilePosition.x +D_SIZE+MONSTER_SIZE/2 >= LARGEUR/2 && tilePosition.y+MONSTER_SIZE/2<= HAUTEUR/2 && tilePosition.y +D_SIZE+MONSTER_SIZE/2 >= HAUTEUR /2){
                     actualY = jb;
                     actualX = ib;
                 }
@@ -357,11 +332,11 @@ int main(){
                 /*CARACTER DIRECTION ( DEPENDING OF THE ATTACK DIRECTION )*/
                 if(event.motion.x > LARGEUR/2){
                     dir = 0;
-                    caracterImage.y = 56 * (who*2) ; //Update the caracter Direction
+                    caracterImage.y = CAR_H * (who*2) ; //Update the caracter Direction
                 }
                 else{
                     dir = 1;
-                    caracterImage.y = 56 * (who*2) + 56 ; //Update the caracter Direction
+                    caracterImage.y = CAR_H * (who*2) + CAR_H ; //Update the caracter Direction
                 }
             }
             
@@ -376,7 +351,7 @@ int main(){
                         
                         /*LEAVE CASE*/
                         if (event.type == SDL_MOUSEBUTTONDOWN){
-                            if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+                            if(event.motion.x >= DEBUT_LEAVE_GAME_X + optionsPos.x&& event.motion.x <= FIN_LEAVE_GAME_X+ optionsPos.x && event.motion.y > DEBUT_LEAVE_GAME_Y+ optionsPos.y && event.motion.y < FIN_LEAVE_GAME_Y+ optionsPos.y){
                                 menu_end=1;
                                 fin = 1;
                                 score_current -= 100; // Malus d'abandon
@@ -384,7 +359,7 @@ int main(){
                             }else{
                                 
                                 /*RESUME CASE*/
-                                if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+                                if(event.motion.x >= DEBUT_RESUME_X + optionsPos.x&& event.motion.x <= FIN_RESUME_X+ optionsPos.x && event.motion.y > DEBUT_RESUME_Y+ optionsPos.y && event.motion.y < FIN_RESUME_Y+ optionsPos.y){
                                     menu_end = 1;
                                 }
                             }
@@ -439,7 +414,7 @@ int main(){
                     
                     /*SHOP LOOP*/
                     while ( shop_continue ){   
-                        if(wait < 20){ //Frame update
+                        if(wait < SLOW/SPEED_EVENT){ //Frame update
                             wait++;}
                             else{
                                 wait = 0;
@@ -452,7 +427,7 @@ int main(){
                             }
                             
                             /*EVENT CHECK*/
-                            if (event.type == SDL_MOUSEBUTTONDOWN){
+                            if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){
                                 /*BUY CASE*/
                                 int *tabAchats = shop.gererAchats(money_current,life,val_attaque,event.motion.x,event.motion.y,screen, frame);
                                 life = tabAchats[0];
@@ -468,7 +443,7 @@ int main(){
                             
                             /*LEAVE CASE*/
                             if (SDL_PollEvent(&event) && event.type == SDL_MOUSEBUTTONDOWN){
-                                if (event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+                                if (event.motion.x >= DEBUT_LEAVE_SHOP_X + optionsPos.x&& event.motion.x <= FIN_LEAVE_SHOP_X+ optionsPos.x && event.motion.y > DEBUT_LEAVE_SHOP_X+ optionsPos.y && event.motion.y < FIN_LEAVE_SHOP_Y+ optionsPos.y){
                                     shop_continue = false;
                                 }
                             }
@@ -489,109 +464,9 @@ int main(){
             }
         }
         
-        /*MAP PRINT*/
-        for (jb=0;jb<j;jb++){
-            tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
-            tilePosition.x =  vertical+ pos_x * D_SIZE;
-            for(ib=0;ib<i;ib++){
-                tilePosition.y =  5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
-                tilePosition.x = vertical+ D_SIZE * ib + pos_x * D_SIZE;
-                switch (map[jb][ib]){
-                    case 48:
-                        SDL_BlitSurface(background, NULL, screen, &tilePosition);
-                        break;
-                    case 49:
-                        SDL_BlitSurface(slab, NULL, screen, &tilePosition);
-                        break;
-                    case 50:
-                        SDL_BlitSurface(droite, NULL, screen, &tilePosition);
-                        break;
-                    case 51:
-                        SDL_BlitSurface(gauche, NULL, screen, &tilePosition);
-                        break;
-                    case 52:
-                        SDL_BlitSurface(haut, NULL, screen, &tilePosition);
-                        break;
-                    case 55:
-                        SDL_BlitSurface(hg, NULL, screen, &tilePosition);
-                        break;
-                    case 54:
-                        SDL_BlitSurface(hd, NULL, screen, &tilePosition);
-                        break;
-                    case 57:
-                        SDL_BlitSurface(bg, NULL, screen, &tilePosition);
-                        break;
-                    case 56:
-                        SDL_BlitSurface(bd, NULL, screen, &tilePosition);
-                        break;
-                    case 98:
-                        SDL_BlitSurface(int_g, NULL, screen, &tilePosition);
-                        break;
-                    case 97:
-                        SDL_BlitSurface(int_d, NULL, screen, &tilePosition);
-                        break;
-                    case 100:
-                        SDL_BlitSurface(ext_g, NULL, screen, &tilePosition);
-                        break;
-                    case 99:
-                        SDL_BlitSurface(ext_d, NULL, screen, &tilePosition);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        printMap(horizontal, vertical, jb, ib,pos_y, pos_x,  map, screen);
+        printDeco(horizontal, vertical, jb, ib,pos_y, pos_x,  mapdeco, screen);
         
-        /*DECORATION PRINT*/
-        for (jb=0;jb<j;jb++){
-            tilePosition.y =  - horizontal + D_SIZE * jb + pos_y *D_SIZE;
-            tilePosition.x =  vertical+ pos_x *D_SIZE;
-            for(ib=0;ib<i;ib++){
-                tilePosition.y = 5- horizontal + D_SIZE * jb + pos_y * D_SIZE;
-                tilePosition.x =  vertical+ D_SIZE * ib + pos_x * D_SIZE;
-                switch (mapdeco[jb][ib]){
-                    case 48:
-                        break;
-                    case 50:
-                        r = 8;
-                        tilePosition.x +=r;
-                        SDL_BlitSurface(skull, NULL, screen, &tilePosition);
-                        tilePosition.x -= r;
-                        break;
-                    case 51:
-                        SDL_BlitSurface(hole, NULL, screen, &tilePosition);
-                        break;
-                    case 52:
-                        SDL_BlitSurface(ladder, NULL, screen, &tilePosition);
-                        break;
-                    case 53:
-                        r = 3;
-                        tilePosition.x +=r;
-                        SDL_BlitSurface(crate, NULL, screen, &tilePosition);
-                        tilePosition.x -= r;
-                        break;
-                    case 54:
-                        r = 9;
-                        tilePosition.x +=r;
-                        tilePosition.y += r;
-                        SDL_BlitSurface(chest, NULL, screen, &tilePosition);
-                        tilePosition.x -= r;
-                        tilePosition.y -=r;
-                        break;
-                    case 55:
-                        SDL_BlitSurface(door, NULL, screen, &tilePosition);
-                        break;
-                    case 56:
-                        SDL_BlitSurface(slab2, NULL, screen, &tilePosition);
-                        break;
-                    case 57:
-                        SDL_BlitSurface(slab3, NULL, screen, &tilePosition);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
         
         /*LADDER USED*/
         if(mapdeco[actualY][actualX]==51 && SDL_PollEvent(&event) && keystate[SDLK_RETURN] ){
@@ -599,7 +474,7 @@ int main(){
             /*MAXIMUM 5 LEVEL*/
             if(level <6){
                 level++;
-                horizontal += 50;
+                horizontal += D_SIZE -10;
                 
                 /*LOADING NEXT LEVEL IF POSSIBLE*/
                 switch (level){
@@ -659,7 +534,7 @@ int main(){
                 keystate = SDL_GetKeyState(NULL);
                 if(level > 0 ){
                     level--;
-                    horizontal += 50;
+                    horizontal += D_SIZE;
                     
                     /*LOADING PREVIOUS LEVEL IF POSSIBLE*/
                     switch (level){
@@ -743,7 +618,7 @@ int main(){
             temp_money= 0;
             money_current = 0;
             dir = 0;
-            life = 10;
+            life = MAX_LIFE;
             cooldown = 0;
             
             /*STAT UPDATE AND SAVE*/
@@ -761,8 +636,8 @@ int main(){
             score_surface = getScore(score_current);
             
             /*POSITION OF SCORE*/
-            scorePos.x = 600 - score_surface->w /2;
-            scorePos.y = 300;
+            scorePos.x = END_SCORE_X - score_surface->w /2;
+            scorePos.y = END_SCORE_Y;
             
             /*END MENU*/
             while(menu_end!=1){ 
@@ -771,13 +646,13 @@ int main(){
                     if (event.type == SDL_MOUSEBUTTONDOWN){
                         
                         /*REPLAY BUTTON*/
-                        if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+                        if(event.motion.x >= DEBUT_REPLAY_X + optionsPos.x&& event.motion.x <= FIN_REPLAY_X+ optionsPos.x && event.motion.y > DEBUT_REPLAY_Y+ optionsPos.y && event.motion.y < FIN_REPLAY_Y+ optionsPos.y){
                             menu_end=1;
                             start = SDL_GetTicks();
                         }else{
                             
                             /*BACK TO MAIN MENU BUTTON*/
-                            if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+                            if(event.motion.x >= DEBUT_BACK_X + optionsPos.x&& event.motion.x <= FIN_BACK_X+ optionsPos.x && event.motion.y > DEBUT_BACK_Y+ optionsPos.y && event.motion.y < FIN_BACK_Y+ optionsPos.y){
                                 menu_end = 1;
                                 menu_int = 0;
                             }
@@ -797,8 +672,8 @@ int main(){
         Horde.afficher(frame,screen, vertical, horizontal);
         
         /*DEFINE PRINT SURFACE AND POSITION FOR SWORD*/
-        swordImage.w = 60;
-        swordImage.h = 24;
+        swordImage.w = SWORD_W;
+        swordImage.h = SWORD_H;
         swordImage.x = 0  + swordImage.w * dir;
         swordImage.y = 0;
         swordPos.x = caracterPos.x + 8 - ( dir * ( swordImage.w ) ) + (!dir?15:0) ;
@@ -916,12 +791,12 @@ int main(){
                 if (SDL_PollEvent(&event)){
                     if (event.type == SDL_MOUSEBUTTONDOWN){
                         /*REPLAY CASE*/
-                        if(event.motion.x >= 90 + optionsPos.x&& event.motion.x <= 445+ optionsPos.x && event.motion.y > 310+ optionsPos.y && event.motion.y < 390+ optionsPos.y){
+                        if(event.motion.x >= DEBUT_REPLAY_X + optionsPos.x&& event.motion.x <= FIN_REPLAY_X+ optionsPos.x && event.motion.y > DEBUT_REPLAY_Y+ optionsPos.y && event.motion.y < FIN_REPLAY_Y+ optionsPos.y){
                             menu_end=1;
                             start = SDL_GetTicks();
                         }else{
                             /*BACK TO MAIN MENU CASE*/
-                            if(event.motion.x >= 160 + optionsPos.x&& event.motion.x <= 520+ optionsPos.x && event.motion.y > 430+ optionsPos.y && event.motion.y < 510+ optionsPos.y){
+                            if(event.motion.x >= DEBUT_BACK_X + optionsPos.x&& event.motion.x <= FIN_BACK_X+ optionsPos.x && event.motion.y > DEBUT_BACK_Y+ optionsPos.y && event.motion.y < FIN_BACK_Y+ optionsPos.y){
                                 menu_end = 1;
                                 menu_int = 0;
                             }
@@ -951,31 +826,13 @@ int main(){
     saveStats("statistiques",stats);
     
     /*FREE ALL SURFACE*/
+    
+    SDL_FreeSurface(crate);
     SDL_FreeSurface(background);
-    SDL_FreeSurface(slab);
-    SDL_FreeSurface(hg);
-    SDL_FreeSurface(hd);
-    SDL_FreeSurface(bg);
-    SDL_FreeSurface(bd);
-    SDL_FreeSurface(haut);
-    SDL_FreeSurface(droite);
-    SDL_FreeSurface(gauche);
     SDL_FreeSurface(heart);
     SDL_FreeSurface(heartb);
     SDL_FreeSurface(hearth);
-    SDL_FreeSurface(skull);
-    SDL_FreeSurface(ladder);
-    SDL_FreeSurface(hole);
-    SDL_FreeSurface(crate);
     SDL_FreeSurface(caracter);
-    SDL_FreeSurface(int_d );
-    SDL_FreeSurface(int_g );
-    SDL_FreeSurface(ext_d );
-    SDL_FreeSurface(ext_g );
-    SDL_FreeSurface(slab2 );
-    SDL_FreeSurface(slab3 );
-    SDL_FreeSurface(chest );
-    SDL_FreeSurface(door );
     SDL_FreeSurface(win_menu);
     SDL_FreeSurface(pause_menu);
     SDL_FreeSurface(menu);

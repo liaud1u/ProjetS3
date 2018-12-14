@@ -1,10 +1,12 @@
-#include "stats.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <math.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <ctime>
+
+#include "stats.h"
+#include "Define.h"
 
 void loadStats(char const * file,int *stats){
     int score,time,game_over,ennemi,money;
@@ -78,12 +80,12 @@ void affichePiece(int money, SDL_Surface *screen, int frame){
     
     /* DEFINE SOURCE RECTANGLE FOR THE MONEY */
     pieceImage.y = 0 ;
-    pieceImage.w = 50;
-    pieceImage.h = 50;
-    pieceImage.x = 50 * frame;
+    pieceImage.w = D_SIZE;
+    pieceImage.h = D_SIZE;
+    pieceImage.x = D_SIZE * frame;
     
-    piecePos.x = textePos.x - 50 ;
-    piecePos.y = textePos.y -10;
+    piecePos.x = textePos.x - D_SIZE ;
+    piecePos.y = textePos.y - D_SIZE/5;
     
     SDL_BlitSurface(piece,&pieceImage,screen,&piecePos);
     
@@ -213,20 +215,20 @@ void print(int * stats, SDL_Surface *screen){
         kill_surface = TTF_RenderText_Solid(font, kill_string, font_color);
         money_surface = TTF_RenderText_Solid(font, money_string, font_color);
         
-        fontPos.y = 200;
-        fontPos.x = 933 - score_surface->w /2;
+        fontPos.y = SCORE_POS_Y_T;
+        fontPos.x = STAT_POS_X_T - score_surface->w /2;
         SDL_BlitSurface(score_surface, NULL, screen, &fontPos);  
-        fontPos.x = 933 - time_surface->w /2;
-        fontPos.y += 90;
+        fontPos.x = STAT_POS_X_T - time_surface->w /2;
+        fontPos.y += STAT_DECAL;
         SDL_BlitSurface(time_surface, NULL, screen, &fontPos); 
-        fontPos.y += 90;
-        fontPos.x = 933 - game_over_surface->w /2;
+        fontPos.y += STAT_DECAL;
+        fontPos.x = STAT_POS_X_T - game_over_surface->w /2;
         SDL_BlitSurface(game_over_surface, NULL, screen, &fontPos); 
-        fontPos.y += 85;
-        fontPos.x = 933 - kill_surface->w /2;
+        fontPos.y += STAT_DECAL-5;
+        fontPos.x = STAT_POS_X_T - kill_surface->w /2;
         SDL_BlitSurface(kill_surface, NULL, screen, &fontPos); 
-        fontPos.y += 90;
-        fontPos.x = 933 - money_surface->w /2;
+        fontPos.y += STAT_DECAL;
+        fontPos.x = STAT_POS_X_T - money_surface->w /2;
         SDL_BlitSurface(money_surface, NULL, screen, &fontPos);
         
         SDL_FreeSurface(score_surface);

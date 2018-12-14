@@ -66,11 +66,11 @@ int* Shop::gererAchats(int money, int life, int attack, int posSourisX, int posS
 	posSourisY -= POSITION_SHOP_Y; //Synchronise shop and mouse pos
 	if (posSourisX >= DEBUT_BOUTON_POTION_X && posSourisX <= FIN_BOUTON_POTION_X && posSourisY >= DEBUT_BOUTON_POTION_Y && posSourisY <= FIN_BOUTON_POTION_Y){
 		if (money >= potion_price){ //if it's possible, buy the item
-			money -= potion_price; //we pay
+			money -= potion_price; //we pay=
 			life += 5;
 			return_tab[3] = 0; //to leave shop
-			if (life > 10){ //check life
-				life = 10;
+			if (life > MAX_LIFE){ //check life
+				life = MAX_LIFE;
 			}
 		}
 	}

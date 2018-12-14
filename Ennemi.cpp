@@ -3,6 +3,7 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <ctime>
+
 #include "Define.h"
 #include "Ennemi.h"
 #include "Fonction.h"
@@ -24,9 +25,9 @@ Ennemi::Ennemi()
     e_ho = 0;
     e_ve = 0;
     e_dead = 0;
-    e_cooldown = 300; //Cooldown before next attack
-    e_cooldown_moove = 50;
-    e_where = 5;
+    e_cooldown = E_COOLDOWN; //Cooldown before next attack
+    e_cooldown_moove = E_COOLDOWN_MOVE;
+    e_where = FIRST_DIR;
     haveAttack = 0;
 }
 
@@ -41,9 +42,9 @@ Ennemi::Ennemi(int idx,int x, int y, int vie, int cat, int size){
     e_ho = 0;
     e_ve = 0;
     e_dead = 0;
-    e_cooldown = 300;
-    e_cooldown_moove = 50;
-    e_where = 5;
+    e_cooldown = E_COOLDOWN;
+    e_cooldown_moove = E_COOLDOWN_MOVE;
+    e_where = FIRST_DIR;
     haveAttack = 0;
 }
 
@@ -52,8 +53,8 @@ Ennemi::Ennemi(int idx,int x, int y, int vie, int cat, int size){
 SDL_Rect Ennemi::getPosition() const{ // Sur la carte
     {
         SDL_Rect m;
-        m.x = e_x * 50  +5+e_ho;
-        m.y = e_y * 50  +8-e_ve;
+        m.x = e_x * D_SIZE  +5+e_ho;
+        m.y = e_y * D_SIZE  +8-e_ve;
         m.w = 32;
         m.h = 56;
         return m;
@@ -72,14 +73,14 @@ int Ennemi::getSize() const{ // taille du monstre
 void Ennemi::randomWhere(){
     srand(SDL_GetTicks()+id+time(NULL));
     e_where = rand()%4;
-    e_cooldown_moove = rand()%4 * 50 ;
+    e_cooldown_moove = rand()%4 * D_SIZE ;
 }
 
 SDL_Rect Ennemi::getPositionPrint(int ve,int ho) const{ //a afficher
     {
         SDL_Rect m;
-        m.x = e_x * 50 +ho +5+e_ho;
-        m.y = e_y * 50-ve +8-e_ve;
+        m.x = e_x * D_SIZE +ho +5+e_ho;
+        m.y = e_y * D_SIZE-ve +8-e_ve;
         m.w = 32;
         m.h = 56;
         return m;
@@ -88,7 +89,7 @@ SDL_Rect Ennemi::getPositionPrint(int ve,int ho) const{ //a afficher
 
 int Ennemi::getDamage() const{
     {
-        return e_size + 1;
+        return e_size + DEFAULT_DAMAGE;
     }
 }
 
@@ -120,8 +121,8 @@ void Ennemi::attack(int &vie) const{
 void Ennemi::mooveL(int c,int ** mapix){
     if (mapix[getY()-1][getX()-1] == 49){
         e_ho = e_ho -c ;
-        e_x= e_x-abs(e_ho)/50;
-        e_ho = e_ho%50;
+        e_x= e_x-abs(e_ho)/D_SIZE;
+        e_ho = e_ho%D_SIZE;
         e_dir = 1;
     }
 }
@@ -129,8 +130,8 @@ void Ennemi::mooveL(int c,int ** mapix){
 void Ennemi::mooveR(int c,int ** mapix){
     if (mapix[getY()-1][getX()+1] == 49){
         e_ho = e_ho +c ;
-        e_x= e_x+e_ho/50;
-        e_ho = e_ho%50;
+        e_x= e_x+e_ho/D_SIZE;
+        e_ho = e_ho%D_SIZE;
         e_dir = 0;
     }
 }
@@ -148,8 +149,8 @@ int Ennemi::equal(SDL_Rect ennem, int ve, int ho){
 void Ennemi::mooveU(int c,int ** mapix){
     if (getY() -2 > 0 && mapix[getY()-2][getX()] == 49){
         e_ve = e_ve +c ;
-        e_y= e_y-abs(e_ve)/50;
-        e_ve = e_ve%50;
+        e_y= e_y-abs(e_ve)/D_SIZE;
+        e_ve = e_ve%D_SIZE;
     }
 }
 
@@ -167,7 +168,7 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
     //Get next direction
     if (e_cooldown_moove <= 0){
         randomWhere();
-        e_cooldown_moove = rand()%4 * 50;;
+        e_cooldown_moove = rand()%4 * D_SIZE;;
     }else{
         if(e_cooldown_moove > 0)
             e_cooldown_moove--;
@@ -175,7 +176,7 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
     
     if(min <= 1){
         e_where = 4;
-        e_cooldown_moove = rand()%4 * 50 ;
+        e_cooldown_moove = rand()%4 * D_SIZE ;
     }
     
     /*If possible moove*/
@@ -193,10 +194,10 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
             mooveD(SPEED_ENNEMI,mapix);
             break;
         case 4:
-            if(e_cooldown == 0 && min <=1 && e_cooldown_moove%50 == 0){
+            if(e_cooldown == 0 && min <=1 && e_cooldown_moove% D_SIZE == 0){
                 attack(vie);
                 haveAttack = 1;
-                e_cooldown = 300;
+                e_cooldown = E_COOLDOWN;
                 
             }
             break;
@@ -215,8 +216,8 @@ void Ennemi::move(int **mapix, int i, int j, int y, int x,int ho , int ve,int &v
 void Ennemi::mooveD(int c, int ** mapix){
     if ( mapix[getY()][getX()] == 49){
         e_ve = e_ve -c ;
-        e_y= e_y+abs(e_ve)/50;
-        e_ve = e_ve%50;
+        e_y= e_y+abs(e_ve)/ D_SIZE;
+        e_ve = e_ve% D_SIZE;
     }
 }
 

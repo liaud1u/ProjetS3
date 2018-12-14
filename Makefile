@@ -1,4 +1,4 @@
-SRC= *.cpp 
+SRC= *.cpp Define.h
 BIN=projet
 
 $(BIN): $(SRC)

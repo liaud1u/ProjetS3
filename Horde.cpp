@@ -75,14 +75,14 @@ void Horde::afficher(int frame,SDL_Surface *screen, int vertical, int horizontal
     /*DEFINE THE SORUCE RECTANGLE FOR ENNEMY*/
     zombieImage.y = 0 ;
     zombieImage.w = MONSTER_SIZE;
-    zombieImage.h = 40;
+    zombieImage.h = MONSTER_H;
     zombieImage.x = MONSTER_SIZE*frame;
     
     /*PRINT ALL ENNEMY*/
     for (int z = 0; z<nb; z++){
         if(!horde[z].isDead()){
             zombiePos = horde[z].getPositionPrint(horizontal,vertical);
-	    zombieImage.y = horde[z].getDir() * 40  + 40 * horde[z].getSize();
+	    zombieImage.y = horde[z].getDir() * MONSTER_H  ;
             zombieImage.x = horde[z].getCat() * MONSTER_SIZE * 4 + MONSTER_SIZE * frame;
             SDL_BlitSurface(zombie, &zombieImage, screen, &zombiePos);
         }
@@ -130,7 +130,7 @@ int Horde::collide(SDL_Rect &perso, int dir,int ve, int ho){
                 
                 ennemi = horde[z].getPositionPrint(ho,ve);
                 if(!horde[z].isDead() && res != 1){
-                    if(!(ennemi.y  - 32> perso.y  || ennemi.y - 32+ ennemi.h < perso.y|| ennemi.x + ennemi.w < perso.x || ennemi.x  > perso.x + perso.w)){
+                    if(!(ennemi.y  - MONSTER_SIZE > perso.y  || ennemi.y - MONSTER_SIZE + ennemi.h < perso.y|| ennemi.x + ennemi.w < perso.x || ennemi.x  > perso.x + perso.w)){
                         res ++;
                     }
                 }
